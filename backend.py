@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# workaround for single-computer hosting
 origins = [
     "http://localhost:3000"
 ]

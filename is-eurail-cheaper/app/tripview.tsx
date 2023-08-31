@@ -5,31 +5,38 @@ import SearchBar from './searchbar';
 
 export default function TripView() {
     let [cities, setCities] = useState([]);
+    let [prices, setPrices] = useState([]);
 
     async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
         let formData = new FormData(event.currentTarget);
         let fromCity = cities[cities.length - 1];
         let toCity = formData.get("toCity");
 
+        if (toCity === fromCity) { // todo give message
+            return;
+        }
+
         setCities(cities.concat(toCity));
 
         if (fromCity !== undefined) {
-            // let body = {'fromCity': fromCity, 'toCity': toCity};
-            // console.log(JSON.stringify(body));
             formData.append("fromCity", fromCity);
 
             const response = await fetch('http://127.0.0.1:8000/api/getPrice', {
                 method: 'POST',
-                // mode: 'no-cors',
                 body: formData,
             })
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
+                let data = await response.json();
+                // data = JSON.parse(data);
+                // console.log(data.price);
+                // console.log(JSON.parse(data));
+                setPrices(prices.concat(parseInt(data.price)));
             } else {
                 console.log("response not ok")
             }
+        }  else {
+            setPrices(prices.concat("-"));
         }
     }
 
@@ -47,11 +54,11 @@ export default function TripView() {
                     </thead>
 
                     <tbody>
-                        {cities.map(city => {
+                        {cities.map((city, idx) => {
                             return (
                                 <tr key={city}>
                                     <td>{city}</td>
-                                    <td>0</td>
+                                    <td>{prices[idx]}</td>
                                     <td>0</td>
                                 </tr>
                             );
@@ -61,7 +68,7 @@ export default function TripView() {
                     <tfoot>
                         <tr>
                             <td>Total</td>
-                            <td>0</td>
+                            <td>{prices.slice(1).reduce((a, b) => a + b, 0)}</td>
                             <td>0</td>
                         </tr>
                     </tfoot>
