@@ -1,11 +1,28 @@
-import React from "react";
+import React, {FormEvent} from "react";
+import { useState } from "react";
+
 import SearchBar from './searchbar';
 
 export default function TripView() {
-    let cities = ["Toulouse", "Lyon"];
+    let [cities, setCities] = useState(["Toulouse", "Lyon"]);
+
+    async function onSearch(event: FormEvent<HTMLFormElement>) {
+        const formData = new FormData(event.currentTarget);
+        console.log("onsearch", Object.fromEntries(formData).city);
+        setCities(cities.concat(Object.fromEntries(formData).city));
+        // const response = await fetch('/api/submit', {
+        //     method: 'POST',
+        //     body: formData,
+        // })
+        //
+        // // Handle response if necessary
+        // const data = await response.json()
+        // ...
+    }
+
     return (
         <div>
-            <SearchBar />
+            <SearchBar onSearch={onSearch}/>
             <div>
                 <table className="table">
                     <thead>
