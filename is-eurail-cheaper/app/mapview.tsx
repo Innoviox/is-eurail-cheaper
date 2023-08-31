@@ -14,7 +14,7 @@ export default function MapView({latitude, longitude}: {latitude: number; longit
                 lat: latitude ?? 0,
                 lng: longitude ?? 0,
             },
-            zoom: 3
+            zoom: 5
         }));
     }, [latitude, longitude]);
     return <div style={{height: "100vh"}} ref={mapRef} />;

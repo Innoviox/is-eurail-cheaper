@@ -10,7 +10,7 @@ export default function Home() {
       <div id="container">
           <div id="map">
               <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">
-                <MapView latitude={40} longitude={10} />
+                <MapView latitude={50} longitude={10} />
               </Wrapper>
           </div>
           <div id="trip">
