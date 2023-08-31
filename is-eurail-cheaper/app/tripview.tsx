@@ -6,23 +6,23 @@ import SearchBar from './searchbar';
 export default function TripView() {
     let [cities, setCities] = useState([]);
 
-    async function onSearch(event: FormEvent<HTMLFormElement>) {
+    async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
         const formData = new FormData(event.currentTarget);
         console.log("onsearch", Object.fromEntries(formData).city);
         setCities(cities.concat(Object.fromEntries(formData).city));
-        // const response = await fetch('/api/submit', {
-        //     method: 'POST',
-        //     body: formData,
-        // })
-        //
-        // // Handle response if necessary
-        // const data = await response.json()
+        const response = await fetch('/api/getPrice', {
+            method: 'POST',
+            body: formData,
+        })
+
+        // Handle response if necessary
+        const data = await response.json()
         // ...
     }
 
     return (
         <div>
-            <SearchBar onSearch={onSearch}/>
+            <SearchBar onSearchSubmit={onSearchSubmit}/>
             <div>
                 <table className="table">
                     <thead>

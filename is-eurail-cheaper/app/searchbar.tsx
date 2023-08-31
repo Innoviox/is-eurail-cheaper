@@ -1,12 +1,12 @@
 import React from "react";
 import { FormEvent } from 'react'
 
-export default function SearchBar({onSearch}) {
+export default function SearchBar({onSearchSubmit}) {
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         console.log("onsubmit");
 
-        await onSearch(event);
+        await onSearchSubmit(event);
     }
 
     return (

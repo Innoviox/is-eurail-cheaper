@@ -1,5 +1,8 @@
 # is-eurail-cheaper
 
+- frontend: `npm run dev`
+- backend: `uvicorn backend:app --reload`
+
 ## Roadmap
 
 - [ ] UI
