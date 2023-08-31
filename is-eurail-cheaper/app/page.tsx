@@ -7,7 +7,7 @@ import MapView from './mapview'
 export default function Home() {
   return (
       <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">
-        <MapView latitude={0} longitude={0} />
+        <MapView latitude={40} longitude={10} />
       </Wrapper>
   )
 }
