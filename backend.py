@@ -1,12 +1,29 @@
-from fastapi import FastAPI
+from pydantic import BaseModel
+import logging
+from fastapi import FastAPI, Request, status, Form
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from typing import Annotated
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000"
+]
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.post("/getPrice")
-async def search():
-    ...
+
+
+@app.post("/api/getPrice")
+async def search(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
+    print(fromCity, toCity)
+    return {"price": "10"}

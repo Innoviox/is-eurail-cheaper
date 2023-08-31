@@ -7,17 +7,30 @@ export default function TripView() {
     let [cities, setCities] = useState([]);
 
     async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
-        const formData = new FormData(event.currentTarget);
-        console.log("onsearch", Object.fromEntries(formData).city);
-        setCities(cities.concat(Object.fromEntries(formData).city));
-        const response = await fetch('/api/getPrice', {
-            method: 'POST',
-            body: formData,
-        })
+        let formData = new FormData(event.currentTarget);
+        let fromCity = cities[cities.length - 1];
+        let toCity = formData.get("toCity");
 
-        // Handle response if necessary
-        const data = await response.json()
-        // ...
+        setCities(cities.concat(toCity));
+
+        if (fromCity !== undefined) {
+            // let body = {'fromCity': fromCity, 'toCity': toCity};
+            // console.log(JSON.stringify(body));
+            formData.append("fromCity", fromCity);
+
+            const response = await fetch('http://127.0.0.1:8000/api/getPrice', {
+                method: 'POST',
+                // mode: 'no-cors',
+                body: formData,
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.log("response not ok")
+            }
+        }
     }
 
     return (

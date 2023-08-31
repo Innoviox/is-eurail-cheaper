@@ -15,3 +15,9 @@
 - [ ] Backend
   - [ ] access list of train stations
   - [ ] access list
+
+- [ ] features
+  - [ ] currency conversion
+  - [ ] flixbus
+  - [ ] 
+

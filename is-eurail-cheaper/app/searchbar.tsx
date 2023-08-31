@@ -12,7 +12,7 @@ export default function SearchBar({onSearchSubmit}) {
     return (
         <form onSubmit={onSubmit}>
             <div className="control">
-                <input className="input" type="text" name="city" placeholder="Next city..." />
+                <input className="input" type="text" name="toCity" placeholder="Next city..." />
             </div>
         </form>
     );
