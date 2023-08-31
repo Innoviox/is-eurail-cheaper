@@ -7,7 +7,7 @@ export default function TripView() {
         <div>
             <SearchBar />
             <div>
-                <table>
+                <table className="table">
                     <thead>
                         <tr>
                             <th>City</th>
