@@ -8,20 +8,33 @@ export default function TripView() {
             <SearchBar />
             <div>
                 <table>
-                    <tr>
-                        <th>City</th>
-                        <th>Price</th>
-                        <th>Eurail Extras</th>
-                    </tr>
-                    {cities.map(city => {
-                        return (
-                            <tr key={city}>
-                                <td>{city}</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                        );
-                    })}
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>Price</th>
+                            <th>Eurail Extras</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {cities.map(city => {
+                            return (
+                                <tr key={city}>
+                                    <td>{city}</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tfoot>
                 </table>
 
             </div>
