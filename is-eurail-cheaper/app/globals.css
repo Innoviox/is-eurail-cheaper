@@ -25,3 +25,15 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+#map {
+  flex: 7;
+}
+
+#trip {
+  flex: 3;
+}
+
+#container {
+  display: flex;
+}
