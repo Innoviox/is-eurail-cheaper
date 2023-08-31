@@ -4,7 +4,7 @@ import { useState } from "react";
 import SearchBar from './searchbar';
 
 export default function TripView() {
-    let [cities, setCities] = useState(["Toulouse", "Lyon"]);
+    let [cities, setCities] = useState([]);
 
     async function onSearch(event: FormEvent<HTMLFormElement>) {
         const formData = new FormData(event.currentTarget);
