@@ -28,10 +28,7 @@ export default function TripView() {
 
             if (response.ok) {
                 let data = await response.json();
-                // data = JSON.parse(data);
-                // console.log(data.price);
-                // console.log(JSON.parse(data));
-                setPrices(prices.concat(parseInt(data.price)));
+                setPrices(prices.concat(parseInt(data.price))); // todo clean
             } else {
                 console.log("response not ok")
             }
