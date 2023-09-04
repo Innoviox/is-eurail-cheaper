@@ -2,12 +2,16 @@ import React, {FormEvent} from "react";
 import { useState } from "react";
 
 import SearchBar from './searchbar';
+import search from './interrail/stations.js';
+import journeys from './interrail/journeys.js';
 
 export default function TripView() {
     let [cities, setCities] = useState([]);
     let [prices, setPrices] = useState([]);
 
     async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
+        search('Ljubl', { results: 1 });
+
         let formData = new FormData(event.currentTarget);
         let fromCity = cities[cities.length - 1];
         let toCity = formData.get("toCity");

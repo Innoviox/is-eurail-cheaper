@@ -19,6 +19,7 @@
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "google-map-react": "^2.2.1",
+    "interrail": "^3.0.4",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "react": "18.2.0",
@@ -28,6 +29,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/google.maps": "^3.54.0"
+    "@types/google.maps": "^3.54.0",
+    "@types/luxon": "^3.3.2"
   }
 }
