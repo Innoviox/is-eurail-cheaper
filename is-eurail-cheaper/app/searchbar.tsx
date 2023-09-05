@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import { FormEvent } from 'react'
+import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 
 export default function SearchBar({onSearchSubmit}) {
     let [stations, setStations] = useState([]);
@@ -8,10 +7,10 @@ export default function SearchBar({onSearchSubmit}) {
         event.preventDefault();
         console.log("onsubmit");
 
-        await onSearchSubmit(event);
+        await onSearchSubmit(new FormData(event.currentTarget));
     }
 
-    async function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    async function handleChange(event: ChangeEvent<HTMLInputElement>) {
         // console.log(event.target.value);
         const response = await fetch(`http://127.0.0.1:8000/api/stations?query=${event.target.value}`, {
            method: 'GET'
@@ -19,7 +18,6 @@ export default function SearchBar({onSearchSubmit}) {
 
         if (response.ok) {
             let data = await response.json();
-            console.log(data);
             let newStations = data.stations.map(i => i.station);
             setStations(newStations);
         } else {
@@ -27,10 +25,16 @@ export default function SearchBar({onSearchSubmit}) {
         }
     }
 
+    async function onDropdownClick(event: MouseEvent<HTMLAnchorElement>) {
+        let formData = new FormData();
+        formData.append("toCity", event.target.getAttribute("data-index"));
+        await onSearchSubmit(formData);
+    }
+
     return (
         <div id="searchbar">
             <form onSubmit={onSubmit}>
-                <div className="dropdown is-active">
+                <div id="searchDropdown" className="dropdown is-active">
                     <div className="dropdown-trigger">
                         <div className="control">
                             <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} />
@@ -40,8 +44,8 @@ export default function SearchBar({onSearchSubmit}) {
                         <div className="dropdown-content">
                             {stations.map(station => {
                                 return (
-                                    <a href="#" className="dropdown-item" key={station}>
-                                        <span>{station}</span>
+                                    <a onClick={onDropdownClick} className="dropdown-item" key={station} data-index={station}>
+                                        {station}
                                     </a>
                                 )
                             })}

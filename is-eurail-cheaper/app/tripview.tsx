@@ -7,9 +7,8 @@ export default function TripView() {
     let [cities, setCities] = useState([]);
     let [prices, setPrices] = useState([]);
 
-    async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
-
-        let formData = new FormData(event.currentTarget);
+    async function onSearchSubmit(formData: FormData) {
+        console.log(Object.entries(""));
         let fromCity = cities[cities.length - 1];
         let toCity = formData.get("toCity");
 
@@ -41,6 +40,7 @@ export default function TripView() {
     return (
         <div>
             <SearchBar onSearchSubmit={onSearchSubmit}/>
+            <br/><br/><br/><br/>
             <div>
                 <table className="table">
                     <thead>
