@@ -10,6 +10,12 @@ export default function TripView() {
     let [prices, setPrices] = useState([]);
     let [eurail, setEurail] = useState([]);
 
+    function extractEurailPrice(eurail: Array<any>) {
+        // for now just use cheapest
+        // console.log(eurail);
+        return Math.min(...eurail.map(i => i.price));
+    }
+
     async function onSearchSubmit(formData: FormData) {
         let fromCityId = cities.size === 0 ? undefined : getLastItemInMap(cities)[1];
         let toCity = formData.get("toCity");
@@ -23,7 +29,7 @@ export default function TripView() {
 
         if (fromCityId !== undefined) {
             formData.append("fromCityId", fromCityId);
-            
+
             const response = await fetch('http://127.0.0.1:8000/api/price', {
                 method: 'POST',
                 body: formData,
@@ -32,7 +38,7 @@ export default function TripView() {
             if (response.ok) {
                 let data = await response.json();
                 setPrices(prices.concat(parseInt(data.price))); // todo clean
-                setEurail(eurail.concat(parseInt(data.eurail)));
+                setEurail(eurail.concat(extractEurailPrice(data.eurail_trips)));
             } else {
                 console.log("response not ok - price");
             }
