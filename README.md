@@ -21,3 +21,9 @@
   - [ ] flixbus
   - [ ] 
 
+# API exploration
+
+- https://api.timetable.eurail.com/v2/timetable/
+- https://api.timetable.eurail.com/v2/locations/
+- 
+- 

@@ -1,11 +1,10 @@
 from pydantic import BaseModel
-import logging
 from fastapi import FastAPI, Request, status, Form
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from typing import Annotated
+from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
-
+import requests
 
 app = FastAPI()
 
@@ -23,8 +22,22 @@ app.add_middleware(
 )
 
 
-
-@app.post("/api/getPrice")
+@app.post("/api/price")
 async def search(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
     print(fromCity, toCity)
     return {"price": "10"}
+
+@app.post("/api/route")
+async def getRoute(fromStation: Annotated[str, Form()], toStation: Annotated[str, Form()]):
+    ...
+
+@app.get("/api/stations")
+async def getStations(query: Union[str, None]):
+    if query is None:
+        return {"stations": []}
+
+    response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}")
+    stations = response.json()
+
+    return {"stations": stations}
+
