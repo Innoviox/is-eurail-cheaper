@@ -30,18 +30,18 @@ export default function TripView() {
         if (fromCityId !== undefined) {
             formData.append("fromCityId", fromCityId);
 
-            const response = await fetch('http://127.0.0.1:8000/api/price', {
+            fetch('http://127.0.0.1:8000/api/price', {
                 method: 'POST',
                 body: formData,
+            }).then(async response => {
+                if (response.ok) {
+                   let data = await response.json();
+                   setPrices(prices.concat(parseInt(data.price))); // todo clean
+                   setEurail(eurail.concat(extractEurailPrice(data.eurail_trips)));
+               } else {
+                   console.log("response not ok - price");
+               }
             });
-
-            if (response.ok) {
-                let data = await response.json();
-                setPrices(prices.concat(parseInt(data.price))); // todo clean
-                setEurail(eurail.concat(extractEurailPrice(data.eurail_trips)));
-            } else {
-                console.log("response not ok - price");
-            }
         }  else {
             setPrices(prices.concat("-"));
             setEurail(eurail.concat("-"));
