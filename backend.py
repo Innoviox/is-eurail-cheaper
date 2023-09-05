@@ -36,7 +36,7 @@ async def getStations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
 
-    response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}")
+    response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}&results=15")
     stations = response.json()
 
     return {"stations": stations}

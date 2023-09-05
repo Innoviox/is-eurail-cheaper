@@ -2,15 +2,12 @@ import React, {FormEvent} from "react";
 import { useState } from "react";
 
 import SearchBar from './searchbar';
-import search from './interrail/stations.js';
-import journeys from './interrail/journeys.js';
 
 export default function TripView() {
     let [cities, setCities] = useState([]);
     let [prices, setPrices] = useState([]);
 
     async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
-        search('Ljubl', { results: 1 });
 
         let formData = new FormData(event.currentTarget);
         let fromCity = cities[cities.length - 1];
@@ -25,7 +22,7 @@ export default function TripView() {
         if (fromCity !== undefined) {
             formData.append("fromCity", fromCity);
 
-            const response = await fetch('http://127.0.0.1:8000/api/getPrice', {
+            const response = await fetch('http://127.0.0.1:8000/api/price', {
                 method: 'POST',
                 body: formData,
             })
@@ -34,7 +31,7 @@ export default function TripView() {
                 let data = await response.json();
                 setPrices(prices.concat(parseInt(data.price))); // todo clean
             } else {
-                console.log("response not ok")
+                console.log("response not ok - price");
             }
         }  else {
             setPrices(prices.concat("-"));
