@@ -4,37 +4,46 @@ import { useState } from "react";
 import SearchBar from './searchbar';
 
 export default function TripView() {
-    let [cities, setCities] = useState([]);
+    const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
+
+    let [cities, setCities] = useState(new Map<string, string>);
     let [prices, setPrices] = useState([]);
+    let [eurail, setEurail] = useState([]);
 
     async function onSearchSubmit(formData: FormData) {
-        console.log(Object.entries(""));
-        let fromCity = cities[cities.length - 1];
+        let fromCityId = cities.size === 0 ? undefined : getLastItemInMap(cities)[1];
         let toCity = formData.get("toCity");
+        let toCityId = formData.get("toCityId");
 
-        if (toCity === fromCity) { // todo give message
+        if (toCityId === fromCityId) { // todo give message
             return;
         }
 
-        setCities(cities.concat(toCity));
+        setCities(cities.set(toCity, toCityId));
 
-        if (fromCity !== undefined) {
-            formData.append("fromCity", fromCity);
-
+        if (fromCityId !== undefined) {
+            formData.append("fromCityId", fromCityId);
+            
             const response = await fetch('http://127.0.0.1:8000/api/price', {
                 method: 'POST',
                 body: formData,
-            })
+            });
 
             if (response.ok) {
                 let data = await response.json();
                 setPrices(prices.concat(parseInt(data.price))); // todo clean
+                setEurail(eurail.concat(parseInt(data.eurail)));
             } else {
                 console.log("response not ok - price");
             }
         }  else {
             setPrices(prices.concat("-"));
+            setEurail(eurail.concat("-"));
         }
+    }
+
+    function sumArr(arr: Array<any>) {
+        return arr.slice(1).reduce((a, b) => a + b, 0);
     }
 
     return (
@@ -52,26 +61,25 @@ export default function TripView() {
                     </thead>
 
                     <tbody>
-                        {cities.map((city, idx) => {
+                        {Array.from(cities.keys(), ((city, idx) => {
                             return (
                                 <tr key={city}>
                                     <td>{city}</td>
                                     <td>{prices[idx]}</td>
-                                    <td>0</td>
+                                    <td>{eurail[idx]}</td>
                                 </tr>
                             );
-                        })}
+                        }))}
                     </tbody>
 
                     <tfoot>
                         <tr>
                             <td>Total</td>
-                            <td>{prices.slice(1).reduce((a, b) => a + b, 0)}</td>
-                            <td>0</td>
+                            <td>{sumArr(prices)}</td>
+                            <td>{sumArr(eurail)}</td>
                         </tr>
                     </tfoot>
                 </table>
-
             </div>
         </div>
     )

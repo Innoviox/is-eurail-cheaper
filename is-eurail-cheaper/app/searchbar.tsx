@@ -2,12 +2,18 @@ import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 
 export default function SearchBar({onSearchSubmit}) {
     let [stations, setStations] = useState([]);
+    let [stationIds, setStationIds] = useState(new Map<string, string>());
+
+    async function prepareForSubmit(formData: FormData) {
+        formData.append("toCityId", stationIds.get(formData.get("toCity")));
+        await onSearchSubmit(formData);
+    }
 
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         console.log("onsubmit");
 
-        await onSearchSubmit(new FormData(event.currentTarget));
+        await prepareForSubmit(new FormData(event.currentTarget));
     }
 
     async function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -18,8 +24,16 @@ export default function SearchBar({onSearchSubmit}) {
 
         if (response.ok) {
             let data = await response.json();
-            let newStations = data.stations.map(i => i.station);
+            console.log(data);
+
+            let newStations: string[] = [];
+            let newSIds = stationIds;
+            data.stations.forEach(i => {
+                newStations.push(i.station);
+                newSIds.set(i.station, i.id);
+            })
             setStations(newStations);
+            setStationIds(newSIds);
         } else {
             console.log("response not ok - stations");
         }
@@ -28,7 +42,7 @@ export default function SearchBar({onSearchSubmit}) {
     async function onDropdownClick(event: MouseEvent<HTMLAnchorElement>) {
         let formData = new FormData();
         formData.append("toCity", event.target.getAttribute("data-index"));
-        await onSearchSubmit(formData);
+        await prepareForSubmit(formData);
     }
 
     return (
@@ -42,7 +56,7 @@ export default function SearchBar({onSearchSubmit}) {
                     </div>
                     <div className="dropdown-menu" id="dropdown-menu3" role="menu">
                         <div className="dropdown-content">
-                            {stations.map(station => {
+                            {stations.map((station, idx) => {
                                 return (
                                     <a onClick={onDropdownClick} className="dropdown-item" key={station} data-index={station}>
                                         {station}

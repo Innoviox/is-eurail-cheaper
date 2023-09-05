@@ -23,13 +23,13 @@ app.add_middleware(
 
 
 @app.post("/api/price")
-async def search(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
-    print(fromCity, toCity)
+async def search(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
+    # timestamp format: 2023-09-27T12%3A00%3A00.000Z
+    # todo currency
+    print(fromCityId, toCityId)
+    #eurail_response = f"https://api.timetable.eurail.com/v2/timetable?origin={fromCityId}&destination={toCityId}&timestamp={timeStamp}&tripsNumber=5&currency=USD"
+    #print(eurail_response)
     return {"price": "10"}
-
-@app.post("/api/route")
-async def getRoute(fromStation: Annotated[str, Form()], toStation: Annotated[str, Form()]):
-    ...
 
 @app.get("/api/stations")
 async def getStations(query: Union[str, None]):
