@@ -31,7 +31,7 @@ def get_length(trip):
     return (end - start).total_seconds()
     
 
-@app.post("/api/price")
+@app.post("/api/price/eurail")
 async def search(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
     # get eurail price
     # todo currency

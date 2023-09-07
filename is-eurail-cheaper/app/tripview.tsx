@@ -30,7 +30,7 @@ export default function TripView() {
         if (fromCityId !== undefined) {
             formData.append("fromCityId", fromCityId);
 
-            fetch('http://127.0.0.1:8000/api/price', {
+            fetch('http://127.0.0.1:8000/api/price/eurail', {
                 method: 'POST',
                 body: formData,
             }).then(async response => {
