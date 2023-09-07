@@ -32,7 +32,7 @@ def get_length(trip):
     
 
 @app.post("/api/price/eurail")
-async def search(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
+async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
     # get eurail price
     # todo currency
     timestamp = dt.datetime.now().strftime(DT_FORMAT + ".000Z")
@@ -42,10 +42,14 @@ async def search(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Fo
     print("found", fromCityId, toCityId, trips)
 
     # todo get db price
-    return {"price": "10", "eurail_trips": trips}
+    return {"eurail_trips": trips}
+
+@app.post("/api/price/db")
+async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
+    
 
 @app.get("/api/stations")
-async def getStations(query: Union[str, None]):
+async def get_stations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
 
