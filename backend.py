@@ -6,8 +6,15 @@ from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import datetime as dt
+from pyhafas import HafasClient
+from pyhafas.profile import DBProfile
+from pyhafas.types.fptf import Journey, Leg
+
+hafas_client = HafasClient(DBProfile())
 
 app = FastAPI()
+
+
 
 # workaround for single-computer hosting
 origins = [
@@ -29,7 +36,20 @@ def get_length(trip):
     end = dt.datetime.strptime(trip['arrival'], DT_FORMAT)
 
     return (end - start).total_seconds()
-    
+##
+##def leg_to_json(l: Leg):
+##    return {
+##        "orgiin": 
+##    }
+##        
+##
+##def journey_to_json(j: Journey):
+##    return {
+##        "date": j.date.strftime(DT_FORMAT),
+##        "duration": j.duration.total_seconds(),
+##        "legs": [leg_to_json(l) for l in j.legs]
+##    }
+##    
 
 @app.post("/api/price/eurail")
 async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
@@ -45,7 +65,10 @@ async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[s
     return {"eurail_trips": trips}
 
 @app.post("/api/price/db")
-async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
+async def db_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
+    print(fromCityId, toCityId)
+    journeys = hafas_client.journeys('8011167', '8000261', dt.datetime.now())
+    return {"journeys": journeys}
     
 
 @app.get("/api/stations")
