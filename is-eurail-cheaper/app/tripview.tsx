@@ -5,16 +5,13 @@ import SearchBar from './searchbar';
 
 // todo currency, class
 const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
-    '4/1': 211,
-    '5/1': 243,
-    '7/1': 288,
-    '10/1': 344,
-    '15/1': 380,
-    '22/1': 445,
-    '0/1': 576,
-    '15/2': 424,
-    '0/2': 627,
-    '0/3': 775
+    4: 211,
+    5: 243,
+    7: 288,
+    10: 344,
+    15: 380,
+    22: 445,
+    31: 576, // todo multimonth trips
 };
 
 export default function TripView() {
