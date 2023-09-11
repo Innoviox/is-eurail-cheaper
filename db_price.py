@@ -1,7 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def extract_data(result):
     dauer = result.find_element(By.CLASS_NAME, "dauer-umstieg__dauer")
@@ -13,9 +15,15 @@ def get_db_price(from_, to_, date): # todo datetime input
     driver = webdriver.Chrome()
     driver.get("https://www.bahn.de/angebot")
 
-    # todo cookies popup?
+    input() # wait for load?
 
-    # driver.implicitly_wait(1) # todo wait until element shows up
+    driver.execute_script("""
+    var e = document.children[0].children[1].children[0];
+    if (e.style['height'] === '100%') {
+        e.remove();
+    }
+    """)
+
     input()
     von = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input")
     nach = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input")
@@ -40,6 +48,8 @@ def get_db_price(from_, to_, date): # todo datetime input
     minus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]")
     plus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]")
 
+    # this might be right idrc
+    # todo account for date
     current_hour = datetime.now().hour
     if current_hour < 9:
         for i in range(9 - current_hour):
@@ -63,3 +73,5 @@ def get_db_price(from_, to_, date): # todo datetime input
     loesungen = driver.find_elements(By.CLASS_NAME, "verbindung-list__result-item")
 
     return [extract_data(loesung) for loesung in loesungen]
+
+print(get_db_price("Munich", "Hamburg", datetime.now() + timedelta(weeks=4)))
