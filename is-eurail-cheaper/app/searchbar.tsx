@@ -3,9 +3,11 @@ import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 export default function SearchBar({onSearchSubmit}) {
     let [stations, setStations] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, string>());
+    let [showDropdown, setShowDropdown] = useState(false);
 
     async function prepareForSubmit(formData: FormData) {
         formData.append("toCityId", stationIds.get(formData.get("toCity")));
+        setShowDropdown(false);
         await onSearchSubmit(formData);
     }
 
@@ -34,6 +36,7 @@ export default function SearchBar({onSearchSubmit}) {
             })
             setStations(newStations);
             setStationIds(newSIds);
+            setShowDropdown(true);
         } else {
             console.log("response not ok - stations");
         }
@@ -48,7 +51,7 @@ export default function SearchBar({onSearchSubmit}) {
     return (
         <div id="searchbar">
             <form onSubmit={onSubmit}>
-                <div id="searchDropdown" className="dropdown is-active">
+                <div id="searchDropdown" className={"dropdown" + (showDropdown ? " is-active" : "")}>
                     <div className="dropdown-trigger">
                         <div className="control">
                             <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} />

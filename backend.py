@@ -6,11 +6,7 @@ from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import datetime as dt
-from pyhafas import HafasClient
-from pyhafas.profile import DBProfile
-from pyhafas.types.fptf import Journey, Leg
-
-hafas_client = HafasClient(DBProfile())
+from db_price import get_db_price
 
 app = FastAPI()
 
@@ -36,20 +32,6 @@ def get_length(trip):
     end = dt.datetime.strptime(trip['arrival'], DT_FORMAT)
 
     return (end - start).total_seconds()
-##
-##def leg_to_json(l: Leg):
-##    return {
-##        "orgiin": 
-##    }
-##        
-##
-##def journey_to_json(j: Journey):
-##    return {
-##        "date": j.date.strftime(DT_FORMAT),
-##        "duration": j.duration.total_seconds(),
-##        "legs": [leg_to_json(l) for l in j.legs]
-##    }
-##    
 
 @app.post("/api/price/eurail")
 async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
@@ -59,15 +41,14 @@ async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[s
     url = f"https://api.timetable.eurail.com/v2/timetable?origin={fromCityId}&destination={toCityId}&timestamp={timestamp}&tripsNumber=5&currency=USD"
     trips = requests.get(url).json()
     trips = [{"price": i['price'], "length": get_length(i)} for i in trips]
-    print("found", fromCityId, toCityId, trips)
+    # print("found", fromCityId, toCityId, trips)
 
-    # todo get db price
     return {"eurail_trips": trips}
 
 @app.post("/api/price/db")
 async def db_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
+    # todo date
     print(fromCityId, toCityId)
-    journeys = hafas_client.journeys('8011167', '8000261', dt.datetime.now())
     return {"journeys": journeys}
     
 

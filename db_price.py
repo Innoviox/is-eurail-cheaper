@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 import time
 from datetime import datetime, timedelta
@@ -11,42 +13,59 @@ def extract_data(result):
 
     return {"duration": dauer.text, "price": preis.text}
 
+def wait_for(driver, xpath, max_time=10, by=By.XPATH, criterion=EC.element_to_be_clickable):
+    wait = WebDriverWait(driver, max_time)
+    element = wait.until(criterion((by, xpath)))
+    return element
+
+VON = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input"
+NACH = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input"
+HINFAHRT = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/h2"
+DATUM = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div/label/input"
+MINUS = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]"
+PLUS = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]"
+UEBERNEHMEN = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[3]/div/button"
+SUCHEN = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/button[2]/span/span"
+
 def get_db_price(from_, to_, date): # todo datetime input
     driver = webdriver.Chrome()
     driver.get("https://www.bahn.de/angebot")
 
-    input() # wait for load?
+    driver.implicitly_wait(2)
 
     driver.execute_script("""
     var e = document.children[0].children[1].children[0];
-    if (e.style['height'] === '100%') {
+    if (e !== undefined && e.style['height'] === '100%') {
         e.remove();
     }
     """)
 
-    input()
-    von = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input")
-    nach = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input")
+    driver.implicitly_wait(1)
+    
+    von = wait_for(driver, VON)
+    nach = driver.find_element(By.XPATH, NACH)
 
     von.click()
     von.send_keys(f"{from_}\t")
     nach.send_keys(f"{to_}\t")
 
-    hinfahrt = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/h2")
+    driver.implicitly_wait(1) # give some buffer to load stations
+
+    hinfahrt = driver.find_element(By.XPATH, HINFAHRT)
     hinfahrt.click()
 
-    input() # todo wait until popup
+    driver.implicitly_wait(1)
 
     # todo click date & type in
-    datum = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div/label/input")
+    datum = wait_for(driver, DATUM, criterion=EC.presence_of_element_located)
     datum.click()
-    
-    input() # todo wait
-    
-    datum.send_keys(date.strftime("%d.%m.%Y"))
+    time.sleep(0.1)
+    for i in date.strftime("%d%m%Y\n"):
+        datum.send_keys(i)
+        time.sleep(0.1)
 
-    minus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]")
-    plus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]")
+    minus = driver.find_element(By.XPATH, MINUS)
+    plus = driver.find_element(By.XPATH, PLUS)
 
     # this might be right idrc
     # todo account for date
@@ -54,24 +73,20 @@ def get_db_price(from_, to_, date): # todo datetime input
     if current_hour < 9:
         for i in range(9 - current_hour):
             plus.click()
-            driver.implicitly_wait(0.1)
+            time.sleep(0.1)
     else:
         for i in range(current_hour - 9):
             minus.click()
-            driver.implicitly_wait(0.1)
+            time.sleep(0.1)
 
-    uebernehmen = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[3]/div/button")
+    uebernehmen = driver.find_element(By.XPATH, UEBERNEHMEN)
     uebernehmen.click()
 
-    input() # todo wait until stations are loaded
-
-    suchen = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/button[2]/span/span")
+    suchen = wait_for(driver, SUCHEN)
     suchen.click()
 
-    input() # todo load
+    loesungen = wait_for(driver, "reiseloesung-list-page__verbindung-list", by=By.CLASS_NAME, criterion=EC.presence_of_element_located)
+    return [extract_data(loesung) for loesung in loesungen.find_elements(By.CLASS_NAME, "verbindung-list__result-item")]
 
-    loesungen = driver.find_elements(By.CLASS_NAME, "verbindung-list__result-item")
-
-    return [extract_data(loesung) for loesung in loesungen]
-
-print(get_db_price("Munich", "Hamburg", datetime.now() + timedelta(weeks=4)))
+if __name__ == "__main__":
+    print(get_db_price("Munich", "Hamburg", datetime.now() + timedelta(weeks=4)))
