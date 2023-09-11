@@ -18,6 +18,11 @@ def wait_for(driver, xpath, max_time=10, by=By.XPATH, criterion=EC.element_to_be
     element = wait.until(criterion((by, xpath)))
     return element
 
+def slow_type(el, txt, dt=0.1):
+    for i in txt:
+        el.send_keys(i)
+        time.sleep(dt)
+
 VON = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input"
 NACH = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input"
 HINFAHRT = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/h2"
@@ -31,7 +36,7 @@ def get_db_price(from_, to_, date): # todo datetime input
     driver = webdriver.Chrome()
     driver.get("https://www.bahn.de/angebot")
 
-    driver.implicitly_wait(2)
+    time.sleep(2)
 
     driver.execute_script("""
     var e = document.children[0].children[1].children[0];
@@ -40,29 +45,29 @@ def get_db_price(from_, to_, date): # todo datetime input
     }
     """)
 
-    driver.implicitly_wait(1)
+    time.sleep(1)
     
     von = wait_for(driver, VON)
     nach = driver.find_element(By.XPATH, NACH)
 
     von.click()
-    von.send_keys(f"{from_}\t")
-    nach.send_keys(f"{to_}\t")
+    slow_type(von, f"{from_}")
+    time.sleep(1)
 
-    driver.implicitly_wait(1) # give some buffer to load stations
+    nach.click()
+    slow_type(nach, f"{to_}")
+    time.sleep(1) # give some buffer to load stations
 
     hinfahrt = driver.find_element(By.XPATH, HINFAHRT)
     hinfahrt.click()
 
-    driver.implicitly_wait(1)
+    time.sleep(1)
 
     # todo click date & type in
     datum = wait_for(driver, DATUM, criterion=EC.presence_of_element_located)
     datum.click()
     time.sleep(0.1)
-    for i in date.strftime("%d%m%Y\n"):
-        datum.send_keys(i)
-        time.sleep(0.1)
+    slow_type(datum, date.strftime("%d%m%Y\n"))
 
     minus = driver.find_element(By.XPATH, MINUS)
     plus = driver.find_element(By.XPATH, PLUS)

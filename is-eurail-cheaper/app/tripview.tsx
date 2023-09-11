@@ -28,7 +28,7 @@ export default function TripView() {
     }
 
     async function onSearchSubmit(formData: FormData) {
-        let [fromCity, fromCityId] = cities.size === 0 ? undefined : getLastItemInMap(cities);
+        let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
         let toCity = formData.get("toCity");
         let toCityId = formData.get("toCityId");
 
@@ -42,13 +42,20 @@ export default function TripView() {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
+            let startLength = prices.length; // update this idx when it's done
+
             fetch('http://127.0.0.1:8000/api/price/eurail', {
                 method: 'POST',
                 body: formData,
             }).then(async response => {
                 if (response.ok) {
                    let data = await response.json();
-                   setEurail(eurail.concat(extractPrice(data.journeys)));
+                   let price = extractPrice(data.journeys);
+                   let newEurail = [...eurail];
+                   newEurail[startLength] = price;
+                   setEurail(newEurail);
+
+                   // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
                } else {
                    console.log("response not ok - price eurail");
                }
@@ -60,12 +67,18 @@ export default function TripView() {
             }).then(async response => {
                 if (response.ok) {
                     let data = await response.json();
-                    console.log(data);
-                    setPrices(prices.concat(extractPrice(data.journeys))); //parseInt(data.price))); // todo clean
+                    // console.log(data);
+                    let price = extractPrice(data.journeys);
+                    let newPrices = [...prices];
+                    newPrices[startLength] = price;
+                    setPrices(newPrices);
                 } else {
                     console.log("response not ok - price db");
                 }
             });
+
+            setPrices(prices.concat("+"));
+            setEurail(eurail.concat("+"));
         }  else {
             setPrices(prices.concat("-"));
             setEurail(eurail.concat("-"));
@@ -95,8 +108,12 @@ export default function TripView() {
                             return (
                                 <tr key={city}>
                                     <td>{city}</td>
-                                    <td>{prices[idx]}</td>
-                                    <td>{eurail[idx]}</td>
+                                    <td>{prices[idx] === '+' ?
+                                        <button className="button is-loading" disabled>Loading</button> :
+                                        prices[idx]}</td>
+                                    <td>{eurail[idx] === '+' ?
+                                        <button className="button is-loading" disabled>Loading</button> :
+                                        eurail[idx]}</td>
                                 </tr>
                             );
                         }))}

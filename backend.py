@@ -40,16 +40,17 @@ async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[s
     timestamp = dt.datetime.now().strftime(DT_FORMAT + ".000Z")
     url = f"https://api.timetable.eurail.com/v2/timetable?origin={fromCityId}&destination={toCityId}&timestamp={timestamp}&tripsNumber=5&currency=USD"
     trips = requests.get(url).json()
-    trips = [{"price": i['price'], "length": get_length(i)} for i in trips]
+    trips = [{"price": i.get('price', 0), "length": get_length(i)} for i in trips]
     # print("found", fromCityId, toCityId, trips)
 
     return {"journeys": trips}
 
 @app.post("/api/price/db")
-async def db_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
+async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
     # todo date
-    print(fromCityId, toCityId)
-    return {"journeys": journeys}
+    print(fromCity, toCity)
+    date = dt.datetime.now() + dt.timedelta(weeks=4)
+    return {"journeys": get_db_price(fromCity, toCity, date)}
     
 
 @app.get("/api/stations")
