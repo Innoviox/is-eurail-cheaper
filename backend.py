@@ -43,7 +43,7 @@ async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[s
     trips = [{"price": i['price'], "length": get_length(i)} for i in trips]
     # print("found", fromCityId, toCityId, trips)
 
-    return {"eurail_trips": trips}
+    return {"journeys": trips}
 
 @app.post("/api/price/db")
 async def db_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
