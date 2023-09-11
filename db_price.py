@@ -9,7 +9,7 @@ def extract_data(result):
 
     return {"duration": dauer.text, "price": preis.text}
 
-def get_db_price(from_, to_): # todo datetime input
+def get_db_price(from_, to_, date): # todo datetime input
     driver = webdriver.Chrome()
     driver.get("https://www.bahn.de/angebot")
 
@@ -30,15 +30,12 @@ def get_db_price(from_, to_): # todo datetime input
     input() # todo wait until popup
 
     # todo click date & type in
-    monat = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/button[2]/span/span[1]")
-    monat.click() # 1 month out
-
-    input() # today wait until month?
-
-    tag = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[2]/div/div/div[14]/div/div[17]/span")
-    tag.click()
-
-    input() # todo wait until clicked
+    datum = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div/label/input")
+    datum.click()
+    
+    input() # todo wait
+    
+    datum.send_keys(date.strftime("%d.%m.%Y"))
 
     minus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]")
     plus = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]")
@@ -47,11 +44,11 @@ def get_db_price(from_, to_): # todo datetime input
     if current_hour < 9:
         for i in range(9 - current_hour):
             plus.click()
-            time.sleep(0.1)
+            driver.implicitly_wait(0.1)
     else:
         for i in range(current_hour - 9):
             minus.click()
-            time.sleep(0.1) # todo implicit wait
+            driver.implicitly_wait(0.1)
 
     uebernehmen = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[3]/div/button")
     uebernehmen.click()
@@ -61,8 +58,7 @@ def get_db_price(from_, to_): # todo datetime input
     suchen = driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/button[2]/span/span")
     suchen.click()
 
-    input()
-
+    input() # todo load
 
     loesungen = driver.find_elements(By.CLASS_NAME, "verbindung-list__result-item")
 
