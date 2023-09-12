@@ -6,7 +6,7 @@ from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
 import datetime as dt
 
-from price import EurailEngine
+from price import EurailEngine, DBEngine
 
 app = FastAPI()
 
@@ -24,6 +24,7 @@ app.add_middleware(
 )
 
 eurail = EurailEngine()
+db = DBEngine()
 
 @app.post("/api/price/eurail")
 async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
@@ -32,9 +33,9 @@ async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[s
 @app.post("/api/price/db")
 async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
     # todo date
-    print(fromCity, toCity)
+    # print(fromCity, toCity)
     date = dt.datetime.now() + dt.timedelta(weeks=4)
-    return {"journeys": get_db_price(fromCity, toCity, date)}
+    return {"journeys": db.get_journeys(fromCity, toCity, date)}
     
 
 @app.get("/api/stations")
