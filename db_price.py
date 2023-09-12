@@ -11,7 +11,7 @@ def extract_data(result):
     dauer = result.find_element(By.CLASS_NAME, "dauer-umstieg__dauer")
     preis = result.find_element(By.CLASS_NAME, "reise-preis__preis")
 
-    return {"duration": dauer.text, "price": preis.text}
+    return {"duration": dauer.text, "price": preis.text.strip(" €")} # todo currency
 
 def wait_for(driver, xpath, max_time=10, by=By.XPATH, criterion=EC.element_to_be_clickable):
     wait = WebDriverWait(driver, max_time)

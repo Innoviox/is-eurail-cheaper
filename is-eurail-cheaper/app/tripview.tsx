@@ -24,7 +24,7 @@ export default function TripView() {
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
         // console.log(eurail);
-        return Math.min(...trips.map(i => i.price));
+        return Math.min(...trips.map(i => parseInt(i.price)));
     }
 
     async function onSearchSubmit(formData: FormData) {
@@ -67,7 +67,7 @@ export default function TripView() {
             }).then(async response => {
                 if (response.ok) {
                     let data = await response.json();
-                    // console.log(data);
+                    console.log(data);
                     let price = extractPrice(data.journeys);
                     let newPrices = [...prices];
                     newPrices[startLength] = price;
@@ -131,3 +131,21 @@ export default function TripView() {
         </div>
     )
 }
+
+// fetch("https://global.api.flixbus.com/search/service/v4/search?from_city_id=490d29d8-7151-4e05-86df-68fba4f000be&to_city_id=30e3dcd2-f9a7-4900-8f39-7a77c261904e&departure_date=12.09.2023&products=%7B%22adult%22%3A1%7D&currency=USD&locale=en_US&search_by=cities&include_after_midnight_rides=1", {
+//     "headers": {
+//         "accept": "*/*",
+//         "accept-language": "en-US,en;q=0.9",
+//         "sec-ch-ua": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"",
+//         "sec-ch-ua-mobile": "?0",
+//         "sec-ch-ua-platform": "\"macOS\"",
+//         "sec-fetch-dest": "empty",
+//         "sec-fetch-mode": "cors",
+//         "sec-fetch-site": "same-site",
+//         "x-feature-flags": "{\"ps_illuminati_offeron_c1\":4,\"ps_illuminati_offeron_c2\":9,\"webc_fxp_1261\":0,\"webc_fxp_1384\":2,\"webc_fxp_1292\":2,\"webc_fxp_1453\":0}",
+//         "Referer": "https://shop.flixbus.com/",
+//         "Referrer-Policy": "strict-origin-when-cross-origin"
+//     },
+//     "body": null,
+//     "method": "GET"
+// });

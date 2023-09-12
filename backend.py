@@ -4,13 +4,11 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
-import requests
 import datetime as dt
-from db_price import get_db_price
+
+from price import EurailEngine
 
 app = FastAPI()
-
-
 
 # workaround for single-computer hosting
 origins = [
@@ -25,25 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
-
-def get_length(trip):
-    start = dt.datetime.strptime(trip['departure'], DT_FORMAT)
-    end = dt.datetime.strptime(trip['arrival'], DT_FORMAT)
-
-    return (end - start).total_seconds()
+eurail = EurailEngine()
 
 @app.post("/api/price/eurail")
 async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
-    # get eurail price
-    # todo currency
-    timestamp = dt.datetime.now().strftime(DT_FORMAT + ".000Z")
-    url = f"https://api.timetable.eurail.com/v2/timetable?origin={fromCityId}&destination={toCityId}&timestamp={timestamp}&tripsNumber=5&currency=USD"
-    trips = requests.get(url).json()
-    trips = [{"price": i.get('price', 0), "length": get_length(i)} for i in trips]
-    # print("found", fromCityId, toCityId, trips)
-
-    return {"journeys": trips}
+    return {"journeys": eurail.get_journeys(fromCityId, toCityId, dt.datetime.now())}
 
 @app.post("/api/price/db")
 async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
