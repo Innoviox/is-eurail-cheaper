@@ -44,47 +44,44 @@ export default function TripView() {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = prices.length; // update this idx when it's done
+            let startLength = prices.length - 1; // update this idx when it's done
 
-            // fetch('http://127.0.0.1:8000/api/price/eurail', {
-            //     method: 'POST',
-            //     body: formData,
-            // }).then(async response => {
-            //     if (response.ok) {
-            //        let data = await response.json();
-            //        let price = extractPrice(data.journeys);
-            //        let newEurail = [...eurail];
-            //        newEurail[startLength] = price;
-            //        setEurail(newEurail);
-            //
-            //        // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
-            //    } else {
-            //        console.log("response not ok - price eurail");
-            //    }
-            // });
-            //
-            // fetch('http://127.0.0.1:8000/api/price/db', {
-            //     method: 'POST',
-            //     body: formData,
-            // }).then(async response => {
-            //     if (response.ok) {
-            //         let data = await response.json();
-            //         console.log(data);
-            //         let price = extractPrice(data.journeys);
-            //         let newPrices = [...prices];
-            //         newPrices[startLength] = price;
-            //         setPrices(newPrices);
-            //     } else {
-            //         console.log("response not ok - price db");
-            //     }
-            // });
+            fetch('http://127.0.0.1:8000/api/price/eurail', {
+                method: 'POST',
+                body: formData,
+            }).then(async response => {
+                if (response.ok) {
+                   let data = await response.json();
+                   let price = extractPrice(data.journeys);
+                   let newEurail = [...eurail];
+                   newEurail[startLength] = price;
+                   setEurail(newEurail);
 
-            setPrices(prices.concat("+"));
-            setEurail(eurail.concat("+"));
-        }  else {
-            setPrices(prices.concat("-"));
-            setEurail(eurail.concat("-"));
+                   // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
+               } else {
+                   console.log("response not ok - price eurail");
+               }
+            });
+
+            fetch('http://127.0.0.1:8000/api/price/db', {
+                method: 'POST',
+                body: formData,
+            }).then(async response => {
+                if (response.ok) {
+                    let data = await response.json();
+                    console.log(data);
+                    let price = extractPrice(data.journeys);
+                    let newPrices = [...prices];
+                    newPrices[startLength] = price;
+                    setPrices(newPrices);
+                } else {
+                    console.log("response not ok - price db");
+                }
+            });
         }
+
+        setPrices(prices.concat("+"));
+        setEurail(eurail.concat("+"));
     }
 
     function sumArr(arr: Array<any>) {
