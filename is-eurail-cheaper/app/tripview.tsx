@@ -1,7 +1,7 @@
 import React, {FormEvent} from "react";
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrain } from '@fortawesome/free-solid-svg-icons'
+import { faTrain, faBus } from '@fortawesome/free-solid-svg-icons'
 
 import SearchBar from './searchbar';
 
@@ -100,9 +100,6 @@ export default function TripView() {
                     <tbody>
                         <tr>
                             <td>
-                                {/*<span className="icon">*/}
-                                {/*  <i className="fas fa-train"></i>*/}
-                                {/*</span>*/}
                                 <FontAwesomeIcon icon={faTrain} />
                             </td>
                             <td>{prices[idx] === '+' ?
@@ -133,60 +130,6 @@ export default function TripView() {
                     )
                 }))}
             </div>
-
-            {/*<div>*/}
-            {/*    <table className="table">*/}
-            {/*        <thead>*/}
-            {/*            <tr>*/}
-            {/*                <th>City</th>*/}
-            {/*                <th>Price</th>*/}
-            {/*                <th>Eurail Extras</th>*/}
-            {/*            </tr>*/}
-            {/*        </thead>*/}
-
-            {/*        <tbody>*/}
-            {/*            {Array.from(cities.keys(), ((city, idx) => {*/}
-            {/*                return (*/}
-            {/*                    <tr key={city}>*/}
-            {/*                        <td>{city}</td>*/}
-            {/*                        <td>{prices[idx] === '+' ?*/}
-            {/*                            <button className="button is-loading" disabled>Loading</button> :*/}
-            {/*                            prices[idx]}</td>*/}
-            {/*                        <td>{eurail[idx] === '+' ?*/}
-            {/*                            <button className="button is-loading" disabled>Loading</button> :*/}
-            {/*                            eurail[idx]}</td>*/}
-            {/*                    </tr>*/}
-            {/*                );*/}
-            {/*            }))}*/}
-            {/*        </tbody>*/}
-
-            {/*        <tfoot>*/}
-            {/*            <tr>*/}
-            {/*                <td>Total</td>*/}
-            {/*                <td>{sumArr(prices)}</td>*/}
-            {/*                <td>{sumArr(eurail)}</td>*/}
-            {/*            </tr>*/}
-            {/*        </tfoot>*/}
-            {/*    </table>*/}
-            {/*</div>*/}
         </div>
     )
 }
-
-// fetch("https://global.api.flixbus.com/search/service/v4/search?from_city_id=490d29d8-7151-4e05-86df-68fba4f000be&to_city_id=30e3dcd2-f9a7-4900-8f39-7a77c261904e&departure_date=12.09.2023&products=%7B%22adult%22%3A1%7D&currency=USD&locale=en_US&search_by=cities&include_after_midnight_rides=1", {
-//     "headers": {
-//         "accept": "*/*",
-//         "accept-language": "en-US,en;q=0.9",
-//         "sec-ch-ua": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"",
-//         "sec-ch-ua-mobile": "?0",
-//         "sec-ch-ua-platform": "\"macOS\"",
-//         "sec-fetch-dest": "empty",
-//         "sec-fetch-mode": "cors",
-//         "sec-fetch-site": "same-site",
-//         "x-feature-flags": "{\"ps_illuminati_offeron_c1\":4,\"ps_illuminati_offeron_c2\":9,\"webc_fxp_1261\":0,\"webc_fxp_1384\":2,\"webc_fxp_1292\":2,\"webc_fxp_1453\":0}",
-//         "Referer": "https://shop.flixbus.com/",
-//         "Referrer-Policy": "strict-origin-when-cross-origin"
-//     },
-//     "body": null,
-//     "method": "GET"
-// });
