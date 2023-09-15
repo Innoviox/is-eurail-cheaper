@@ -1,2 +1,2 @@
-from eurail import EurailEngine
-from deutschebahn import DBEngine
+from .eurail import EurailEngine
+from .deutschebahn import DBEngine

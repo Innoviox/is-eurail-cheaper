@@ -1,5 +1,7 @@
 import React, {FormEvent} from "react";
 import { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrain } from '@fortawesome/free-solid-svg-icons'
 
 import SearchBar from './searchbar';
 
@@ -90,6 +92,7 @@ export default function TripView() {
     }
 
     function renderTrip(city: string, idx: number): React.JSX.Element | null {
+        console.log(city, idx);
         if (idx === cities.size - 1) {
             return null;
         }
@@ -100,9 +103,10 @@ export default function TripView() {
                     <tbody>
                         <tr>
                             <td>
-                                <span className="icon">
-                                  <i className="fas fa-train"></i>
-                                </span>
+                                {/*<span className="icon">*/}
+                                {/*  <i className="fas fa-train"></i>*/}
+                                {/*</span>*/}
+                                <FontAwesomeIcon icon={faTrain} />
                             </td>
                             <td>{prices[idx] === '+' ?
                                 <button className="button is-loading" disabled>Loading</button> :
@@ -127,7 +131,7 @@ export default function TripView() {
                     return (
                         <div key={city}>
                             <span>{city}</span><br />
-                            renderTrip(city, idx)
+                            { renderTrip(city, idx) }
                         </div>
                     )
                 }))}
