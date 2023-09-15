@@ -9,14 +9,14 @@ from datetime import datetime, timedelta
 
 from .engine import Engine, Journey
 
-VON = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input"
-NACH = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input"
-HINFAHRT = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/h2"
-DATUM = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div/label/input"
-MINUS = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]"
-PLUS = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]"
+VON         = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[1]/span/div[1]/input"
+NACH        = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/div/div[3]/span/div[1]/input"
+HINFAHRT    = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/h2"
+DATUM       = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/div/label/input"
+MINUS       = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[1]/span/span[2]"
+PLUS        = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div/div[2]/div[2]/div/button[2]/span/span[2]"
 UEBERNEHMEN = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[2]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div[3]/div/div/div/div[3]/div/button"
-SUCHEN = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/button[2]/span/span"
+SUCHEN      = "/html/body/div[1]/div[2]/div/div/div/div[1]/form/span/div[1]/div/button[2]/span/span"
 
 def extract_data(result) -> Journey:
     dauer = result.find_element(By.CLASS_NAME, "dauer-umstieg__dauer")
@@ -72,7 +72,6 @@ class DBEngine(Engine):
 
         time.sleep(1)
 
-        # todo click date & type in
         datum = wait_for(driver, DATUM, criterion=EC.presence_of_element_located)
         datum.click()
         time.sleep(0.1)

@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from typing import Annotated, Union
 from fastapi.middleware.cors import CORSMiddleware
 import datetime as dt
+import requests
 
 from price import EurailEngine, DBEngine
 

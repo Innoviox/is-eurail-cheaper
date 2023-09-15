@@ -44,38 +44,38 @@ export default function TripView() {
 
             let startLength = prices.length; // update this idx when it's done
 
-            fetch('http://127.0.0.1:8000/api/price/eurail', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                   let data = await response.json();
-                   let price = extractPrice(data.journeys);
-                   let newEurail = [...eurail];
-                   newEurail[startLength] = price;
-                   setEurail(newEurail);
-
-                   // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
-               } else {
-                   console.log("response not ok - price eurail");
-               }
-            });
-
-            fetch('http://127.0.0.1:8000/api/price/db', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                    let data = await response.json();
-                    console.log(data);
-                    let price = extractPrice(data.journeys);
-                    let newPrices = [...prices];
-                    newPrices[startLength] = price;
-                    setPrices(newPrices);
-                } else {
-                    console.log("response not ok - price db");
-                }
-            });
+            // fetch('http://127.0.0.1:8000/api/price/eurail', {
+            //     method: 'POST',
+            //     body: formData,
+            // }).then(async response => {
+            //     if (response.ok) {
+            //        let data = await response.json();
+            //        let price = extractPrice(data.journeys);
+            //        let newEurail = [...eurail];
+            //        newEurail[startLength] = price;
+            //        setEurail(newEurail);
+            //
+            //        // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
+            //    } else {
+            //        console.log("response not ok - price eurail");
+            //    }
+            // });
+            //
+            // fetch('http://127.0.0.1:8000/api/price/db', {
+            //     method: 'POST',
+            //     body: formData,
+            // }).then(async response => {
+            //     if (response.ok) {
+            //         let data = await response.json();
+            //         console.log(data);
+            //         let price = extractPrice(data.journeys);
+            //         let newPrices = [...prices];
+            //         newPrices[startLength] = price;
+            //         setPrices(newPrices);
+            //     } else {
+            //         console.log("response not ok - price db");
+            //     }
+            // });
 
             setPrices(prices.concat("+"));
             setEurail(eurail.concat("+"));
@@ -89,45 +89,85 @@ export default function TripView() {
         return arr.slice(1).reduce((a, b) => a + b, 0);
     }
 
+    function renderTrip(city: string, idx: number): React.JSX.Element | null {
+        if (idx === cities.size - 1) {
+            return null;
+        }
+
+        return (
+            <div>
+                <table className="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span className="icon">
+                                  <i className="fas fa-train"></i>
+                                </span>
+                            </td>
+                            <td>{prices[idx] === '+' ?
+                                <button className="button is-loading" disabled>Loading</button> :
+                                prices[idx]}</td>
+                            <td>{eurail[idx] === '+' ?
+                                <button className="button is-loading" disabled>Loading</button> :
+                                eurail[idx]}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
     return (
         <div>
             <SearchBar onSearchSubmit={onSearchSubmit}/>
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
             <div>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>City</th>
-                            <th>Price</th>
-                            <th>Eurail Extras</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {Array.from(cities.keys(), ((city, idx) => {
-                            return (
-                                <tr key={city}>
-                                    <td>{city}</td>
-                                    <td>{prices[idx] === '+' ?
-                                        <button className="button is-loading" disabled>Loading</button> :
-                                        prices[idx]}</td>
-                                    <td>{eurail[idx] === '+' ?
-                                        <button className="button is-loading" disabled>Loading</button> :
-                                        eurail[idx]}</td>
-                                </tr>
-                            );
-                        }))}
-                    </tbody>
-
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td>{sumArr(prices)}</td>
-                            <td>{sumArr(eurail)}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                {Array.from(cities.keys(), ((city, idx) => {
+                    return (
+                        <div key={city}>
+                            <span>{city}</span><br />
+                            renderTrip(city, idx)
+                        </div>
+                    )
+                }))}
             </div>
+
+            {/*<div>*/}
+            {/*    <table className="table">*/}
+            {/*        <thead>*/}
+            {/*            <tr>*/}
+            {/*                <th>City</th>*/}
+            {/*                <th>Price</th>*/}
+            {/*                <th>Eurail Extras</th>*/}
+            {/*            </tr>*/}
+            {/*        </thead>*/}
+
+            {/*        <tbody>*/}
+            {/*            {Array.from(cities.keys(), ((city, idx) => {*/}
+            {/*                return (*/}
+            {/*                    <tr key={city}>*/}
+            {/*                        <td>{city}</td>*/}
+            {/*                        <td>{prices[idx] === '+' ?*/}
+            {/*                            <button className="button is-loading" disabled>Loading</button> :*/}
+            {/*                            prices[idx]}</td>*/}
+            {/*                        <td>{eurail[idx] === '+' ?*/}
+            {/*                            <button className="button is-loading" disabled>Loading</button> :*/}
+            {/*                            eurail[idx]}</td>*/}
+            {/*                    </tr>*/}
+            {/*                );*/}
+            {/*            }))}*/}
+            {/*        </tbody>*/}
+
+            {/*        <tfoot>*/}
+            {/*            <tr>*/}
+            {/*                <td>Total</td>*/}
+            {/*                <td>{sumArr(prices)}</td>*/}
+            {/*                <td>{sumArr(eurail)}</td>*/}
+            {/*            </tr>*/}
+            {/*        </tfoot>*/}
+            {/*    </table>*/}
+            {/*</div>*/}
         </div>
     )
 }
