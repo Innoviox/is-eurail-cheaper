@@ -26,7 +26,7 @@ export default function TripView() {
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
         // console.log(eurail);
-        return Math.min(...trips.map(i => parseInt(i.price)));
+        return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
     }
 
     async function onSearchSubmit(formData: FormData) {
