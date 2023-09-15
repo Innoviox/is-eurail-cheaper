@@ -204,7 +204,6 @@ def reconstruction(enableProxy=False):
 
 
 def bestPriceSearch(date, departureStation=STATION_ID_FRANKFURT, arrivalStation=STATION_ID_COLOGNE, enableProxy=False):
-
     if enableProxy:
         proxies = {'https': '0.0.0.0:8080'}
         verify = False
@@ -273,13 +272,19 @@ def bestPriceSearch(date, departureStation=STATION_ID_FRANKFURT, arrivalStation=
     }
 
     response = requests.post(url, params=params, headers=headers, data=bestPriceSearchRequestEncoded, proxies=proxies, verify=verify)
-    return response.json()
+    r = response.json()
 
-r = getStationID(searchTerm='Koeln Hbf')
-print(r)
+    journeys = [Journey(price=i['trfRes']['fareSetL'][0]['fareL'][0]['prc'],
+                        length=i['dur']) for i in r['svcResL'][0]['res']['outConL']]
+    return journeys
+    # return response.json()
+
+# r = getStationID(searchTerm='Koeln Hbf')
+# print(r)
 # print(r['svcResL'][0]['res']['match']['locL'])
-# import datetime as dt
-# r = bestPriceSearch(dt.datetime.now() + dt.timedelta(days=1))
+import datetime as dt
+r = bestPriceSearch(dt.datetime.now() + dt.timedelta(days=1))
+print([[i['dur'], i['trfRes']['fareSetL'][0]['fareL'][0]['prc']] for i in r['svcResL'][0]['res']['outConL']])
 # bestPrices = [(bestPrice['toTime'], bestPrice['bestPrice']['amount']) for bestPrice in r['svcResL'][0]['res']['outDaySegL']]
 
 # print(*bestPrices, sep='\n')
