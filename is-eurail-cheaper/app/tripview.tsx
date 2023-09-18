@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrain, faBus } from '@fortawesome/free-solid-svg-icons'
 
 import SearchBar from './searchbar';
+import Trip from './trip';
 
 // todo currency, class
 const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
@@ -19,6 +20,7 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
 export default function TripView() {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
 
+    let [trips, setTrips] = useState([]);
     let [cities, setCities] = useState(new Map<string, string>);
     let [prices, setPrices] = useState([]);
     let [eurail, setEurail] = useState([]);
@@ -88,47 +90,48 @@ export default function TripView() {
         return arr.slice(1).reduce((a, b) => a + b, 0);
     }
 
-    function renderTrip(city: string, idx: number): React.JSX.Element | null {
-        console.log(city, idx);
-        if (idx === cities.size - 1) {
-            return null;
-        }
+    // function renderTrip(city: string, idx: number): React.JSX.Element | null {
+    //     console.log(city, idx);
+    //     if (idx === cities.size - 1) {
+    //         return null;
+    //     }
+    //
+    //     return (
+    //         <div>
+    //             <table className="table">
+    //                 <tbody>
+    //                     <tr>
+    //                         <td>
+    //                             <FontAwesomeIcon icon={faTrain} />
+    //                         </td>
+    //                         <td>{prices[idx] === '+' ?
+    //                             <button className="button is-loading" disabled>Loading</button> :
+    //                             prices[idx]}</td>
+    //                         <td>{eurail[idx] === '+' ?
+    //                             <button className="button is-loading" disabled>Loading</button> :
+    //                             eurail[idx]}</td>
+    //                     </tr>
+    //                 </tbody>
+    //             </table>
+    //         </div>
+    //     )
+    // }
 
-        return (
-            <div>
-                <table className="table">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <FontAwesomeIcon icon={faTrain} />
-                            </td>
-                            <td>{prices[idx] === '+' ?
-                                <button className="button is-loading" disabled>Loading</button> :
-                                prices[idx]}</td>
-                            <td>{eurail[idx] === '+' ?
-                                <button className="button is-loading" disabled>Loading</button> :
-                                eurail[idx]}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        )
+    function renderTrip(trip: any): React.JSX.Element {
+        return <Trip trip={trip} />
+    }
+
+    function renderEmptyTrip(): React.JSX.Element {
+        return <Trip trip={{name: '+'}} />
     }
 
     return (
         <div>
-            <SearchBar onSearchSubmit={onSearchSubmit}/>
+            <SearchBar onSearchSubmit={onSearchSubmit} />
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
             <div>
-                {Array.from(cities.keys(), ((city, idx) => {
-                    return (
-                        <div key={city}>
-                            <span>{city}</span><br />
-                            { renderTrip(city, idx) }
-                        </div>
-                    )
-                }))}
+                {trips.length === 0 ? renderEmptyTrip() : trips.map(renderTrip)}
             </div>
         </div>
     )
