@@ -4,7 +4,7 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
 
     function openTrip() {
         return (
-            <button className="button trip-box is-large" onClick={onclick()}>
+            <button className="button trip-box is-large" onClick={onclick}>
                 {trip.name}
             </button>
         )
@@ -12,7 +12,7 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
 
     function closedTrip() {
         return (
-            <button className="button trip-box is-large" onClick={onclick()}>
+            <button className="button trip-box is-large" onClick={onclick}>
                 {trip.name}
             </button>
         )

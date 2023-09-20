@@ -21,6 +21,7 @@ export default function TripView() {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
 
     let [trips, setTrips] = useState([]);
+    let [modalActive, setModalActive] = useState(false);
     // let [cities, setCities] = useState(new Map<string, string>);
     // let [prices, setPrices] = useState([]);
     // let [eurail, setEurail] = useState([]);
@@ -132,11 +133,8 @@ export default function TripView() {
     // }
 
     function newTripModal() {
-        return (
-            <div>
-
-            </div>
-        )
+        console.log("ntm");
+        setModalActive(true);
     }
 
     function openTrip(trip) {
@@ -158,6 +156,13 @@ export default function TripView() {
             <p>Your Trips</p>
             <div>
                 {trips.length === 0 ? renderEmptyTrip() : trips.map(renderTrip)}
+            </div>
+            <div id="new-trip-modal" className={"modal " + (modalActive ? "is-active" : "")}>
+                <div className="modal-background"></div>
+                <div className="modal-content">
+                    Test Modal
+                </div>
+                <button className="modal-close is-large" aria-label="close" onClick={() => setModalActive(false)} />
             </div>
         </div>
     )
