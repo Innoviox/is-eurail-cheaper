@@ -42,7 +42,7 @@ body {
 }
 
 .search-block {
-  display: inline-block;
+  display: block;
   vertical-align: middle;
 }
 
@@ -50,3 +50,14 @@ body {
   border-radius: 25px;
   border: 2px solid #73AD21;
 }
+
+#trip-container {
+  background: white;
+  height: 100%;
+  padding: 10px;
+}
+
+//#search-form {
+//  display: flex;
+//  flex-direction: row;
+//}

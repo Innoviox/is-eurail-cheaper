@@ -126,7 +126,7 @@ export default function TripView() {
     }
 
     return (
-        <div>
+        <div id="trip-container">
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 

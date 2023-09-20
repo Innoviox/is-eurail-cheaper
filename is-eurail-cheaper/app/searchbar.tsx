@@ -50,27 +50,33 @@ export default function SearchBar({onSearchSubmit}) {
 
     return (
         <div id="searchbar">
-            <form onSubmit={onSubmit}>
-                <div id="search-container">
-                    <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
-                        <div className="dropdown-trigger">
-                            <div className="control">
-                                <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} />
+            <form onSubmit={onSubmit} id="search-form">
+                <div className="level" id="search-container">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
+                                <div className="dropdown-trigger">
+                                    <div className="control">
+                                        <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} />
+                                    </div>
+                                </div>
+                                <div className="dropdown-menu" id="dropdown-menu3" role="menu">
+                                    <div className="dropdown-content">
+                                        {stations.map((station, idx) => {
+                                            return (
+                                                <a onClick={onDropdownClick} className="dropdown-item" key={station} data-index={station}>
+                                                    {station}
+                                                </a>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="dropdown-menu" id="dropdown-menu3" role="menu">
-                            <div className="dropdown-content">
-                                {stations.map((station, idx) => {
-                                    return (
-                                        <a onClick={onDropdownClick} className="dropdown-item" key={station} data-index={station}>
-                                            {station}
-                                        </a>
-                                    )
-                                })}
-                            </div>
+                        <div className="level-item">
+                            <input className="search-block input" type="date" name="date" />
                         </div>
                     </div>
-                    <input className="search-block input" type="date" name="date" />
                 </div>
             </form>
         </div>
