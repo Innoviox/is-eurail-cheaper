@@ -21,9 +21,23 @@ export default function TripView() {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
 
     let [trips, setTrips] = useState([]);
-    let [cities, setCities] = useState(new Map<string, string>);
-    let [prices, setPrices] = useState([]);
-    let [eurail, setEurail] = useState([]);
+    // let [cities, setCities] = useState(new Map<string, string>);
+    // let [prices, setPrices] = useState([]);
+    // let [eurail, setEurail] = useState([]);
+
+    function emptyTrip() {
+        return {
+            'name': '',
+            'cities': new Map<string, string>,
+            'prices': {
+                'db': [],
+                'eurail': [],
+                'flixbus': [],
+                'hostelworld': [],
+                'ryanair': []
+            }
+        }
+    }
 
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
@@ -117,18 +131,31 @@ export default function TripView() {
     //     )
     // }
 
+    function newTripModal() {
+        return (
+            <div>
+
+            </div>
+        )
+    }
+
+    function openTrip(trip) {
+
+    }
+
     function renderTrip(trip: any): React.JSX.Element {
-        return <Trip trip={trip} />
+        return <Trip trip={trip} open={false} onclick={openTrip(trip)} />
     }
 
     function renderEmptyTrip(): React.JSX.Element {
-        return <Trip trip={{name: '+'}} />
+        return <Trip trip={{name: '+'}} open={false} onclick={newTripModal} />
     }
 
     return (
         <div id="trip-container">
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br />
+            <p>Your Trips</p>
             <div>
                 {trips.length === 0 ? renderEmptyTrip() : trips.map(renderTrip)}
             </div>
