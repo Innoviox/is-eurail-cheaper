@@ -22,6 +22,7 @@ export default function TripView() {
 
     let [trips, setTrips] = useState([]);
     let [modalActive, setModalActive] = useState(false);
+    let [currentTrip, setCurrentTrip] = useState(-1);
     // let [cities, setCities] = useState(new Map<string, string>);
     // let [prices, setPrices] = useState([]);
     // let [eurail, setEurail] = useState([]);
@@ -36,7 +37,8 @@ export default function TripView() {
                 'flixbus': [],
                 'hostelworld': [],
                 'ryanair': []
-            }
+            },
+            'id': trips.length + 1
         }
     }
 
@@ -133,12 +135,11 @@ export default function TripView() {
     // }
 
     function newTripModal() {
-        console.log("ntm");
         setModalActive(true);
     }
 
     function openTrip(trip) {
-
+        return () => setCurrentTrip(trip.id);
     }
 
     function renderTrip(trip: any): React.JSX.Element {
