@@ -128,8 +128,7 @@ export default function TripView() {
     return (
         <div id="trip-container">
             <SearchBar onSearchSubmit={onSearchSubmit} />
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-
+            <br />
             <div>
                 {trips.length === 0 ? renderEmptyTrip() : trips.map(renderTrip)}
             </div>
