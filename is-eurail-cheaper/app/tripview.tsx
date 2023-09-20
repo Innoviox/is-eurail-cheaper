@@ -159,8 +159,25 @@ export default function TripView() {
             </div>
             <div id="new-trip-modal" className={"modal " + (modalActive ? "is-active" : "")}>
                 <div className="modal-background"></div>
-                <div className="modal-content">
-                    Test Modal
+                <div className="modal-card">
+                    <section className="modal-card-body">
+                        <div className="field is-horizontal">
+                            <div className="field-label is-normal">
+                                <label className="label">Trip Name</label>
+                            </div>
+                            <div className="field-body">
+                                <div className="field">
+                                    <p className="control">
+                                        <input className="input" type="text" placeholder="Make it good..." />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <footer className="modal-card-foot">
+                        <button className="button is-success">Create</button>
+                        <button className="button">Cancel</button>
+                    </footer>
                 </div>
                 <button className="modal-close is-large" aria-label="close" onClick={() => setModalActive(false)} />
             </div>
