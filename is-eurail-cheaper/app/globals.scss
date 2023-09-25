@@ -46,10 +46,11 @@ body {
   vertical-align: middle;
 }
 
-.trip-box {
+.closed-trip {
   border-radius: 25px;
   border: 2px solid #73AD21;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 #trips-box {
@@ -59,7 +60,7 @@ body {
   border-radius: 25px;
 }
 
-#trip-container {
+#trip-view {
   background: white;
   height: 100%;
   padding: 10px;

@@ -193,7 +193,7 @@ export default function TripView() {
     }
 
     return (
-        <div id="trip-container">
+        <div id="trip-view">
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br />
             <p>Your Trips</p>
