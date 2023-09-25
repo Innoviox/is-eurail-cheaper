@@ -1,6 +1,6 @@
 import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faTrain } from '@fortawesome/free-solid-svg-icons'
 
 export default function Trip({trip, open, onopen, onclose}: {trip: any; open: boolean, onopen: any, onclose: any}) {
 
@@ -24,6 +24,27 @@ export default function Trip({trip, open, onopen, onclose}: {trip: any; open: bo
                         </div>
                     </div>
                 </nav>
+                 <div>
+                     <table className="table">
+                         <tbody>
+                             {
+                                 Array.from(trip.cities.keys(), (city: string, idx: number) => (
+                                     <tr key={city}>
+                                         <td>
+                                             <FontAwesomeIcon icon={faTrain} />
+                                         </td>
+                                         <td>{trip.prices[idx] === '+' ?
+                                             <button className="button is-loading" disabled>Loading</button> :
+                                             trip.prices[idx]}</td>
+                                         <td>{trip.eurail[idx] === '+' ?
+                                             <button className="button is-loading" disabled>Loading</button> :
+                                             trip.eurail[idx]}</td>
+                                     </tr>
+                                 ))
+                             }
+                         </tbody>
+                     </table>
+                 </div>
             </div>
         )
     }
