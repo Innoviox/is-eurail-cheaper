@@ -116,12 +116,16 @@ export default function TripView() {
         return () => setCurrentTrip(trip.id);
     }
 
+    function closeTrip() {
+        return setCurrentTrip(-1);
+    }
+
     function renderTrip(trip: any, open: boolean): React.JSX.Element {
-        return <Trip trip={trip} open={open} onclick={openTrip(trip)} />
+        return <Trip trip={trip} open={open} onopen={openTrip(trip)} onclose={closeTrip} />
     }
 
     function renderEmptyTrip(): React.JSX.Element {
-        return <Trip trip={{name: '+'}} open={false} onclick={newTripModal} />
+        return <Trip trip={{name: '+'}} open={false} onopen={newTripModal} onclose={undefined} />
     }
 
     function renderTrips(): React.JSX.Element {
@@ -193,7 +197,7 @@ export default function TripView() {
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br />
             <p>Your Trips</p>
-            <div>
+            <div id="trips-box">
                 {renderTrips()}
             </div>
             {renderModal()}

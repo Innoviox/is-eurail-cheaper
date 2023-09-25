@@ -2,7 +2,7 @@ import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-export default function Trip({trip, open, onclick}: {trip: any; open: boolean, onclick: any}) {
+export default function Trip({trip, open, onopen, onclose}: {trip: any; open: boolean, onopen: any, onclose: any}) {
 
     function openTrip() {
         return (
@@ -11,7 +11,9 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
                     <div className="level-left">
                         <div className="level-item">
                             <div>
-                                <FontAwesomeIcon icon={faArrowLeft} />
+                                <button className="button is-ghost" onClick={onclose}>
+                                    <FontAwesomeIcon icon={faArrowLeft} />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -28,7 +30,7 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
 
     function closedTrip() {
         return (
-            <button className="button trip-box is-large" onClick={onclick}>
+            <button className="button trip-box is-large" onClick={onopen}>
                 {trip.name}
             </button>
         )
