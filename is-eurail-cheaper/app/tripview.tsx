@@ -23,6 +23,7 @@ export default function TripView() {
     let [trips, setTrips] = useState([]);
     let [modalActive, setModalActive] = useState(false);
     let [currentTrip, setCurrentTrip] = useState(-1);
+    let [tripName, setTripName] = useState("");
     // let [cities, setCities] = useState(new Map<string, string>);
     // let [prices, setPrices] = useState([]);
     // let [eurail, setEurail] = useState([]);
@@ -107,33 +108,6 @@ export default function TripView() {
         return arr.slice(1).reduce((a, b) => a + b, 0);
     }
 
-    // function renderTrip(city: string, idx: number): React.JSX.Element | null {
-    //     console.log(city, idx);
-    //     if (idx === cities.size - 1) {
-    //         return null;
-    //     }
-    //
-    //     return (
-    //         <div>
-    //             <table className="table">
-    //                 <tbody>
-    //                     <tr>
-    //                         <td>
-    //                             <FontAwesomeIcon icon={faTrain} />
-    //                         </td>
-    //                         <td>{prices[idx] === '+' ?
-    //                             <button className="button is-loading" disabled>Loading</button> :
-    //                             prices[idx]}</td>
-    //                         <td>{eurail[idx] === '+' ?
-    //                             <button className="button is-loading" disabled>Loading</button> :
-    //                             eurail[idx]}</td>
-    //                     </tr>
-    //                 </tbody>
-    //             </table>
-    //         </div>
-    //     )
-    // }
-
     function newTripModal() {
         setModalActive(true);
     }
@@ -142,12 +116,29 @@ export default function TripView() {
         return () => setCurrentTrip(trip.id);
     }
 
-    function renderTrip(trip: any): React.JSX.Element {
-        return <Trip trip={trip} open={false} onclick={openTrip(trip)} />
+    function renderTrip(trip: any, open: boolean): React.JSX.Element {
+        return <Trip trip={trip} open={open} onclick={openTrip(trip)} />
     }
 
     function renderEmptyTrip(): React.JSX.Element {
         return <Trip trip={{name: '+'}} open={false} onclick={newTripModal} />
+    }
+
+    function renderTrips(): React.JSX.Element {
+        if (trips.length === 0) {
+            return renderEmptyTrip();
+        } else if (currentTrip === -1) {
+            return <div>{trips.map(t => renderTrip(t, false))}</div>;
+        } else {
+            return renderTrip(trips[currentTrip], true);
+        }
+    }
+
+    function closeModal() {
+        setModalActive(false);
+        let t = emptyTrip();
+        t.name = tripName;
+        openTrip(t.id);
     }
 
     return (
@@ -156,7 +147,7 @@ export default function TripView() {
             <br />
             <p>Your Trips</p>
             <div>
-                {trips.length === 0 ? renderEmptyTrip() : trips.map(renderTrip)}
+                {renderTrips()}
             </div>
             <div id="new-trip-modal" className={"modal " + (modalActive ? "is-active" : "")}>
                 <div className="modal-background"></div>
@@ -169,7 +160,8 @@ export default function TripView() {
                             <div className="field-body">
                                 <div className="field">
                                     <p className="control">
-                                        <input className="input" type="text" placeholder="Make it good..." />
+                                        <input className="input" type="text" placeholder="Make it good..."
+                                               value={tripName} onChange={evt => setTripName(evt.target.value)} />
                                     </p>
                                 </div>
                             </div>
@@ -180,7 +172,7 @@ export default function TripView() {
                         <button className="button">Cancel</button>
                     </footer>
                 </div>
-                <button className="modal-close is-large" aria-label="close" onClick={() => setModalActive(false)} />
+                <button className="modal-close is-large" aria-label="close" onClick={closeModal} />
             </div>
         </div>
     )
