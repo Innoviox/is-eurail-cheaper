@@ -154,14 +154,8 @@ export default function TripView() {
         addTrip(t);
     }
 
-    return (
-        <div id="trip-container">
-            <SearchBar onSearchSubmit={onSearchSubmit} />
-            <br />
-            <p>Your Trips</p>
-            <div>
-                {renderTrips()}
-            </div>
+    function renderModal() {
+        return (
             <div id="new-trip-modal" className={"modal " + (modalActive ? "is-active" : "")}>
                 <div className="modal-background"></div>
                 <div className="modal-card">
@@ -187,6 +181,18 @@ export default function TripView() {
                 </div>
                 <button className="modal-close is-large" aria-label="close" onClick={closeModal} />
             </div>
+        )
+    }
+
+    return (
+        <div id="trip-container">
+            <SearchBar onSearchSubmit={onSearchSubmit} />
+            <br />
+            <p>Your Trips</p>
+            <div>
+                {renderTrips()}
+            </div>
+            {renderModal()}
         </div>
     )
 }
