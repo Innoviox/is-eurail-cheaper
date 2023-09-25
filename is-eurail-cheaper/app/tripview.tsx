@@ -24,9 +24,6 @@ export default function TripView() {
     let [modalActive, setModalActive] = useState(false);
     let [currentTrip, setCurrentTrip] = useState(-1);
     let [tripName, setTripName] = useState("");
-    // let [cities, setCities] = useState(new Map<string, string>);
-    // let [prices, setPrices] = useState([]);
-    // let [eurail, setEurail] = useState([]);
 
     function emptyTrip() {
         return {
@@ -117,7 +114,7 @@ export default function TripView() {
     }
 
     function closeTrip() {
-        return setCurrentTrip(-1);
+        setCurrentTrip(-1);
     }
 
     function renderTrip(trip: any, open: boolean): React.JSX.Element {

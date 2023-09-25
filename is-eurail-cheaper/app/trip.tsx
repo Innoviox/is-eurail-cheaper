@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faTrain } from '@fortawesome/free-solid-svg-icons'
 
 export default function Trip({trip, open, onopen, onclose}: {trip: any; open: boolean, onopen: any, onclose: any}) {
+    let [cities, setCities] = useState(trip.cities);
+    let [prices, setPrices] = useState(trip.prices);
 
     function openTrip() {
         return (
