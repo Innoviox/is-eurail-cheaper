@@ -24,24 +24,26 @@ export default function Trip({trip, open, onopen, onclose}: {trip: any; open: bo
                     </div>
                 </nav>
                  <div>
-                     <table className="table">
-                         <tbody>
-                             {Array.from(trip.cities.keys(), (city: string, idx: number) => (
-                                 <tr key={city}>
-                                     <td>
-                                         <FontAwesomeIcon icon={faTrain} />
-                                     </td>
-                                     <td>{city}</td>
-                                     <td>{trip.prices.db[idx] === '+' ?
-                                         <button className="button is-loading" disabled>Loading</button> :
-                                         trip.prices.db[idx]}</td>
-                                     <td>{trip.prices.eurail[idx] === '+' ?
-                                         <button className="button is-loading" disabled>Loading</button> :
-                                         trip.prices.eurail[idx]}</td>
-                                 </tr>
-                             ))}
-                         </tbody>
-                     </table>
+                     {Array.from(trip.cities.keys(), (city: string, idx: number) => (
+                         <div key={city}>
+                             <span>{city}</span><br />
+                             <table className="table">
+                                 <tbody>
+                                     <tr>
+                                         <td>
+                                             <FontAwesomeIcon icon={faTrain} />
+                                         </td>
+                                         <td>{trip.prices.db[idx] === '+' ?
+                                             <button className="button is-loading" disabled>Loading</button> :
+                                             trip.prices.db[idx]}</td>
+                                         <td>{trip.prices.eurail[idx] === '+' ?
+                                             <button className="button is-loading" disabled>Loading</button> :
+                                             trip.prices.eurail[idx]}</td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     ))}
                  </div>
             </div>
         )
