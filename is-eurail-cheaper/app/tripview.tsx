@@ -40,6 +40,26 @@ export default function TripView() {
         }
     }
 
+    function updateActiveTrip(key, newval) {
+        let t = { ...trips[currentTrip] };
+        t[key] = newval;
+
+        let newTrips = [...trips];
+        newTrips[currentTrip] = t;
+
+        setTrips(newTrips);
+    }
+
+    function updateActiveTripPrices(key, newval) {
+        let t = { ...trips[currentTrip] };
+        t.prices[key] = newval;
+
+        let newTrips = [...trips];
+        newTrips[currentTrip] = t;
+
+        setTrips(newTrips);
+    }
+
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
         // console.log(eurail);
@@ -55,13 +75,14 @@ export default function TripView() {
             return;
         }
 
-        setCities(cities.set(toCity, toCityId));
+        // setCities(cities.set(toCity, toCityId));
+        updateActiveTrip("cities", trips[currentTrip].cities.set(toCity, toCityId));
 
         if (fromCityId !== undefined) {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = prices.length - 1; // update this idx when it's done
+            let startLength = trips[currentTrip].prices.db.length - 1; // update this idx when it's done
 
             fetch('http://127.0.0.1:8000/api/price/eurail', {
                 method: 'POST',
@@ -70,9 +91,10 @@ export default function TripView() {
                 if (response.ok) {
                    let data = await response.json();
                    let price = extractPrice(data.journeys);
-                   let newEurail = [...eurail];
+                   let newEurail = [...trips[currentTrip].prices.eurail];
                    newEurail[startLength] = price;
-                   setEurail(newEurail);
+                   // setEurail(newEurail);
+                    updateActiveTripPrices("eurail", newEurail);
 
                    // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
                } else {
@@ -88,17 +110,18 @@ export default function TripView() {
                     let data = await response.json();
                     console.log(data);
                     let price = extractPrice(data.journeys);
-                    let newPrices = [...prices];
+                    let newPrices = [...trips[currentTrip].prices.db];
                     newPrices[startLength] = price;
-                    setPrices(newPrices);
+                    // setPrices(newPrices);
+                    updateActiveTripPrices("prices", newPrices);
                 } else {
                     console.log("response not ok - price db");
                 }
             });
         }
 
-        setPrices(prices.concat("+"));
-        setEurail(eurail.concat("+"));
+        updateActiveTripPrices("eurail", trips[currentTrip].prices.eurail.concat("+"));
+        updateActiveTripPrices("db", trips[currentTrip].prices.db.concat("+"));
     }
 
     function sumArr(arr: Array<any>) {
