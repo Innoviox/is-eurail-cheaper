@@ -85,7 +85,7 @@ export default function TripView() {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = trips[currentTrip].prices.db.length - 1; // update this idx when it's done
+            let startLength = trips[currentTrip].prices.db.length - 2; // update this idx when it's done
 
             fetch('http://127.0.0.1:8000/api/price/eurail', {
                 method: 'POST',
