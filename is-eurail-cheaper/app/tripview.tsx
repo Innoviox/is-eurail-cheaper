@@ -126,10 +126,13 @@ export default function TripView() {
 
     function renderTrips(): React.JSX.Element {
         console.log(currentTrip);
-        if (trips.length === 0) {
-            return renderEmptyTrip();
-        } else if (currentTrip === -1) {
-            return <div>{trips.map(t => renderTrip(t, false))}</div>;
+        if (currentTrip === -1) {
+            return (
+                <div>
+                     {trips.map(t => renderTrip(t, false))}
+                     {renderEmptyTrip()}
+                </div>
+            );
         } else {
             return renderTrip(trips[currentTrip], true);
         }
@@ -144,12 +147,13 @@ export default function TripView() {
     function closeModal() {
         console.log("closing modal");
         setModalActive(false);
+        setTripName(""); // reset modal fields
     }
 
     function createTrip() {
-        closeModal();
         let t = emptyTrip();
         t.name = tripName;
+        closeModal();
         setCurrentTrip(t.id);
         addTrip(t);
     }
@@ -176,7 +180,7 @@ export default function TripView() {
                     </section>
                     <footer className="modal-card-foot">
                         <button className="button is-success" onClick={createTrip}>Create</button>
-                        <button className="button">Cancel</button>
+                        <button className="button" onClick={closeModal}>Cancel</button>
                     </footer>
                 </div>
                 <button className="modal-close is-large" aria-label="close" onClick={closeModal} />
