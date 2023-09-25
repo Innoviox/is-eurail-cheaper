@@ -8,7 +8,7 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
             //     {trip.name}
             // </button>
             <div className="open-trip">
-
+                {trip.name}
             </div>
         )
     }

@@ -39,7 +39,7 @@ export default function TripView() {
                 'hostelworld': [],
                 'ryanair': []
             },
-            'id': trips.length + 1
+            'id': trips.length
         }
     }
 
@@ -135,6 +135,12 @@ export default function TripView() {
         }
     }
 
+    function addTrip(t) {
+        let newTrips = [...trips];
+        newTrips.push(t);
+        setTrips(newTrips);
+    }
+
     function closeModal() {
         console.log("closing modal");
         setModalActive(false);
@@ -144,8 +150,8 @@ export default function TripView() {
         closeModal();
         let t = emptyTrip();
         t.name = tripName;
-        setTrips(trips.concat(t));
-        openTrip(t.id)();
+        setCurrentTrip(t.id);
+        addTrip(t);
     }
 
     return (
