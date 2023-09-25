@@ -4,9 +4,12 @@ export default function Trip({trip, open, onclick}: {trip: any; open: boolean, o
 
     function openTrip() {
         return (
-            <button className="button trip-box is-large" onClick={onclick}>
-                {trip.name}
-            </button>
+            // <button className="button trip-box is-large" onClick={onclick}>
+            //     {trip.name}
+            // </button>
+            <div className="open-trip">
+
+            </div>
         )
     }
 

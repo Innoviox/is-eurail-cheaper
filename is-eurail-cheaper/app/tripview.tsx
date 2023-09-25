@@ -125,6 +125,7 @@ export default function TripView() {
     }
 
     function renderTrips(): React.JSX.Element {
+        console.log(currentTrip);
         if (trips.length === 0) {
             return renderEmptyTrip();
         } else if (currentTrip === -1) {
@@ -135,10 +136,16 @@ export default function TripView() {
     }
 
     function closeModal() {
+        console.log("closing modal");
         setModalActive(false);
+    }
+
+    function createTrip() {
+        closeModal();
         let t = emptyTrip();
         t.name = tripName;
-        openTrip(t.id);
+        setTrips(trips.concat(t));
+        openTrip(t.id)();
     }
 
     return (
@@ -168,7 +175,7 @@ export default function TripView() {
                         </div>
                     </section>
                     <footer className="modal-card-foot">
-                        <button className="button is-success">Create</button>
+                        <button className="button is-success" onClick={createTrip}>Create</button>
                         <button className="button">Cancel</button>
                     </footer>
                 </div>
