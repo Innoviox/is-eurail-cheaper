@@ -31,12 +31,13 @@ export default function Trip({trip, open, onopen, onclose}: {trip: any; open: bo
                                      <td>
                                          <FontAwesomeIcon icon={faTrain} />
                                      </td>
-                                     <td>{trip.prices[idx] === '+' ?
+                                     <td>{city}</td>
+                                     <td>{trip.prices.db[idx] === '+' ?
                                          <button className="button is-loading" disabled>Loading</button> :
-                                         trip.prices[idx]}</td>
-                                     <td>{trip.eurail[idx] === '+' ?
+                                         trip.prices.db[idx]}</td>
+                                     <td>{trip.prices.eurail[idx] === '+' ?
                                          <button className="button is-loading" disabled>Loading</button> :
-                                         trip.eurail[idx]}</td>
+                                         trip.prices.eurail[idx]}</td>
                                  </tr>
                              ))}
                          </tbody>

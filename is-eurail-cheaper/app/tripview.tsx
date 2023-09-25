@@ -67,6 +67,7 @@ export default function TripView() {
     }
 
     async function onSearchSubmit(formData: FormData) {
+        let cities = trips[currentTrip].cities;
         let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
         let toCity = formData.get("toCity");
         let toCityId = formData.get("toCityId");
@@ -76,52 +77,51 @@ export default function TripView() {
         }
 
         // setCities(cities.set(toCity, toCityId));
-        updateActiveTrip("cities", trips[currentTrip].cities.set(toCity, toCityId));
-
-        if (fromCityId !== undefined) {
-            formData.append("fromCity", fromCity);
-            formData.append("fromCityId", fromCityId);
-
-            let startLength = trips[currentTrip].prices.db.length - 1; // update this idx when it's done
-
-            fetch('http://127.0.0.1:8000/api/price/eurail', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                   let data = await response.json();
-                   let price = extractPrice(data.journeys);
-                   let newEurail = [...trips[currentTrip].prices.eurail];
-                   newEurail[startLength] = price;
-                   // setEurail(newEurail);
-                    updateActiveTripPrices("eurail", newEurail);
-
-                   // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
-               } else {
-                   console.log("response not ok - price eurail");
-               }
-            });
-
-            fetch('http://127.0.0.1:8000/api/price/db', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                    let data = await response.json();
-                    console.log(data);
-                    let price = extractPrice(data.journeys);
-                    let newPrices = [...trips[currentTrip].prices.db];
-                    newPrices[startLength] = price;
-                    // setPrices(newPrices);
-                    updateActiveTripPrices("prices", newPrices);
-                } else {
-                    console.log("response not ok - price db");
-                }
-            });
-        }
-
         updateActiveTripPrices("eurail", trips[currentTrip].prices.eurail.concat("+"));
         updateActiveTripPrices("db", trips[currentTrip].prices.db.concat("+"));
+        updateActiveTrip("cities", cities.set(toCity, toCityId));
+        //
+        // if (fromCityId !== undefined) {
+        //     formData.append("fromCity", fromCity);
+        //     formData.append("fromCityId", fromCityId);
+        //
+        //     let startLength = trips[currentTrip].prices.db.length - 1; // update this idx when it's done
+        //
+        //     fetch('http://127.0.0.1:8000/api/price/eurail', {
+        //         method: 'POST',
+        //         body: formData,
+        //     }).then(async response => {
+        //         if (response.ok) {
+        //             let data = await response.json();
+        //             let price = extractPrice(data.journeys);
+        //             let newEurail = [...trips[currentTrip].prices.eurail];
+        //             newEurail[startLength] = price;
+        //             // setEurail(newEurail);
+        //             updateActiveTripPrices("eurail", newEurail);
+        //
+        //             // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
+        //         } else {
+        //             console.log("response not ok - price eurail");
+        //         }
+        //     });
+        //
+        //     fetch('http://127.0.0.1:8000/api/price/db', {
+        //         method: 'POST',
+        //         body: formData,
+        //     }).then(async response => {
+        //         if (response.ok) {
+        //             let data = await response.json();
+        //             console.log(data);
+        //             let price = extractPrice(data.journeys);
+        //             let newPrices = [...trips[currentTrip].prices.db];
+        //             newPrices[startLength] = price;
+        //             // setPrices(newPrices);
+        //             updateActiveTripPrices("prices", newPrices);
+        //         } else {
+        //             console.log("response not ok - price db");
+        //         }
+        //     });
+        // }
     }
 
     function sumArr(arr: Array<any>) {
