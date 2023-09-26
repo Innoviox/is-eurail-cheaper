@@ -116,33 +116,34 @@ export default function TripView() {
         if (idx < cities.size - 1) {
             return (
                 <div>
-                    <div className="level">
-                        <div className="level-left">
-                            <div className="level-item">
-                                <div>
-                                    <FontAwesomeIcon icon={faCity} />
+                    <div className="prices-container">
+                        <div className="upper level">
+                            <div className="level-left">
+                                <div className="level-item">
+                                    <div>
+                                        <FontAwesomeIcon icon={faCity} />
+                                    </div>
+                                </div>
+                                <div className="level-item">
+                                    <div>
+                                        <span>{city(idx)}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="level-item">
                                 <div>
-                                    <span>{city(idx)}</span>
+                                   <FontAwesomeIcon icon={faArrowRight} />
+                                </div>
+                            </div>
+                            <div className="level-right">
+                                <div className="level-item">
+                                    <div>
+                                        <span>{city(idx + 1)}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="level-item">
-                            <div>
-                               <FontAwesomeIcon icon={faArrowRight} />
-                            </div>
-                        </div>
-                        <div className="level-right">
-                            <div className="level-item">
-                                <div>
-                                    <span>{city(idx + 1)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="level">
+                        <div className="lower level">
                         <div className="level-item">
                             <div>
                                 <Image src={db_image} className="logo" alt="DB" />
@@ -156,7 +157,7 @@ export default function TripView() {
                             </div>
                         </div>
                     </div>
-                    <div className="level">
+                        <div className="lower level">
                         <div className="level-item">
                             <div>
                                 <Image src={eurail_image} className="logo"  alt="E" />
@@ -169,6 +170,7 @@ export default function TripView() {
                                     eurail[idx]}
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             )

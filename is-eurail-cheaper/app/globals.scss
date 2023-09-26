@@ -81,3 +81,15 @@ body {
   width: 30px;
   height: 30px;
 }
+
+.prices-container:hover > .upper {
+  background: gray;
+}
+
+.prices-container:hover > .lower {
+  background: lightgray;
+}
+
+.lower.level, .upper.level {
+  margin-bottom: 0 !important;
+}
