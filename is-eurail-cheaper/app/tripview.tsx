@@ -1,9 +1,10 @@
 import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import {faTrain, faBus, faArrowLeft, faArrowRight, faCity} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "./eurail.png";
+import db_image from "./db.png";
 import SearchBar from './searchbar';
 
 // todo currency, class
@@ -78,20 +79,20 @@ export default function TripView() {
 
             let startLength = db.length - 2; // update this idx when it's done
 
-            for (let endpoint of endpoints) {
-                fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
-                    method: 'POST',
-                    body: formData,
-                }).then(async response => {
-                    if (response.ok) {
-                        let data = await response.json();
-                        let price = extractPrice(data.journeys);
-                        addPrice(endpoint, price, startLength);
-                    } else {
-                        console.log(`response not ok - price ${endpoint}`);
-                    }
-                });
-            }
+            // for (let endpoint of endpoints) {
+            //     fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
+            //         method: 'POST',
+            //         body: formData,
+            //     }).then(async response => {
+            //         if (response.ok) {
+            //             let data = await response.json();
+            //             let price = extractPrice(data.journeys);
+            //             addPrice(endpoint, price, startLength);
+            //         } else {
+            //             console.log(`response not ok - price ${endpoint}`);
+            //         }
+            //     });
+            // }
         }
     }
 
@@ -115,36 +116,79 @@ export default function TripView() {
         if (idx < cities.size - 1) {
             return (
                 <div>
-                    <nav className="breadcrumb has-succeeds-separator trip-title-breadcrumb" aria-label="breadcrumbs">
-                        <ul>
-                            <li><a href="#">{city(idx)}</a></li>
-                            <li><a href="#">{city(idx + 1)}</a></li>
-                        </ul>
-                    </nav>
-                    <table className="table">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <FontAwesomeIcon icon={faTrain} />
-                                </td>
-                                <td>{db[idx] === -100 ?
+                    <div className="level">
+                        <div className="level-left">
+                            <div className="level-item">
+                                <div>
+                                    <FontAwesomeIcon icon={faCity} />
+                                </div>
+                            </div>
+                            <div className="level-item">
+                                <div>
+                                    <span>{city(idx)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="level-item">
+                            <div>
+                               <FontAwesomeIcon icon={faArrowRight} />
+                            </div>
+                        </div>
+                        <div className="level-right">
+                            <div className="level-item">
+                                <div>
+                                    <span>{city(idx + 1)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="level">
+                        <div className="level-item">
+                            <div>
+                                <Image src={db_image} className="logo" alt="DB" />
+                            </div>
+                        </div>
+                        <div className="level-item">
+                            <div>
+                                {db[idx] === -100 ?
                                     <button className="button is-loading" disabled>Loading</button> :
-                                    db[idx]}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <Image src={eurail_image} id="eurail-logo"  alt="E" />
-                                </td>
-                                <td>{eurail[idx] === -100 ?
+                                    db[idx]}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="level">
+                        <div className="level-item">
+                            <div>
+                                <Image src={eurail_image} className="logo"  alt="E" />
+                            </div>
+                        </div>
+                        <div className="level-item">
+                            <div>
+                                {eurail[idx] === -100 ?
                                     <button className="button is-loading" disabled>Loading</button> :
-                                    eurail[idx]}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    eurail[idx]}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )
         } else if (idx === cities.size - 1) {
-            return <span>{city(idx)}</span>
+            return (
+                <div className="level">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div>
+                                <FontAwesomeIcon icon={faCity} />
+                            </div>
+                        </div>
+                        <div className="level-item">
+                            <div>
+                                <span>{city(idx)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
         }
     }
 
