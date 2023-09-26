@@ -1,9 +1,17 @@
-import React, {useState, ChangeEvent, FormEvent, MouseEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, MouseEvent, useRef } from "react";
+import { useOuterClick } from "./outerclick";
 
 export default function SearchBar({onSearchSubmit}) {
+    const innerRef = useOuterClick(closeDropdown);
+
     let [stations, setStations] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, string>());
     let [showDropdown, setShowDropdown] = useState(false);
+
+    function closeDropdown() {
+        console.log("close dropdown");
+        setShowDropdown(false);
+    }
 
     async function prepareForSubmit(formData: FormData) {
         formData.append("toCityId", stationIds.get(formData.get("toCity")));
@@ -49,12 +57,13 @@ export default function SearchBar({onSearchSubmit}) {
     }
 
     return (
-        <div id="searchbar">
+        <div ref={innerRef} id="searchbar">
             <form onSubmit={onSubmit} id="search-form">
                 <div className="level" id="search-container">
                     <div className="level-left">
                         <div className="level-item">
-                            <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
+                            <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}
+                                 tabIndex={0} onBlur={closeDropdown}>
                                 <div className="dropdown-trigger">
                                     <div className="control">
                                         <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} autoComplete="off" />
