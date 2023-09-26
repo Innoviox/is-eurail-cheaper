@@ -8,7 +8,7 @@ import TripView from './tripview'
 export default function Home() {
   return (
       <main>
-          <nav className="navbar" role="navigation" aria-label="main navigation">
+          <nav className="navbar is-light" role="navigation" aria-label="main navigation">
               <div className="navbar-menu">
                   <div className="navbar-start">
                       <a className="navbar-item">

@@ -218,7 +218,7 @@ export default function TripView() {
                         </div>
                     </section>
                     <footer className="modal-card-foot">
-                        <button className="button is-success" onClick={createTrip}>Create</button>
+                        <button className="button is-success" disabled={tripName === ""} onClick={createTrip}>Create</button>
                         <button className="button" onClick={closeModal}>Cancel</button>
                     </footer>
                 </div>
