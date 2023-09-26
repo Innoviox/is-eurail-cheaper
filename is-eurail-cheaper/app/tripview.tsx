@@ -1,10 +1,9 @@
-import React, {FormEvent} from "react";
+import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrain, faBus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faTrain, faBus, faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 
 import SearchBar from './searchbar';
-import Trip from './trip';
 
 // todo currency, class
 const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
@@ -19,46 +18,11 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
 
 export default function TripView() {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
+    const city = (idx: number) => [...cities][idx][0];
 
-    let [trips, setTrips] = useState([]);
-    let [modalActive, setModalActive] = useState(false);
-    let [currentTrip, setCurrentTrip] = useState(-1);
-    let [tripName, setTripName] = useState("");
-
-    function emptyTrip() {
-        return {
-            'name': '',
-            'cities': new Map<string, string>,
-            'prices': {
-                'db': [],
-                'eurail': [],
-                'flixbus': [],
-                'hostelworld': [],
-                'ryanair': []
-            },
-            'id': trips.length
-        }
-    }
-
-    function updateActiveTrip(key, newval) {
-        let t = { ...trips[currentTrip] };
-        t[key] = newval;
-
-        let newTrips = [...trips];
-        newTrips[currentTrip] = t;
-
-        setTrips(newTrips);
-    }
-
-    function updateActiveTripPrices(key, newval) {
-        let t = { ...trips[currentTrip] };
-        t.prices[key] = newval;
-
-        let newTrips = [...trips];
-        newTrips[currentTrip] = t;
-
-        setTrips(newTrips);
-    }
+    let [cities, setCities] = useState(new Map<string, string>);
+    let [db, setDb] : [number[], Dispatch<any>] = useState([]);
+    let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
 
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
@@ -66,22 +30,25 @@ export default function TripView() {
         return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
     }
 
-    async function onSearchSubmit(formData: FormData) {
-        // todo make default trip if empty; problem is state does not update in time; manually set for use?
-        // if (trips.length === 0) {
-        //     tripName = "Default";
-        //     createTrip();
-        //     // useEffect(() => onSearchSubmit(formData), [currentTrip]);
-        //     setCurrentTrip(0);
-        //     // setCurrentTrip(0, () => onSearchSubmit(formData));
-        //     return;
-        // }
-
-        if (currentTrip === -1) {
-            return;
+    // todo do this better
+    function addPrice(key: string, price: number) {
+        switch (key) {
+            case "db": {
+                let n = [...db];
+                n.push(price);
+                setDb(n);
+                break;
+            }
+            case "eurail": {
+                let n = [...eurail];
+                n.push(price);
+                setEurail(n);
+                break;
+            }
         }
+    }
 
-        let cities = trips[currentTrip].cities;
+    async function onSearchSubmit(formData: FormData) {
         let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
         let toCity = formData.get("toCity");
         let toCityId = formData.get("toCityId");
@@ -90,16 +57,15 @@ export default function TripView() {
             return;
         }
 
-        // setCities(cities.set(toCity, toCityId));
-        updateActiveTripPrices("eurail", trips[currentTrip].prices.eurail.concat("+"));
-        updateActiveTripPrices("db", trips[currentTrip].prices.db.concat("+"));
-        updateActiveTrip("cities", cities.set(toCity, toCityId));
+        setCities(cities.set(toCity, toCityId));
+        addPrice("db", -100);
+        addPrice("eurail", -100);
 
         if (fromCityId !== undefined) {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = trips[currentTrip].prices.db.length - 2; // update this idx when it's done
+            let startLength = db.length - 2; // update this idx when it's done
 
             fetch('http://127.0.0.1:8000/api/price/eurail', {
                 method: 'POST',
@@ -108,10 +74,7 @@ export default function TripView() {
                 if (response.ok) {
                     let data = await response.json();
                     let price = extractPrice(data.journeys);
-                    let newEurail = [...trips[currentTrip].prices.eurail];
-                    newEurail[startLength] = price;
-                    // setEurail(newEurail);
-                    updateActiveTripPrices("eurail", newEurail);
+                    addPrice("eurail", price);
 
                     // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
                 } else {
@@ -125,12 +88,8 @@ export default function TripView() {
             }).then(async response => {
                 if (response.ok) {
                     let data = await response.json();
-                    console.log(data);
                     let price = extractPrice(data.journeys);
-                    let newPrices = [...trips[currentTrip].prices.db];
-                    newPrices[startLength] = price;
-                    // setPrices(newPrices);
-                    updateActiveTripPrices("prices", newPrices);
+                    addPrice("db", price);
                 } else {
                     console.log("response not ok - price db");
                 }
@@ -142,88 +101,48 @@ export default function TripView() {
         return arr.slice(1).reduce((a, b) => a + b, 0);
     }
 
-    function newTripModal() {
-        setModalActive(true);
-    }
-
-    function openTrip(trip) {
-        return () => setCurrentTrip(trip.id);
-    }
-
-    function closeTrip() {
-        setCurrentTrip(-1);
-    }
-
-    function renderTrip(trip: any, open: boolean): React.JSX.Element {
-        return <Trip trip={trip} open={open} onopen={openTrip(trip)} onclose={closeTrip} />
-    }
-
-    function renderEmptyTrip(): React.JSX.Element {
-        return <Trip trip={{name: '+ Create New Trip', empty: true}} open={false} onopen={newTripModal} onclose={undefined} />
-    }
-
-    function renderTrips(): React.JSX.Element {
-        console.log(currentTrip);
-        if (currentTrip === -1) {
-            return (
-                <div>
-                     {trips.map(t => renderTrip(t, false))}
-                     {renderEmptyTrip()}
-                </div>
-            );
-        } else {
-            return renderTrip(trips[currentTrip], true);
-        }
-    }
-
-    function addTrip(t) {
-        let newTrips = [...trips];
-        newTrips.push(t);
-        setTrips(newTrips);
-    }
-
-    function closeModal() {
-        console.log("closing modal");
-        setModalActive(false);
-        setTripName(""); // reset modal fields
-    }
-
-    function createTrip() {
-        let t = emptyTrip();
-        t.name = tripName;
-        closeModal();
-        setCurrentTrip(t.id);
-        addTrip(t);
-    }
-
-    function renderModal() {
+    function renderTrip(): React.JSX.Element {
         return (
-            <div id="new-trip-modal" className={"modal " + (modalActive ? "is-active" : "")}>
-                <div className="modal-background"></div>
-                <div className="modal-card">
-                    <section className="modal-card-body">
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Trip Name</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <p className="control">
-                                        <input className="input" type="text" placeholder="Make it good..."
-                                               value={tripName} onChange={evt => setTripName(evt.target.value)} />
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <footer className="modal-card-foot">
-                        <button className="button is-success" disabled={tripName === ""} onClick={createTrip}>Create</button>
-                        <button className="button" onClick={closeModal}>Cancel</button>
-                    </footer>
-                </div>
-                <button className="modal-close is-large" aria-label="close" onClick={closeModal} />
+            <div>
+                {Array.from(cities.keys(), (city: string, idx: number) => (
+                    <div key={city}>
+                        {renderPrices(idx)}
+                    </div>
+                ))}
             </div>
         )
+    }
+
+    function renderPrices(idx: number) {
+        if (idx < cities.size - 1) {
+            return (
+                <div>
+                    <nav className="breadcrumb has-succeeds-separator trip-title-breadcrumb" aria-label="breadcrumbs">
+                        <ul>
+                            <li><a href="#">{city(idx)}</a></li>
+                            <li><a href="#">{city(idx + 1)}</a></li>
+                        </ul>
+                    </nav>
+                    <table className="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <FontAwesomeIcon icon={faTrain} />
+                            </td>
+                            <td>{db[idx] === -100 ?
+                                <button className="button is-loading" disabled>Loading</button> :
+                                db[idx]}</td>
+                            <td>{eurail[idx] === -100 ?
+                                <button className="button is-loading" disabled>Loading</button> :
+                                eurail[idx]}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            )
+        } else if (idx === cities.size - 1) {
+            return <span>{city(idx)}</span>
+        }
     }
 
     return (
@@ -231,10 +150,8 @@ export default function TripView() {
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br />
             <div id="trips-box">
-                <p>Your Trips</p>
-                {renderTrips()}
+                {renderTrip()}
             </div>
-            {renderModal()}
         </div>
     )
 }
