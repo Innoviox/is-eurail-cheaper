@@ -1,5 +1,5 @@
 import React, {FormEvent} from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrain, faBus } from '@fortawesome/free-solid-svg-icons'
 
@@ -67,6 +67,21 @@ export default function TripView() {
     }
 
     async function onSearchSubmit(formData: FormData) {
+        // console.log("search submitting");
+        // todo make default trip if empty; problem is state does not update in time; manually set for use?
+        // if (trips.length === 0) {
+        //     tripName = "Default";
+        //     createTrip();
+        //     // useEffect(() => onSearchSubmit(formData), [currentTrip]);
+        //     setCurrentTrip(0);
+        //     // setCurrentTrip(0, () => onSearchSubmit(formData));
+        //     return;
+        // }
+
+        if (currentTrip === -1) {
+            return;
+        }
+
         let cities = trips[currentTrip].cities;
         let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
         let toCity = formData.get("toCity");
