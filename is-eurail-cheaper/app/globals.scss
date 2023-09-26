@@ -90,6 +90,13 @@ body {
   background: lightgray;
 }
 
-.lower.level, .upper.level {
+.lower .level, .upper.level {
   margin-bottom: 0 !important;
+}
+
+.vl {
+  border-left: 2px solid gray;
+  //height: 100%;
+  height: 40px;
+  margin-left: 10px;
 }
