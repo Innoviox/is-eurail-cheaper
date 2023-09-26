@@ -55,7 +55,7 @@ body {
 
 #trips-box {
   height: 80%;
-  border: 2px solid #7321AD;
+  //border: 2px solid #7321AD;
   padding: 10px;
   border-radius: 25px;
 }
@@ -75,4 +75,9 @@ body {
 
 .trip-title-breadcrumb {
   margin-bottom: 0 !important;
+}
+
+#eurail-logo {
+  width: 15px;
+  height: 15px;
 }

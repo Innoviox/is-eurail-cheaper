@@ -2,7 +2,8 @@ import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrain, faBus, faArrowLeft} from '@fortawesome/free-solid-svg-icons';
-
+import Image from 'next/image';
+import eurail_image from "./eurail.png";
 import SearchBar from './searchbar';
 
 // todo currency, class
@@ -24,6 +25,8 @@ export default function TripView() {
     let [db, setDb] : [number[], Dispatch<any>] = useState([]);
     let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
 
+    const endpoints = ["db", "eurail"];
+
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
         // console.log(eurail);
@@ -31,17 +34,25 @@ export default function TripView() {
     }
 
     // todo do this better
-    function addPrice(key: string, price: number) {
+    function addPrice(key: string, price: number, set: number | undefined = undefined) {
         switch (key) {
             case "db": {
                 let n = [...db];
-                n.push(price);
+                if (set === undefined) {
+                    n.push(price);
+                } else {
+                    n[set] = price;
+                }
                 setDb(n);
                 break;
             }
             case "eurail": {
                 let n = [...eurail];
-                n.push(price);
+                if (set === undefined) {
+                    n.push(price);
+                } else {
+                    n[set] = price;
+                }
                 setEurail(n);
                 break;
             }
@@ -58,7 +69,7 @@ export default function TripView() {
         }
 
         setCities(cities.set(toCity, toCityId));
-        addPrice("db", -100);
+        addPrice("db", -100); // start loading wheels
         addPrice("eurail", -100);
 
         if (fromCityId !== undefined) {
@@ -67,33 +78,20 @@ export default function TripView() {
 
             let startLength = db.length - 2; // update this idx when it's done
 
-            fetch('http://127.0.0.1:8000/api/price/eurail', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                    let data = await response.json();
-                    let price = extractPrice(data.journeys);
-                    addPrice("eurail", price);
-
-                    // setEurail(eurail.concat(extractPrice(data.journeys))); // change based on startLength
-                } else {
-                    console.log("response not ok - price eurail");
-                }
-            });
-
-            fetch('http://127.0.0.1:8000/api/price/db', {
-                method: 'POST',
-                body: formData,
-            }).then(async response => {
-                if (response.ok) {
-                    let data = await response.json();
-                    let price = extractPrice(data.journeys);
-                    addPrice("db", price);
-                } else {
-                    console.log("response not ok - price db");
-                }
-            });
+            for (let endpoint of endpoints) {
+                fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
+                    method: 'POST',
+                    body: formData,
+                }).then(async response => {
+                    if (response.ok) {
+                        let data = await response.json();
+                        let price = extractPrice(data.journeys);
+                        addPrice(endpoint, price, startLength);
+                    } else {
+                        console.log(`response not ok - price ${endpoint}`);
+                    }
+                });
+            }
         }
     }
 
@@ -125,17 +123,22 @@ export default function TripView() {
                     </nav>
                     <table className="table">
                         <tbody>
-                        <tr>
-                            <td>
-                                <FontAwesomeIcon icon={faTrain} />
-                            </td>
-                            <td>{db[idx] === -100 ?
-                                <button className="button is-loading" disabled>Loading</button> :
-                                db[idx]}</td>
-                            <td>{eurail[idx] === -100 ?
-                                <button className="button is-loading" disabled>Loading</button> :
-                                eurail[idx]}</td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <FontAwesomeIcon icon={faTrain} />
+                                </td>
+                                <td>{db[idx] === -100 ?
+                                    <button className="button is-loading" disabled>Loading</button> :
+                                    db[idx]}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Image src={eurail_image} id="eurail-logo"  alt="E" />
+                                </td>
+                                <td>{eurail[idx] === -100 ?
+                                    <button className="button is-loading" disabled>Loading</button> :
+                                    eurail[idx]}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
