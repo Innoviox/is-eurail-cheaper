@@ -62,8 +62,7 @@ export default function SearchBar({onSearchSubmit}) {
                 <div className="level" id="search-container">
                     <div className="level-left">
                         <div className="level-item">
-                            <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}
-                                 tabIndex={0} onBlur={closeDropdown}>
+                            <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
                                 <div className="dropdown-trigger">
                                     <div className="control">
                                         <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} autoComplete="off" />

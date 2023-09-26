@@ -59,7 +59,7 @@ export default function Trip({trip, open, onopen, onclose}: {trip: any; open: bo
 
     function closedTrip() {
         return (
-            <button className="button closed-trip is-large" onClick={onopen}>
+            <button className={"button closed-trip is-large " + (trip.empty ? "is-info" : "")} onClick={onopen}>
                 {trip.name}
             </button>
         )

@@ -67,7 +67,6 @@ export default function TripView() {
     }
 
     async function onSearchSubmit(formData: FormData) {
-        // console.log("search submitting");
         // todo make default trip if empty; problem is state does not update in time; manually set for use?
         // if (trips.length === 0) {
         //     tripName = "Default";
@@ -160,7 +159,7 @@ export default function TripView() {
     }
 
     function renderEmptyTrip(): React.JSX.Element {
-        return <Trip trip={{name: '+'}} open={false} onopen={newTripModal} onclose={undefined} />
+        return <Trip trip={{name: '+ Create New Trip', empty: true}} open={false} onopen={newTripModal} onclose={undefined} />
     }
 
     function renderTrips(): React.JSX.Element {
@@ -231,8 +230,8 @@ export default function TripView() {
         <div id="trip-view">
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <br />
-            <p>Your Trips</p>
             <div id="trips-box">
+                <p>Your Trips</p>
                 {renderTrips()}
             </div>
             {renderModal()}
