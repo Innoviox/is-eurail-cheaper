@@ -25,6 +25,7 @@ export default function TripView() {
     let [cities, setCities] = useState(new Map<string, string>);
     let [db, setDb] : [number[], Dispatch<any>] = useState([]);
     let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
+    let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
@@ -35,7 +36,7 @@ export default function TripView() {
     }
 
     // todo do this better
-    function addPrice(key: string, price: number, set: number | undefined = undefined) {
+    function add(key: string, price: number | boolean, set: number | undefined = undefined) {
         switch (key) {
             case "db": {
                 let n = [...db];
@@ -57,6 +58,16 @@ export default function TripView() {
                 setEurail(n);
                 break;
             }
+            case "open": {
+                let n = [...open];
+                if (set === undefined) {
+                    n.push(true);
+                } else {
+                    n[set] = price;
+                }
+                setOpen(n);
+                break;
+            }
         }
     }
 
@@ -70,8 +81,9 @@ export default function TripView() {
         }
 
         setCities(cities.set(toCity, toCityId));
-        addPrice("db", -100); // start loading wheels
-        addPrice("eurail", -100);
+        add("db", -100); // start loading wheels
+        add("eurail", -100);
+        add("open", true);
 
         if (fromCityId !== undefined) {
             formData.append("fromCity", fromCity);
@@ -87,7 +99,7 @@ export default function TripView() {
             //         if (response.ok) {
             //             let data = await response.json();
             //             let price = extractPrice(data.journeys);
-            //             addPrice(endpoint, price, startLength);
+            //             add(endpoint, price, startLength);
             //         } else {
             //             console.log(`response not ok - price ${endpoint}`);
             //         }
@@ -98,6 +110,10 @@ export default function TripView() {
 
     function sumArr(arr: Array<any>) {
         return arr.slice(1).reduce((a, b) => a + b, 0);
+    }
+
+    function toggleOpen(idx: number) {
+        add("open", !open[idx], idx);
     }
 
     function renderTrip(): React.JSX.Element {
@@ -116,7 +132,7 @@ export default function TripView() {
         if (idx < cities.size - 1) {
             return (
                 <div>
-                    <div className="prices-container">
+                    <div className="prices-container" onClick={() => toggleOpen(idx)}>
                         <div className="upper level">
                             <div className="level-left">
                                 <div className="level-item">
@@ -143,34 +159,38 @@ export default function TripView() {
                                 </div>
                             </div>
                         </div>
-                        <div className="lower level">
-                        <div className="level-item">
-                            <div>
-                                <Image src={db_image} className="logo" alt="DB" />
+                        { open[idx] ?
+                            <div className="lower">
+                                <div className="level">
+                            <div className="level-item">
+                                <div>
+                                    <Image src={db_image} className="logo" alt="DB" />
+                                </div>
+                            </div>
+                            <div className="level-item">
+                                <div>
+                                    {db[idx] === -100 ?
+                                        <button className="button is-loading" disabled>Loading</button> :
+                                        db[idx]}
+                                </div>
                             </div>
                         </div>
-                        <div className="level-item">
-                            <div>
-                                {db[idx] === -100 ?
-                                    <button className="button is-loading" disabled>Loading</button> :
-                                    db[idx]}
+                                <div className="level">
+                            <div className="level-item">
+                                <div>
+                                    <Image src={eurail_image} className="logo"  alt="E" />
+                                </div>
+                            </div>
+                            <div className="level-item">
+                                <div>
+                                    {eurail[idx] === -100 ?
+                                        <button className="button is-loading" disabled>Loading</button> :
+                                        eurail[idx]}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                        <div className="lower level">
-                        <div className="level-item">
-                            <div>
-                                <Image src={eurail_image} className="logo"  alt="E" />
                             </div>
-                        </div>
-                        <div className="level-item">
-                            <div>
-                                {eurail[idx] === -100 ?
-                                    <button className="button is-loading" disabled>Loading</button> :
-                                    eurail[idx]}
-                            </div>
-                        </div>
-                    </div>
+                            : <></>}
                     </div>
                 </div>
             )
