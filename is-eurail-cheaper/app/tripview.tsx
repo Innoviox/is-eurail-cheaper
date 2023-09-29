@@ -28,6 +28,7 @@ export default function TripView() {
     let [eurail, setEurail] : [any[], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
+    let [picker, setPicker]: [string[], Dispatch<any>] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
@@ -84,6 +85,16 @@ export default function TripView() {
                 setChoices(n);
                 break;
             }
+            case "picker": {
+                let n = [...picker];
+                if (set === undefined) {
+                    n.push(price);
+                } else {
+                    n[set] = price;
+                }
+                setPicker(n);
+                break;
+            }
         }
     }
 
@@ -101,6 +112,7 @@ export default function TripView() {
         add("eurail", [-100, -100]);
         add("open", true);
         add("choices", "");
+        add("picker", "");
 
         if (fromCityId !== undefined) {
             formData.append("fromCity", fromCity);
@@ -190,7 +202,7 @@ export default function TripView() {
                                                         <Image src={eurail_image} className="logo"  alt="E" />
                                                         {eurail[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            renderPricePicker(idx, eurail)
+                                                            renderPricePicker(idx, eurail, "eurail")
                                                         }
                                                     </div>
                                                 </div>
@@ -223,17 +235,16 @@ export default function TripView() {
         }
     }
 
-    function renderPricePicker(idx: number, lst: any[]) {
+    // todo improve lstname stuff
+    function renderPricePicker(idx: number, lst: any[], lstname: string) {
         return (
-            <div className="dropdown">
-                <div className="dropdown-trigger">
+            <div className="">
+                <div onClick={() => add("picker", picker[idx] === lstname ? "" : lstname, idx)}>
                     { renderPricePickerElement(idx, lst, 0) }
-                    <span className="icon is-small">
-                        <i className="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
                 </div>
-                <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content">
+
+                { picker[idx] === lstname ?
+                    <div>
                         {
                             lst[idx].map((data, i) => {
                                 if (i !== 0) {
@@ -242,14 +253,15 @@ export default function TripView() {
                             })
                         }
                     </div>
-                </div>
+                    : <></>
+                }
             </div>
         );
     }
 
     function renderPricePickerElement(idx: number, lst: any[], tripN: number) {
         return (
-            <div className="tags has-addons">
+            <div className="tags has-addons price-picker">
                 <div className="tag is-info">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>

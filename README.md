@@ -5,7 +5,7 @@
 
 ## Roadmap
 
-- [ ] UI
+- [ ] anUI
   - [ ] search bar
   - [ ] trip space
   - [ ] add cities
@@ -30,10 +30,12 @@
     - [ ] animate
   - [ ] Make hovering the price look nicer
   - [ ] Make hovering the segment look nicer
-  - [ ] Make the price display look nicer
+    - [ ] animate
+  - [x] Make the price display look nicer
   - [ ] Make the price inline display look nicer
   - [ ] Update the summed trips
   - [ ] Update the eurail with pass price
+  - [ ] center price display with respect to image
 
 # API exploration
 
