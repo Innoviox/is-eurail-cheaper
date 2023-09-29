@@ -24,8 +24,8 @@ export default function TripView() {
     const city = (idx: number) => [...cities][idx][0];
 
     let [cities, setCities] = useState(new Map<string, string>);
-    let [db, setDb] : [number[], Dispatch<any>] = useState([]);
-    let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
+    let [db, setDb] : [number[][], Dispatch<any>] = useState([]);
+    let [eurail, setEurail] : [number[][], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
@@ -34,7 +34,10 @@ export default function TripView() {
     function extractPrice(trips: Array<any>) {
         // for now just use cheapest
         // console.log(eurail);
-        return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
+        // return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
+        console.log(trips);
+        console.log(trips.map(i => [parseInt(i.price), i.length]));
+        return trips.map(i => [parseInt(i.price), i.length]).sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0])[0];
     }
 
     // todo do this better
@@ -51,6 +54,7 @@ export default function TripView() {
                 break;
             }
             case "eurail": {
+                console.log("setting eurail", price, set);
                 let n = [...eurail];
                 if (set === undefined) {
                     n.push(price);
@@ -93,8 +97,8 @@ export default function TripView() {
         }
 
         setCities(cities.set(toCity, toCityId));
-        add("db", -100); // start loading wheels
-        add("eurail", -100);
+        add("db", [-100, -100]); // start loading wheels
+        add("eurail", [-100, -100]);
         add("open", true);
         add("choices", "");
 
@@ -102,22 +106,23 @@ export default function TripView() {
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = db.length - 2; // update this idx when it's done
+            let startLength = db.length - 1; // update this idx when it's done
+            console.log("startlength", startLength);
 
-            // for (let endpoint of endpoints) {
-            //     fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
-            //         method: 'POST',
-            //         body: formData,
-            //     }).then(async response => {
-            //         if (response.ok) {
-            //             let data = await response.json();
-            //             let price = extractPrice(data.journeys);
-            //             add(endpoint, price, startLength);
-            //         } else {
-            //             console.log(`response not ok - price ${endpoint}`);
-            //         }
-            //     });
-            // }
+            for (let endpoint of endpoints) {
+                fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
+                    method: 'POST',
+                    body: formData,
+                }).then(async response => {
+                    if (response.ok) {
+                        let data = await response.json();
+                        let price = extractPrice(data.journeys);
+                        add(endpoint, price, startLength);
+                    } else {
+                        console.log(`response not ok - price ${endpoint}`);
+                    }
+                });
+            }
         }
     }
 
@@ -161,9 +166,17 @@ export default function TripView() {
                                                 <div>
                                                     <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
                                                         <Image src={db_image} className="logo" alt="DB" />
-                                                        {db[idx] === -100 ?
+                                                        {db[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            db[idx]}
+                                                            <div className="tags has-addons">
+                                                                <div className="tag">
+                                                                    {db[idx][0]}
+                                                                </div>
+                                                                <div className="tag">
+                                                                    {db[idx][1]}
+                                                                </div>
+                                                            </div>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -175,9 +188,16 @@ export default function TripView() {
                                                 <div>
                                                     <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
                                                         <Image src={eurail_image} className="logo"  alt="E" />
-                                                        {eurail[idx] === -100 ?
+                                                        {eurail[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            eurail[idx]}
+                                                            <div className="tags has-addons">
+                                                                <div className="tag">
+                                                                    {eurail[idx][0]}
+                                                                </div>
+                                                                <div className="tag">
+                                                                    {eurail[idx][1]}
+                                                                </div>
+                                                            </div>}
                                                     </div>
                                                 </div>
                                             </div>
