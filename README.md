@@ -19,7 +19,21 @@
 - [ ] features
   - [ ] currency conversion
   - [ ] flixbus
-  - [ ] 
+
+
+
+# Steps
+
+- [ ] Trip UI
+  - [ ] Make trips a dropdown
+    - [ ] dropdown of possible trips; click => that one's picked
+    - [ ] animate
+  - [ ] Make hovering the price look nicer
+  - [ ] Make hovering the segment look nicer
+  - [ ] Make the price display look nicer
+  - [ ] Make the price inline display look nicer
+  - [ ] Update the summed trips
+  - [ ] Update the eurail with pass price
 
 # API exploration
 

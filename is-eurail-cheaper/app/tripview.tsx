@@ -1,7 +1,7 @@
 import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft, faArrowRight, faCity} from '@fortawesome/free-solid-svg-icons';
+import {faTrain, faBus, faArrowLeft, faArrowRight, faCity, faDollarSign, faClock} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
@@ -25,7 +25,7 @@ export default function TripView() {
 
     let [cities, setCities] = useState(new Map<string, string>);
     let [db, setDb] : [number[][], Dispatch<any>] = useState([]);
-    let [eurail, setEurail] : [number[][], Dispatch<any>] = useState([]);
+    let [eurail, setEurail] : [any[], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
@@ -37,7 +37,7 @@ export default function TripView() {
         // return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
         console.log(trips);
         console.log(trips.map(i => [parseInt(i.price), i.length]));
-        return trips.map(i => [parseInt(i.price), i.length]).sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0])[0];
+        return trips.map(i => [parseInt(i.price), i.length]).sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
     // todo do this better
@@ -190,14 +190,23 @@ export default function TripView() {
                                                         <Image src={eurail_image} className="logo"  alt="E" />
                                                         {eurail[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            <div className="tags has-addons">
-                                                                <div className="tag">
-                                                                    {eurail[idx][0]}
-                                                                </div>
-                                                                <div className="tag">
-                                                                    {eurail[idx][1]}
-                                                                </div>
-                                                            </div>}
+
+                                                                    <div className="tags has-addons">
+                                                                        <div className="tag is-info">
+                                                                            <FontAwesomeIcon icon={faDollarSign} />
+                                                                        </div>
+                                                                        <div className="tag is-success">
+                                                                            {eurail[idx][0][0]}
+                                                                        </div>
+
+                                                                        <div className="tag is-info">
+                                                                            <FontAwesomeIcon icon={faClock} />
+                                                                        </div>
+                                                                        <div className="tag is-success">
+                                                                            {eurail[idx][0][1]}
+                                                                        </div>
+                                                                    </div>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
