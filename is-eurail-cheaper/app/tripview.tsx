@@ -6,6 +6,7 @@ import Image from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
 import SearchBar from './searchbar';
+import City from './city';
 
 // todo currency, class
 const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
@@ -143,7 +144,7 @@ export default function TripView() {
                                     </div>
                                     <div className="level-item">
                                         <div>
-                                            <span>{city(idx)}</span>
+                                            <City name={city(idx)} />
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +158,7 @@ export default function TripView() {
                                 <div className="level-right">
                                     <div className="level-item">
                                         <div>
-                                            <span>{city(idx + 1)}</span>
+                                            <City name={city(idx + 1)} />
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +224,7 @@ export default function TripView() {
                                     </div>
                                     <div className="level-item">
                                         <div>
-                                            <span>{city(idx)}</span>
+                                            <City name={city(idx)} />
                                         </div>
                                     </div>
                                     <div className="level-item">
@@ -233,7 +234,7 @@ export default function TripView() {
                                     </div>
                                     <div className="level-item">
                                         <div>
-                                            <span>{city(idx + 1)}</span>
+                                            <City name={city(idx + 1)} />
                                         </div>
                                     </div>
                                 </div>
@@ -256,7 +257,7 @@ export default function TripView() {
                         </div>
                         <div className="level-item">
                             <div>
-                                <span>{city(idx)}</span>
+                                <City name={city(idx)} />
                             </div>
                         </div>
                     </div>
@@ -269,13 +270,11 @@ export default function TripView() {
         <div id="trip-view">
             <SearchBar onSearchSubmit={onSearchSubmit} />
             <div className="divider"></div>
-            <br />
             <div id="trips-box">
                 {renderTrip()}
             </div>
             <div className="divider"></div>
             <div id="price-totals">
-
             </div>
         </div>
     )
