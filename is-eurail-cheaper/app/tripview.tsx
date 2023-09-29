@@ -130,85 +130,123 @@ export default function TripView() {
 
     function renderPrices(idx: number) {
         if (idx < cities.size - 1) {
-            return (
-                <div>
-                    <div className="prices-container">
-                        <div className="upper level" onClick={() => toggleOpen(idx)}>
-                            <div className="level-left">
-                                <div className="level-item">
-                                    <div>
-                                        <FontAwesomeIcon icon={faCity} />
+            if (open[idx]) {
+                return (
+                    <div>
+                        <div className="prices-container">
+                            <div className="upper level" onClick={() => toggleOpen(idx)}>
+                                <div className="level-left">
+                                    <div className="level-item">
+                                        <div>
+                                            <FontAwesomeIcon icon={faCity}/>
+                                        </div>
+                                    </div>
+                                    <div className="level-item">
+                                        <div>
+                                            <span>{city(idx)}</span>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div className="level-item">
                                     <div>
-                                        <span>{city(idx)}</span>
+                                        <FontAwesomeIcon icon={faArrowRight}/>
+                                    </div>
+                                </div>
+
+                                <div className="level-right">
+                                    <div className="level-item">
+                                        <div>
+                                            <span>{city(idx + 1)}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="level-item">
-                                <div>
-                                   <FontAwesomeIcon icon={faArrowRight} />
-                                </div>
-                            </div>
-                            <div className="level-right">
-                                <div className="level-item">
-                                    <div>
-                                        <span>{city(idx + 1)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div >
-                        { open[idx] ?
+
                             <div className="lower">
-                                <div className="level">
-                                    <div className="level-left">
-                                        <div className="level-item">
-                                            <div>
-                                                <div className="vl"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <Image src={db_image} className="logo" alt="DB" />
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            {db[idx] === -100 ?
-                                                <button className="button is-loading" disabled>Loading</button> :
-                                                db[idx]}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="level">
-                                    <div className="level-left">
-                                        <div className="level-item">
-                                            <div>
-                                                <div className="vl">
+                                    <div className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <div className="vl"></div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <Image src={eurail_image} className="logo"  alt="E" />
+                                        <div className="level-item">
+                                            <div>
+                                                <Image src={db_image} className="logo" alt="DB" />
+                                            </div>
+                                        </div>
+                                        <div className="level-item">
+                                            <div>
+                                                {db[idx] === -100 ?
+                                                    <button className="button is-loading" disabled>Loading</button> :
+                                                    db[idx]}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="level-item">
-                                        <div>
-                                            {eurail[idx] === -100 ?
-                                                <button className="button is-loading" disabled>Loading</button> :
-                                                eurail[idx]}
+                                    <div className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <div className="vl">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="level-item">
+                                            <div>
+                                                <Image src={eurail_image} className="logo"  alt="E" />
+                                            </div>
+                                        </div>
+                                        <div className="level-item">
+                                            <div>
+                                                {eurail[idx] === -100 ?
+                                                    <button className="button is-loading" disabled>Loading</button> :
+                                                    eurail[idx]}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            : <></>}
+                        </div>
                     </div>
-                </div>
-            )
+                );
+            } else {
+                return (
+                    <div>
+                        <div className="prices-container">
+                            <div className="upper level" onClick={() => toggleOpen(idx)}>
+                                <div className="level-left">
+                                    <div className="level-item">
+                                        <div>
+                                            <FontAwesomeIcon icon={faCity}/>
+                                        </div>
+                                    </div>
+                                    <div className="level-item">
+                                        <div>
+                                            <span>{city(idx)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="level-item">
+                                        <div>
+                                            <FontAwesomeIcon icon={faArrowRight}/>
+                                        </div>
+                                    </div>
+                                    <div className="level-item">
+                                        <div>
+                                            <span>{city(idx + 1)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="level-right">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
         } else if (idx === cities.size - 1) {
             return (
                 <div className="level">

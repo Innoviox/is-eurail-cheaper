@@ -82,11 +82,11 @@ body {
   height: 30px;
 }
 
-.prices-container:hover > .upper {
+.upper:hover {
   background: gray;
 }
 
-.prices-container:hover > .lower {
+.upper:hover + .lower {
   background: lightgray;
 }
 
