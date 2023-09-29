@@ -27,6 +27,7 @@ export default function TripView() {
     let [db, setDb] : [number[], Dispatch<any>] = useState([]);
     let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
+    let [choices, setChoices] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
@@ -180,7 +181,7 @@ export default function TripView() {
                                         <div className="level-item">
                                             <div>
                                                 {db[idx] === -100 ?
-                                                    <button className="button is-loading" disabled>Loading</button> :
+                                                    <button className="button is-loading is-ghost">Loading</button> :
                                                     db[idx]}
                                             </div>
                                         </div>
@@ -202,7 +203,7 @@ export default function TripView() {
                                         <div className="level-item">
                                             <div>
                                                 {eurail[idx] === -100 ?
-                                                    <button className="button is-loading" disabled>Loading</button> :
+                                                    <button className="button is-loading is-ghost">Loading</button> :
                                                     eurail[idx]}
                                             </div>
                                         </div>
