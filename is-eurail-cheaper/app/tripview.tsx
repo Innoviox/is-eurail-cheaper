@@ -251,9 +251,9 @@ export default function TripView() {
          );
     }
 
-    return (
-        <div id="trip-view">
-            <SearchBar onSearchSubmit={onSearchSubmit} />
+    if (cities.size > 0) {
+        return <div id="trip-view">
+            <SearchBar onSearchSubmit={onSearchSubmit}/>
             <div className="divider"></div>
             <div id="trips-box">
                 {renderTrip()}
@@ -264,7 +264,7 @@ export default function TripView() {
                     <div className="level-item">
                         <div>
                             <div className="field is-grouped">
-                                <Image src={db_image} className="logo" alt="DB" />
+                                <Image src={db_image} className="logo" alt="DB"/>
                                 100
                             </div>
                         </div>
@@ -272,7 +272,7 @@ export default function TripView() {
                     <div className="level-item">
                         <div>
                             <div className="field is-grouped">
-                                <Image src={eurail_image} className="logo"  alt="E" />
+                                <Image src={eurail_image} className="logo" alt="E"/>
                                 100
                             </div>
                         </div>
@@ -280,5 +280,7 @@ export default function TripView() {
                 </div>
             </div>
         </div>
-    )
+    } else {
+        return <SearchBar onSearchSubmit={onSearchSubmit}/>
+    }
 }
