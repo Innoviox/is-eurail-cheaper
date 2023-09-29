@@ -27,7 +27,7 @@ export default function TripView() {
     let [db, setDb] : [number[], Dispatch<any>] = useState([]);
     let [eurail, setEurail] : [number[], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
-    let [choices, setChoices] = useState([]);
+    let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
@@ -38,7 +38,7 @@ export default function TripView() {
     }
 
     // todo do this better
-    function add(key: string, price: number | boolean, set: number | undefined = undefined) {
+    function add(key: string, price: any, set: number | undefined = undefined) {
         switch (key) {
             case "db": {
                 let n = [...db];
@@ -63,11 +63,21 @@ export default function TripView() {
             case "open": {
                 let n = [...open];
                 if (set === undefined) {
-                    n.push(true);
+                    n.push(price);
                 } else {
                     n[set] = price;
                 }
                 setOpen(n);
+                break;
+            }
+            case "choices": {
+                let n = [...choices];
+                if (set === undefined) {
+                    n.push(price);
+                } else {
+                    n[set] = price;
+                }
+                setChoices(n);
                 break;
             }
         }
@@ -86,6 +96,7 @@ export default function TripView() {
         add("db", -100); // start loading wheels
         add("eurail", -100);
         add("open", true);
+        add("choices", "");
 
         if (fromCityId !== undefined) {
             formData.append("fromCity", fromCity);
@@ -118,6 +129,11 @@ export default function TripView() {
         add("open", !open[idx], idx);
     }
 
+    function setChoice(idx: number, choice: string) {
+        console.log("set choice", choices);
+        add("choices", choice, idx);
+    }
+
     function renderTrip(): React.JSX.Element {
         return (
             <div>
@@ -132,45 +148,18 @@ export default function TripView() {
 
     function renderPrices(idx: number) {
         if (idx < cities.size - 1) {
-            if (open[idx]) {
-                return (
-                    <div>
-                        <div className="prices-container">
-                            <div className="upper level" onClick={() => toggleOpen(idx)}>
-                                <div className="level-left">
-                                    <div className="level-item">
-                                        <div>
-                                            <FontAwesomeIcon icon={faCity}/>
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <City name={city(idx)} />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="level-item">
-                                    <div>
-                                        <FontAwesomeIcon icon={faArrowRight}/>
-                                    </div>
-                                </div>
-
-                                <div className="level-right">
-                                    <div className="level-item">
-                                        <div>
-                                            <City name={city(idx + 1)} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            return (
+                <div>
+                    <div className="prices-container">
+                        {renderUpper(idx)}
+                        { open[idx] ?
                             <div className="lower">
                                 <div className="lower-inner">
                                     <div className="level">
                                         <div className="level-left">
                                             <div className="level-item">
                                                 <div>
-                                                    <div className="field is-grouped price-grouping">
+                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
                                                         <Image src={db_image} className="logo" alt="DB" />
                                                         {db[idx] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
@@ -184,7 +173,7 @@ export default function TripView() {
                                         <div className="level-left">
                                             <div className="level-item">
                                                 <div>
-                                                    <div className="field is-grouped">
+                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
                                                         <Image src={eurail_image} className="logo"  alt="E" />
                                                         {eurail[idx] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
@@ -196,44 +185,10 @@ export default function TripView() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            : <></> }
                     </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <div className="prices-container">
-                            <div className="upper level" onClick={() => toggleOpen(idx)}>
-                                <div className="level-left">
-                                    <div className="level-item">
-                                        <div>
-                                            <FontAwesomeIcon icon={faCity}/>
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <City name={city(idx)} />
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <FontAwesomeIcon icon={faArrowRight}/>
-                                        </div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div>
-                                            <City name={city(idx + 1)} />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="level-right">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
+                </div>
+            );
         } else if (idx === cities.size - 1) {
             return (
                 <div className="level">
@@ -252,6 +207,48 @@ export default function TripView() {
                 </div>
             )
         }
+    }
+
+    function renderUpper(idx: number) {
+         return  (
+             <div className="upper level" onClick={() => toggleOpen(idx)}>
+                <div className="level-left">
+                    <div className="level-item">
+                        <div>
+                            <FontAwesomeIcon icon={faCity}/>
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            <City name={city(idx)} />
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            <FontAwesomeIcon icon={faArrowRight}/>
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            <City name={city(idx + 1)} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="level-right">
+                    {choices[idx] !== "" ?
+                        <div>
+                            <div>
+                                <div className="field is-grouped price-grouping">
+                                    <Image src={db_image} className="logo" alt="DB" />
+                                    {db[idx]}
+                                </div>
+                            </div>
+                        </div>
+                    : <></>}
+                </div>
+            </div>
+         );
     }
 
     return (
