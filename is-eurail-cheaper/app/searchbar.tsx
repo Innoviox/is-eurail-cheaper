@@ -23,7 +23,7 @@ export default function SearchBar({onSearchSubmit}) {
         event.preventDefault();
         console.log("onsubmit");
 
-        await prepareForSubmit(new FormData(event.currentTarget));
+        // await prepareForSubmit(new FormData(event.currentTarget));
     }
 
     async function handleChange(event: ChangeEvent<HTMLInputElement>) {

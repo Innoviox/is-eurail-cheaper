@@ -190,22 +190,7 @@ export default function TripView() {
                                                         <Image src={eurail_image} className="logo"  alt="E" />
                                                         {eurail[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-
-                                                                    <div className="tags has-addons">
-                                                                        <div className="tag is-info">
-                                                                            <FontAwesomeIcon icon={faDollarSign} />
-                                                                        </div>
-                                                                        <div className="tag is-success">
-                                                                            {eurail[idx][0][0]}
-                                                                        </div>
-
-                                                                        <div className="tag is-info">
-                                                                            <FontAwesomeIcon icon={faClock} />
-                                                                        </div>
-                                                                        <div className="tag is-success">
-                                                                            {eurail[idx][0][1]}
-                                                                        </div>
-                                                                    </div>
+                                                            renderPricePicker(idx, eurail)
                                                         }
                                                     </div>
                                                 </div>
@@ -236,6 +221,50 @@ export default function TripView() {
                 </div>
             )
         }
+    }
+
+    function renderPricePicker(idx: number, lst: any[]) {
+        return (
+            <div className="dropdown">
+                <div className="dropdown-trigger">
+                    { renderPricePickerElement(idx, lst, 0) }
+                    <span className="icon is-small">
+                        <i className="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content">
+                        {
+                            lst[idx].map((data, i) => {
+                                if (i !== 0) {
+                                    return renderPricePickerElement(idx, lst, i);
+                                }
+                            })
+                        }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function renderPricePickerElement(idx: number, lst: any[], tripN: number) {
+        return (
+            <div className="tags has-addons">
+                <div className="tag is-info">
+                    <FontAwesomeIcon icon={faDollarSign} />
+                </div>
+                <div className="tag is-success">
+                    {lst[idx][tripN][0]}
+                </div>
+
+                <div className="tag is-info">
+                    <FontAwesomeIcon icon={faClock} />
+                </div>
+                <div className="tag is-success">
+                    {lst[idx][tripN][1]}
+                </div>
+            </div>
+        )
     }
 
     function renderUpper(idx: number) {
