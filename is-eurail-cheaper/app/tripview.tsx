@@ -166,17 +166,33 @@ export default function TripView() {
                             </div>
                             <div className="lower">
                                 <div className="lower-inner">
-                                    <div className="field is-grouped">
-                                        <Image src={db_image} className="logo" alt="DB" />
-                                        {db[idx] === -100 ?
-                                            <button className="button is-loading is-ghost">Loading</button> :
-                                            db[idx]}
+                                    <div className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <div className="field is-grouped price-grouping">
+                                                        <Image src={db_image} className="logo" alt="DB" />
+                                                        {db[idx] === -100 ?
+                                                            <button className="button is-loading is-ghost">Loading</button> :
+                                                            db[idx]}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="field is-grouped">
-                                        <Image src={eurail_image} className="logo"  alt="E" />
-                                        {eurail[idx] === -100 ?
-                                            <button className="button is-loading is-ghost">Loading</button> :
-                                            eurail[idx]}
+                                    <div className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <div className="field is-grouped">
+                                                        <Image src={eurail_image} className="logo"  alt="E" />
+                                                        {eurail[idx] === -100 ?
+                                                            <button className="button is-loading is-ghost">Loading</button> :
+                                                            eurail[idx]}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

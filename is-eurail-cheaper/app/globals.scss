@@ -121,3 +121,12 @@ body {
 .upper.level {
   //padding: 10px 0 10px 0;
 }
+
+.price-grouping {
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.price-grouping:hover {
+  border: 1px solid dodgerblue;
+}
