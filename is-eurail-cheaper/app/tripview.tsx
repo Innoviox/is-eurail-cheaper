@@ -260,6 +260,24 @@ export default function TripView() {
             </div>
             <div className="divider"></div>
             <div id="price-totals">
+                <div className="level">
+                    <div className="level-item">
+                        <div>
+                            <div className="field is-grouped">
+                                <Image src={db_image} className="logo" alt="DB" />
+                                100
+                            </div>
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            <div className="field is-grouped">
+                                <Image src={eurail_image} className="logo"  alt="E" />
+                                100
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
