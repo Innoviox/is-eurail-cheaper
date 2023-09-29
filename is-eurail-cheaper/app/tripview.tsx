@@ -162,7 +162,6 @@ export default function TripView() {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="lower">
                                     <div className="level">
                                         <div className="level-left">
@@ -246,7 +245,6 @@ export default function TripView() {
                     </div>
                 );
             }
-
         } else if (idx === cities.size - 1) {
             return (
                 <div className="level">
@@ -270,9 +268,14 @@ export default function TripView() {
     return (
         <div id="trip-view">
             <SearchBar onSearchSubmit={onSearchSubmit} />
+            <div className="divider"></div>
             <br />
             <div id="trips-box">
                 {renderTrip()}
+            </div>
+            <div className="divider"></div>
+            <div id="price-totals">
+
             </div>
         </div>
     )
