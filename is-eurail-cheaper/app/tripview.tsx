@@ -252,35 +252,45 @@ export default function TripView() {
     }
 
     if (cities.size > 0) {
-        return <div id="trip-view">
-            <SearchBar onSearchSubmit={onSearchSubmit}/>
-            <div className="divider"></div>
-            <div id="trips-box">
-                {renderTrip()}
-            </div>
-            <div className="divider"></div>
-            <div id="price-totals">
-                <div className="level">
-                    <div className="level-item">
-                        <div>
-                            <div className="field is-grouped">
-                                <Image src={db_image} className="logo" alt="DB"/>
-                                100
+        return (
+            <div id="trip-view">
+                <SearchBar onSearchSubmit={onSearchSubmit}/>
+                <div className="divider"></div>
+                <div id="trips-box">
+                    {renderTrip()}
+                </div>
+                <div className="divider"></div>
+                <div id="price-totals">
+                    <div className="level">
+                        <div className="level-item">
+                            <div>
+                                <div className="field is-grouped">
+                                    <Image src={db_image} className="logo" alt="DB"/>
+                                    100
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="level-item">
-                        <div>
-                            <div className="field is-grouped">
-                                <Image src={eurail_image} className="logo" alt="E"/>
-                                100
+                        <div className="level-item">
+                            <div>
+                                <div className="field is-grouped">
+                                    <Image src={eurail_image} className="logo" alt="E"/>
+                                    100
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        );
     } else {
-        return <SearchBar onSearchSubmit={onSearchSubmit}/>
+        return (
+            <div id="trip-view">
+                <canvas id="canvas"></canvas>
+                <div id="alone-searchbar">
+                    <h1>Explore Your World</h1>
+                    <SearchBar onSearchSubmit={onSearchSubmit}/>
+                </div>
+            </div>
+        );
     }
 }
