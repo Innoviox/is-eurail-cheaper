@@ -7,6 +7,7 @@ import eurail_image from "./eurail.png";
 import db_image from "./db.png";
 import SearchBar from './searchbar';
 import City from './city';
+import Picker from './picker';
 
 // todo currency, class
 const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
@@ -91,6 +92,7 @@ export default function TripView() {
                     n.push(price);
                 } else {
                     n[set] = price;
+                    startPickerAnimation(price);
                 }
                 setPicker(n);
                 break;
@@ -202,7 +204,7 @@ export default function TripView() {
                                                         <Image src={eurail_image} className="logo"  alt="E" />
                                                         {eurail[idx][0] === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            renderPricePicker(idx, eurail, "eurail")
+                                                            <Picker data={eurail[idx]} />
                                                         }
                                                     </div>
                                                 </div>
@@ -236,48 +238,6 @@ export default function TripView() {
     }
 
     // todo improve lstname stuff
-    function renderPricePicker(idx: number, lst: any[], lstname: string) {
-        return (
-            <div className="">
-                <div onClick={() => add("picker", picker[idx] === lstname ? "" : lstname, idx)}>
-                    { renderPricePickerElement(idx, lst, 0) }
-                </div>
-
-                { picker[idx] === lstname ?
-                    <div>
-                        {
-                            lst[idx].map((data, i) => {
-                                if (i !== 0) {
-                                    return renderPricePickerElement(idx, lst, i);
-                                }
-                            })
-                        }
-                    </div>
-                    : <></>
-                }
-            </div>
-        );
-    }
-
-    function renderPricePickerElement(idx: number, lst: any[], tripN: number) {
-        return (
-            <div className="tags has-addons price-picker">
-                <div className="tag is-info">
-                    <FontAwesomeIcon icon={faDollarSign} />
-                </div>
-                <div className="tag is-success">
-                    {lst[idx][tripN][0]}
-                </div>
-
-                <div className="tag is-info">
-                    <FontAwesomeIcon icon={faClock} />
-                </div>
-                <div className="tag is-success">
-                    {lst[idx][tripN][1]}
-                </div>
-            </div>
-        )
-    }
 
     function renderUpper(idx: number) {
          return  (
@@ -319,6 +279,10 @@ export default function TripView() {
                 </div>
             </div>
          );
+    }
+
+    function startPickerAnimation(lstname: string) {
+
     }
 
     if (cities.size > 0) {
