@@ -5,6 +5,7 @@
         function animate(num) {
             let d = document.getElementById(`d${num}`);
             // d.style.display = "block";
+            d.removeAttribute("hidden");
             d.classList.add("animated");
             d.classList.add("flip");
             d.classList.add(num % 2 === 1 ? "forwards" : "backwards");
@@ -45,13 +46,13 @@
     <div id="d1" class="none">
         <h1>Hi 2</h1>
     </div>
-    <div id="d2" class="none">
+    <div id="d2" class="none" hidden>
         <h1>Hi 3</h1>
     </div>
-    <div id="d3" class="none">
+    <div id="d3" class="none" hidden>
         <h1>Hi 4</h1>
     </div>
-    <div id="d4" class="none">
+    <div id="d4" class="none" hidden>
         <h1>Hi 5</h1>
     </div>
 </div>
