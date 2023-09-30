@@ -1,0 +1,59 @@
+<html>
+<head>
+    <link href="main.css" rel="stylesheet" />
+    <script>
+        function animate(num) {
+            let d = document.getElementById(`d${num}`);
+            // d.style.display = "block";
+            d.classList.add("animated");
+            d.classList.add("flip");
+            d.classList.add(num % 2 === 1 ? "forwards" : "backwards");
+            setTimeout(() => start(num), 1000);
+        }
+
+        // function animateDown(div, from, total, height) {
+        //     if (total >= height) {
+        //         return;
+        //     }
+        //     div.style.top = (from + total) + 'px';
+        //     setTimeout(() => animateDown(div, from, total + 5, height), 50);
+        // }
+
+        function start(num) {
+            let h = document.getElementById(`d${num}`);
+            // let ds = document.getElementsByClassName("none");
+
+            let r = h.getBoundingClientRect();
+
+            let div = document.getElementById(`d${num + 1}`)
+            div.style.postion = "absolute";
+            div.style.left = r.left + 'px';
+            div.style.top = (r.top + r.height) + 'px';
+            // animateDown(div, r.top, 0, i * 50);
+            animate(num + 1);
+        }
+
+        setTimeout(() => start(1), 1000);
+    </script>
+</head>
+<body>
+<br>
+<div class="parent">
+<!--    <div id="head">-->
+<!--        <h1>Hi 1</h1>-->
+<!--    </div>-->
+    <div id="d1" class="none">
+        <h1>Hi 2</h1>
+    </div>
+    <div id="d2" class="none">
+        <h1>Hi 3</h1>
+    </div>
+    <div id="d3" class="none">
+        <h1>Hi 4</h1>
+    </div>
+    <div id="d4" class="none">
+        <h1>Hi 5</h1>
+    </div>
+</div>
+</body>
+</html>
