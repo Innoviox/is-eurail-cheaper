@@ -1,0 +1,63 @@
+@keyframes backwards {
+  from {
+    transform: rotateX(90deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  to {
+  }
+}
+
+@keyframes forwards {
+  from {
+    transform: rotateX(-90deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  to {
+  }
+}
+
+
+.backwards {
+  animation-name: backwards;
+}
+
+.forwards {
+  animation-name: forwards;
+}
+
+.flip {
+  backface-visibility: visible !important;
+  transform-origin: top;
+}
+
+.animated {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+
+.flip-parent {
+  line-height: 0;
+  display: flex;
+  flex-direction: column;
+  -moz-transition: height 1s linear;
+  -ms-transition: height 1s linear;
+  -o-transition: height 1s linear;
+  -webkit-transition: height 1s linear;
+  transition: height 1s linear;
+  height: 24px;
+  overflow: hidden;
+}
+
+.none {
+  display: none;
+}
+
+.tags.price-picker, .tag.price-picker-tag {
+  margin-bottom: 0;
+}
+
+.enlarge {
+  height: 120px;
+}

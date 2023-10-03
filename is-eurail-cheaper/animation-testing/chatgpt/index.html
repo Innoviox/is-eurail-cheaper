@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="fold-item" id="foldItem"></div>
+</div>
+<button onclick="startAnimation()">Start Animation</button>
+
+<script>
+    function startAnimation() {
+        const foldItem = document.getElementById('foldItem');
+        foldItem.classList.toggle('active');
+    }
+</script>
+</body>
+</html>

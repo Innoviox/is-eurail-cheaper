@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.fold-item {
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+    transform-origin: top;
+    transform: rotateX(0deg);
+    transition: transform 0.5s ease-in-out;
+}
+
+.fold-item.active {
+    transform: rotateX(-90deg);
+}

@@ -9,7 +9,7 @@
             d.classList.add("animated");
             d.classList.add("flip");
             d.classList.add(num % 2 === 1 ? "forwards" : "backwards");
-            setTimeout(() => start(num), 300);
+            setTimeout(() => start(num), 1000);
         }
 
         // function animateDown(div, from, total, height) {
@@ -26,11 +26,11 @@
 
             let r = h.getBoundingClientRect();
 
-            let div = document.getElementById(`d${num + 1}`)
-            div.style.postion = "absolute";
-            div.style.left = r.left + 'px';
-            div.style.top = (r.top + r.height) + 'px';
-            // animateDown(div, r.top, 0, i * 50);
+            // let div = document.getElementById(`d${num + 1}`)
+            // div.style.postion = "absolute";
+            // div.style.left = r.left + 'px';
+            // div.style.top = (r.top + r.height) + 'px';
+            // // animateDown(div, r.top, 0, i * 50);
             animate(num + 1);
         }
 
@@ -40,9 +40,6 @@
 <body>
 <br>
 <div class="parent">
-<!--    <div id="head">-->
-<!--        <h1>Hi 1</h1>-->
-<!--    </div>-->
     <div id="d1" class="none">
         <h1>Hi 2</h1>
     </div>
