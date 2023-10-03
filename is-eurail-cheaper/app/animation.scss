@@ -1,35 +1,52 @@
-@keyframes backwards {
+@keyframes hinge-from-front {
   from {
     transform: rotateX(90deg);
     animation-timing-function: linear;
   }
 
   to {
+    transform: rotateX(0deg);
   }
 }
 
-@keyframes forwards {
+@keyframes hinge-from-front-last {
   from {
+    transform: rotateX(90deg);
+    animation-timing-function: ease-in;
+  }
+
+  60% {
     transform: rotateX(-90deg);
-    animation-timing-function: linear;
+    animation-timing-function: ease-out;
+  }
+
+  80% {
+    transform: rotateX(40deg);
+    animation-timing-function: ease-in-out;
   }
 
   to {
+    transform: rotateX(0deg);
   }
 }
 
-
-.backwards {
-  animation-name: backwards;
+.hinge-from-front {
+  animation-name: hinge-from-front;
 }
 
-.forwards {
-  animation-name: forwards;
+.hinge-from-front-last {
+  animation-name: hinge-from-front-last;
+  animation-duration: 1s !important;
 }
 
 .flip {
   backface-visibility: visible !important;
   transform-origin: top;
+  animation-direction: normal;
+}
+
+.backwards {
+  animation-direction: reverse;
 }
 
 .animated {
@@ -39,13 +56,8 @@
 
 .flip-parent {
   line-height: 0;
-  display: flex;
-  flex-direction: column;
-  -moz-transition: height 1s linear;
-  -ms-transition: height 1s linear;
-  -o-transition: height 1s linear;
-  -webkit-transition: height 1s linear;
-  transition: height 1s linear;
+  //display: flex;
+  //flex-direction: column;
   height: 24px;
   overflow: hidden;
 }
@@ -56,8 +68,21 @@
 
 .tags.price-picker, .tag.price-picker-tag {
   margin-bottom: 0;
+  border-radius: 0;
+}
+
+.price-picker {
+  //width: 150px;
+  position: absolute;
 }
 
 .enlarge {
+  //-webkit-transition: height 1s linear;
+  //-moz-transition: height 1s linear;
+  //-ms-transition: height 1s linear;
+  //-o-transition: height 1s linear;
+  //transition: height 1s linear;
+
   height: 120px;
 }
+
