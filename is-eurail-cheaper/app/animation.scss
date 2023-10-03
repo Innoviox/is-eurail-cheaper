@@ -1,7 +1,7 @@
 @keyframes backwards {
   from {
     transform: rotateX(90deg);
-    animation-timing-function: ease-in-out;
+    animation-timing-function: linear;
   }
 
   to {
@@ -11,7 +11,7 @@
 @keyframes forwards {
   from {
     transform: rotateX(-90deg);
-    animation-timing-function: ease-in-out;
+    animation-timing-function: linear;
   }
 
   to {
@@ -33,7 +33,7 @@
 }
 
 .animated {
-  animation-duration: 0.2s;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
 }
 

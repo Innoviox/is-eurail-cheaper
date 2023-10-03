@@ -10,7 +10,7 @@ export default function Picker({data}) {
 
     function renderPricePickerElement(tripN: number) {
         return (
-            <div className={"tags has-addons price-picker " + classes[tripN].join(" ")}>
+            <div className={"tags has-addons price-picker " + classes[tripN].join(" ")} key={tripN}>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
@@ -29,10 +29,14 @@ export default function Picker({data}) {
     }
 
     function animate(n: number) {
+        if (n === data.length) {
+            return;
+        }
+
         setMinShow(n);
-        let lst = ["animated", "flip", n % 2 === 1 ? "forwards" : "backwards"];
+        let lst = ["animated", "flip", "backwards"];
         let newClasses = classes.map((_, idx) => {
-            if (idx === n) {
+            if (idx === n && n != 0) {
                 return lst;
             } else {
                 return [];
@@ -40,18 +44,19 @@ export default function Picker({data}) {
         });
 
         setClasses(newClasses);
-        setTimeout(() => animate(n + 1), 200);
+        console.log(newClasses);
+        setTimeout(() => animate(n + 1), 300);
     }
 
     function startAnimation(n: number) {
         setParentCl(["enlarge"]);
-        
+
         animate(n);
     }
 
     return (
         <div className={"flip-parent " + parentCl.join(" ")}>
-            <div onClick={() => startAnimation(1)}>
+            <div onClick={() => startAnimation(0)}>
                 { renderPricePickerElement(0) }
             </div>
 
