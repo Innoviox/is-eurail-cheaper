@@ -11,10 +11,6 @@ export default function Picker({data}) {
     let [parentCl, setParentCl] = useState([]);
     let [open, setOpen] = useState(0); // 0 => closed, 1 => opening, 2 => open
 
-    // let rect = elem.
-
-    // let [positions, setPositions] = useState([]);
-
     function renderPricePickerElement(tripN: number) {
         let style = {};
         if (tripN !== 0) {
@@ -44,6 +40,7 @@ export default function Picker({data}) {
     function animateOpen(n: number) {
         if (n === data.length) {
             setOpen(2);
+            setMinShow(n);
             return;
         }
 
@@ -59,13 +56,13 @@ export default function Picker({data}) {
         });
 
         setClasses(newClasses);
-        setTimeout(() => animateOpen(n + 1), 300);
+        setTimeout(() => animateOpen(n + 1), 200);
     }
 
     function animateClosed(n: number) {
         if (n === 0) {
             setOpen(0);
-            setParentCl([]);
+            setMinShow(n);
             return;
         }
 
@@ -81,27 +78,19 @@ export default function Picker({data}) {
         });
 
         setClasses(newClasses);
-        setTimeout(() => animateClosed(n - 1), 300);
+        setTimeout(() => animateClosed(n - 1), 200);
     }
 
     function startAnimation() {
         if (open === 1) {
             return;
         } else if (open === 0) {
-            setHeights();
-
             setOpen(1);
-
-            animateOpen(0);
+            animateOpen(1);
         } else {
             setOpen(1);
-
             animateClosed(data.length);
         }
-    }
-
-    function setHeights() {
-
     }
 
     return (
