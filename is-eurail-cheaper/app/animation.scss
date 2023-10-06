@@ -86,3 +86,9 @@
   height: 120px;
 }
 
+.lower-open {
+  //transform: scaleY(1) !important;
+  ////transform-duration: 1s;
+  //transition: transform 0.3s ease-out;
+  max-height: 100px !important;
+}

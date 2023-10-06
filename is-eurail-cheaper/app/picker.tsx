@@ -18,7 +18,7 @@ export default function Picker({data}) {
         }
 
         return (
-            <div className={"tags has-addons price-picker " + classes[tripN].join(" ")}
+            <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
                  key={tripN} ref={tripN === 0 ? topRef : undefined} style={style}>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />

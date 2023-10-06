@@ -171,49 +171,47 @@ export default function TripView() {
                 <div>
                     <div className="prices-container">
                         {renderUpper(idx)}
-                        { open[idx] ?
-                            <div className="lower">
-                                <div className="lower-inner">
-                                    <div className="level">
-                                        <div className="level-left">
-                                            <div className="level-item">
-                                                <div>
-                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
-                                                        <Image src={db_image} className="logo" alt="DB" />
-                                                        {db[idx][0] === -100 ?
-                                                            <button className="button is-loading is-ghost">Loading</button> :
-                                                            <div className="tags has-addons">
-                                                                <div className="tag">
-                                                                    {db[idx][0]}
-                                                                </div>
-                                                                <div className="tag">
-                                                                    {db[idx][1]}
-                                                                </div>
+                        <div className={"lower " + (open[idx] ? "lower-open" : "lower-closed")}>
+                            <div className="lower-inner">
+                                <div className="level">
+                                    <div className="level-left">
+                                        <div className="level-item">
+                                            <div>
+                                                <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
+                                                    <Image src={db_image} className="logo" alt="DB" />
+                                                    {db[idx][0] === -100 ?
+                                                        <button className="button is-loading is-ghost">Loading</button> :
+                                                        <div className="tags has-addons">
+                                                            <div className="tag">
+                                                                {db[idx][0]}
                                                             </div>
-                                                        }
-                                                    </div>
+                                                            <div className="tag">
+                                                                {db[idx][1]}
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="level">
-                                        <div className="level-left">
-                                            <div className="level-item">
-                                                <div>
-                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
-                                                        <Image src={eurail_image} className="logo"  alt="E" />
-                                                        {eurail[idx][0] === -100 ?
-                                                            <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={eurail[idx]} />
-                                                        }
-                                                    </div>
+                                </div>
+                                <div className="level">
+                                    <div className="level-left">
+                                        <div className="level-item">
+                                            <div>
+                                                <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
+                                                    <Image src={eurail_image} className="logo"  alt="E" />
+                                                    {eurail[idx][0] === -100 ?
+                                                        <button className="button is-loading is-ghost">Loading</button> :
+                                                        <Picker data={eurail[idx]} />
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            : <></> }
+                        </div>
                     </div>
                 </div>
             );

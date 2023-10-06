@@ -103,6 +103,23 @@ body {
   padding-left: 10px;
 }
 
+.lower {
+  //transform: scaleY(0);
+  //height: 0;
+  max-height: 0;
+  overflow: hidden;
+  height: auto;
+  transition: max-height 0.3s;
+}
+
+//.lower-closed .price-picker {
+//  display: none;
+//}
+
+.first {
+  position: relative;
+}
+
 .vl {
   border-left: 2px solid gray;
   //height: 100%;
