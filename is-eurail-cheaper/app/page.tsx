@@ -10,8 +10,8 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   return (
-      <main>
-          <nav className="navbar is-light" role="navigation" aria-label="main navigation">
+      <main id="main">
+          <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
               <div className="navbar-menu">
                   <div className="navbar-start">
                       <a className="navbar-item">

@@ -30,6 +30,7 @@
     - [x] animate
     - [ ] make all same width
     - [ ] can't open one dropdown until other is closed?
+    - [ ] combine animateXXXX methods
   - [ ] Make hovering the price look nicer
   - [ ] Make hovering the segment look nicer
     - [x] animate
@@ -46,6 +47,7 @@
     - [ ] glow route when expanded
 - [ ] front animation on canvas
 - [ ] settings modal
+- [ ] make page not scroll annoyingly
 
 # API exploration
 
