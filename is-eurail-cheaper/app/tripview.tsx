@@ -20,7 +20,7 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
     31: 576, // todo multimonth trips
 };
 
-export default function TripView() {
+export default function TripView({addCoords}) {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
     const city = (idx: number) => [...cities][idx][0];
 
@@ -109,6 +109,8 @@ export default function TripView() {
             return;
         }
 
+        await updateCoords(toCityId);
+
         setCities(cities.set(toCity, toCityId));
         add("db", [-100, -100]); // start loading wheels
         add("eurail", [-100, -100]);
@@ -137,6 +139,20 @@ export default function TripView() {
                     }
                 });
             }
+        }
+    }
+
+    async function updateCoords(toCityId: string) {
+        const response = await fetch(`http://127.0.0.1:8000/api/station?place_id=${toCityId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            let data = await response.json();
+            console.log(data);
+            addCoords(data.coords.lat, data.coords.lng);
+        } else {
+            console.log("response not ok - update-coords")
         }
     }
 

@@ -44,13 +44,7 @@ async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form
 async def get_stations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
-    #
-    #
-    # # response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}") #&results=15
-    # response = requests.get(f"https://www.eurail.com/bin/geolocation.autosuggest.json?keyword={query}")
-    # stations = response.json()
 
-    # return {"stations": stations}
     return {"stations": place_engine.get_stations(query)}
 
 @app.get("/api/station")

@@ -41,7 +41,7 @@ export default function SearchBar({onSearchSubmit}) {
             data.stations.forEach(i => {
                 newStations.push(i.station);
                 newSIds.set(i.station, i.id);
-            })
+            });
             setStations(newStations);
             setStationIds(newSIds);
             setShowDropdown(true);

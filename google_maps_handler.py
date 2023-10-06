@@ -22,7 +22,7 @@ class Place:
         response = requests.get(self.search_url.format(query=query, session=self.session, api_key=MAPS_API_KEY))
         stations = response.json()
 
-        return stations["predictions"]
+        return [{"station": i["description"], "id": i["place_id"]} for i in stations["predictions"]]
 
     def station_info(self, place_id: str):
         response = requests.get(self.details_url.format(place_id=place_id, session=self.session, api_key=MAPS_API_KEY))
