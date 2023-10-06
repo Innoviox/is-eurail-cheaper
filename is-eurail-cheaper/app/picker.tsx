@@ -43,39 +43,22 @@ export default function Picker({data}) {
         return `${hrs}:${mins}`;
     }
 
-    function animateOpen(n: number) {
-        if (n === data.length) {
-            setOpen(2);
-            setMinShow(n);
-            // setClasses(data.map(_ => []));
-            return;
-        }
-
+    function animate(n: number, end: number) {
         setMinShow(n);
-        let lst = ["animated", "flip", "hinge-from-front", "on-top"];
 
-        let newClasses = classes.map((_, idx) => {
-            if (idx === n && n != 0) {
-                return lst;
-            } else {
-                return ["on-top"];
-            }
-        });
-
-        setClasses(newClasses);
-        setTimeout(() => animateOpen(n + 1), 200);
-    }
-
-    function animateClosed(n: number) {
-        if (n === 0) {
+        if (end === 2 && n === data.length) {
+            setOpen(2);
+            return;
+        } else if (end === 0 && n === 0) {
             setOpen(0);
-            setMinShow(n);
             setClasses(data.map(_ => []));
             return;
         }
 
-        setMinShow(n);
-        let lst = ["animated", "flip", "hinge-from-front", "backwards", "on-top"];
+        let lst = ["animated", "flip", "hinge-from-front", "on-top"];
+        if (end === 0) {
+            lst.push("backwards");
+        }
 
         let newClasses = classes.map((_, idx) => {
             if (idx === n && n != 0) {
@@ -86,18 +69,20 @@ export default function Picker({data}) {
         });
 
         setClasses(newClasses);
-        setTimeout(() => animateClosed(n - 1), 200);
+
+        let next = end === 0 ? n - 1 : n + 1;
+        setTimeout(() => animateOpen(next), 200);
     }
 
     function startAnimation() {
-        if (open === 1) {
+        if (open === 1) { // already animating => don't start
             return;
         } else if (open === 0) {
             setOpen(1);
-            animateOpen(1);
+            animate(1, 2);
         } else {
             setOpen(1);
-            animateClosed(data.length);
+            animate(data.length, 0);
         }
     }
 
