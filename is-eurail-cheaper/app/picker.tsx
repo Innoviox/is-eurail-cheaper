@@ -39,7 +39,7 @@ export default function Picker({data}) {
 
     function formatTime(n: number): string {
         let hrs = Math.floor(n / 3600);
-        let mins = Math.floor((n % 3600) / 60);
+        let mins = `${Math.floor((n % 3600) / 60)}`.padStart(2, '0');
         return `${hrs}:${mins}`;
     }
 
@@ -71,7 +71,7 @@ export default function Picker({data}) {
         setClasses(newClasses);
 
         let next = end === 0 ? n - 1 : n + 1;
-        setTimeout(() => animateOpen(next), 200);
+        setTimeout(() => animate(next, end), 200);
     }
 
     function startAnimation() {
