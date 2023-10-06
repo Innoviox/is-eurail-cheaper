@@ -11,6 +11,8 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     let [coords, setCoords] = useState([]);
+    let [lat, setLat] = useState(50);
+    let [lng, setLng] = useState(10);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
@@ -18,6 +20,8 @@ export default function Home() {
         setCoords(newCoords);
         console.log("adding coords", lat, lng);
         console.log("setting coords", newCoords);
+        // setLat(lat);
+        // setLng(lng);
     }
 
     return (
@@ -40,7 +44,7 @@ export default function Home() {
                 <div id="map">
                   {/*<Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">*/}
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={50} longitude={10} coords={coords} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} />
                   {/*</Wrapper>*/}
                 </div>
                 <div id="trip">
