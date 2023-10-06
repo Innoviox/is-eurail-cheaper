@@ -20,8 +20,8 @@ export default function Home() {
         setCoords(newCoords);
         console.log("adding coords", lat, lng);
         console.log("setting coords", newCoords);
-        // setLat(lat);
-        // setLng(lng);
+        setLat(lat);
+        setLng(lng);
     }
 
     return (
