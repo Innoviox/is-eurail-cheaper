@@ -47,17 +47,18 @@ export default function Picker({data}) {
         if (n === data.length) {
             setOpen(2);
             setMinShow(n);
+            // setClasses(data.map(_ => []));
             return;
         }
 
         setMinShow(n);
-        let lst = ["animated", "flip", "hinge-from-front"];
+        let lst = ["animated", "flip", "hinge-from-front", "on-top"];
 
         let newClasses = classes.map((_, idx) => {
             if (idx === n && n != 0) {
                 return lst;
             } else {
-                return [];
+                return ["on-top"];
             }
         });
 
@@ -69,17 +70,18 @@ export default function Picker({data}) {
         if (n === 0) {
             setOpen(0);
             setMinShow(n);
+            setClasses(data.map(_ => []));
             return;
         }
 
         setMinShow(n);
-        let lst = ["animated", "flip", "hinge-from-front", "backwards"];
+        let lst = ["animated", "flip", "hinge-from-front", "backwards", "on-top"];
 
         let newClasses = classes.map((_, idx) => {
             if (idx === n && n != 0) {
                 return lst;
             } else {
-                return [];
+                return ["on-top"];
             }
         });
 

@@ -28,8 +28,8 @@ export default function Home() {
           </nav>
           <div id="container">
               <div id="map">
-                  {/*<Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">*/}
-                  <Wrapper apiKey="dead">
+                  <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">
+                  {/*<Wrapper apiKey="dead">*/}
                       <MapView latitude={50} longitude={10}/>
                   </Wrapper>
               </div>

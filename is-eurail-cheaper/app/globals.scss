@@ -176,3 +176,7 @@ body {
 .price-picker:hover {
   filter: brightness(85%);
 }
+
+.on-top {
+  z-index: 1;
+}

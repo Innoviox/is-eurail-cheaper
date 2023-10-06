@@ -5,7 +5,7 @@
 
 ## Roadmap
 
-- [ ] anUI
+- [ ] danUI
   - [ ] search bar
   - [ ] trip space
   - [ ] add cities
@@ -25,17 +25,27 @@
 # Steps
 
 - [ ] Trip UI
-  - [ ] Make trips a dropdown
+  - [x] Make trips a dropdown
     - [ ] dropdown of possible trips; click => that one's picked
-    - [ ] animate
+    - [x] animate
+    - [ ] make all same width
+    - [ ] can't open one dropdown until other is closed?
   - [ ] Make hovering the price look nicer
   - [ ] Make hovering the segment look nicer
-    - [ ] animate
+    - [x] animate
   - [x] Make the price display look nicer
   - [ ] Make the price inline display look nicer
   - [ ] Update the summed trips
   - [ ] Update the eurail with pass price
   - [ ] center price display with respect to image
+- [ ] map
+  - [ ] display chosen cities on map
+  - [ ] display line between them
+    - [ ] display train, bus, etc on line
+    - [ ] display actual route
+    - [ ] glow route when expanded
+- [ ] front animation on canvas
+- [ ] settings modal
 
 # API exploration
 
