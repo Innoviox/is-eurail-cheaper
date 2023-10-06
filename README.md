@@ -61,4 +61,7 @@
 - search => retool to search from OSM?
 - then => search from eurail somehow? (need to get id)
 - need a way to convert eurail id <=> coordinates
-- 
+- https://www.eurail.com/bin/geolocation.autosuggest.json?keyword=muni&pagePath=%2Fcontent%2Feurail%2Fen
+
+
+

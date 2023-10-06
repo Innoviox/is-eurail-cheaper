@@ -9,6 +9,8 @@ import requests
 
 from price import EurailEngine, DBEngine
 
+MAPS_API_KEY = open("api-key.txt").read().strip()
+
 app = FastAPI()
 
 # workaround for single-computer hosting
@@ -28,8 +30,8 @@ eurail = EurailEngine()
 db = DBEngine()
 
 @app.post("/api/price/eurail")
-async def eurail_price(fromCityId: Annotated[str, Form()], toCityId: Annotated[str, Form()]):
-    return {"journeys": eurail.get_journeys(fromCityId, toCityId, dt.datetime.now())}
+async def eurail_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
+    return {"journeys": eurail.get_journeys(fromCity, toCity, dt.datetime.now())}
 
 @app.post("/api/price/db")
 async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
@@ -44,7 +46,8 @@ async def get_stations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
 
-    response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}") #&results=15
+    # response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}") #&results=15
+    response = requests.get(f"https://www.eurail.com/bin/geolocation.autosuggest.json?keyword={query}")
     stations = response.json()
 
     return {"stations": stations}
