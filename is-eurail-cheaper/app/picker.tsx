@@ -31,10 +31,16 @@ export default function Picker({data}) {
                     <FontAwesomeIcon icon={faClock} />
                 </div>
                 <div className="tag is-success price-picker-tag">
-                    {data[tripN][1]}
+                    {formatTime(data[tripN][1])}
                 </div>
             </div>
         )
+    }
+
+    function formatTime(n: number): string {
+        let hrs = Math.floor(n / 3600);
+        let mins = Math.floor((n % 3600) / 60);
+        return `${hrs}:${mins}`;
     }
 
     function animateOpen(n: number) {
