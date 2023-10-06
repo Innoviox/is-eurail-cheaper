@@ -5,6 +5,9 @@ import {Wrapper} from '@googlemaps/react-wrapper';
 import MapView from './mapview'
 import TripView from './tripview'
 
+import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
+
 export default function Home() {
   return (
       <main>
@@ -18,7 +21,7 @@ export default function Home() {
 
                   <div className="navbar-end">
                       <a className="navbar-item">
-                          Home
+                          <FontAwesomeIcon icon={faGear} />
                       </a>
                   </div>
               </div>

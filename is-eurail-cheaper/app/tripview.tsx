@@ -243,7 +243,7 @@ export default function TripView() {
                 <div className="level-left">
                     <div className="level-item">
                         <div>
-                            <FontAwesomeIcon icon={faCity}/>
+                            <FontAwesomeIcon icon={faCity} />
                         </div>
                     </div>
                     <div className="level-item">
