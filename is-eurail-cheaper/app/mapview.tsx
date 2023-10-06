@@ -5,7 +5,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { MapContainer, TileLayer } from 'react-leaflet'
 
 export default function MapView({latitude, longitude}: {latitude: number; longitude: number}) {
-    // const mapRef = useRef(null);
+    const mapRef = useRef(null);
     // const [map, setMap] = React.useState<google.maps.Map | null>(null);
     // useEffect(() => {
     //     return setMap(new window.google.maps.Map(mapRef.current, {
@@ -21,7 +21,7 @@ export default function MapView({latitude, longitude}: {latitude: number; longit
     // }, [latitude, longitude]);
     // return <div style={{height: "100vh"}} ref={mapRef} />;
     return (
-        <MapContainer center={[latitude, longitude]} zoom={5} style={{height: "100vh"}}>
+        <MapContainer center={[latitude, longitude]} zoom={5} style={{height: "100vh"}} ref={mapRef}>
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
