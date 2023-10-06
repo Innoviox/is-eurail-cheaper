@@ -8,8 +8,7 @@ import datetime as dt
 import requests
 
 from price import EurailEngine, DBEngine
-
-MAPS_API_KEY = open("api-key.txt").read().strip()
+from google_maps_handler import Place
 
 app = FastAPI()
 
@@ -28,6 +27,7 @@ app.add_middleware(
 
 eurail = EurailEngine()
 db = DBEngine()
+place_engine = Place()
 
 @app.post("/api/price/eurail")
 async def eurail_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
@@ -39,16 +39,20 @@ async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form
     # print(fromCity, toCity)
     date = dt.datetime.now() + dt.timedelta(weeks=4)
     return {"journeys": db.get_journeys(fromCity, toCity, date)}
-    
 
 @app.get("/api/stations")
 async def get_stations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
+    #
+    #
+    # # response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}") #&results=15
+    # response = requests.get(f"https://www.eurail.com/bin/geolocation.autosuggest.json?keyword={query}")
+    # stations = response.json()
 
-    # response = requests.get(f"https://api.timetable.eurail.com/v2/locations?input={query}") #&results=15
-    response = requests.get(f"https://www.eurail.com/bin/geolocation.autosuggest.json?keyword={query}")
-    stations = response.json()
+    # return {"stations": stations}
+    return {"stations": place_engine.get_stations(query)}
 
-    return {"stations": stations}
-
+@app.get("/api/station")
+async def station_info(place_id: str):
+    return place_engine.station_info(place_id)
