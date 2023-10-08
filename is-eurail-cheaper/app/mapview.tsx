@@ -46,7 +46,7 @@ function MarkerWrapper({ map, coords }) {
     });
 }
 
-export default function MapView({latitude, longitude, coords}: {latitude: number; longitude: number, coords: any}) {
+export default function MapView({latitude, longitude, coords, meaningless}: {latitude: number; longitude: number, coords: any, meaningless: number}) {
     const mapRef = useRef(null);
     const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
@@ -63,19 +63,6 @@ export default function MapView({latitude, longitude, coords}: {latitude: number
             mapId: 'DEMO_MAP_ID'
         }));
     }, [latitude, longitude]);
-
-    // useEffect(() => {
-    //     coords.forEach(position => {
-    //         console.log(position);
-    //
-    //         new google.maps.marker.AdvancedMarkerElement(({
-    //             position,
-    //             // content: pinSvg,
-    //             map,
-    //             title: 'A marker using a custom SVG image.',
-    //         }));
-    //     });
-    // }, [coords, map]);
 
     return (
         <div>

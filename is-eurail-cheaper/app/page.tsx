@@ -13,12 +13,13 @@ export default function Home() {
     let [coords, setCoords] = useState([]);
     let [lat, setLat] = useState(50);
     let [lng, setLng] = useState(10);
+    let [meaningless, setMeaningless] = useState(143);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
         newCoords.push({'lat': lat, 'lng': lng});
         setCoords(newCoords);
-        console.log(newCoords);
+        setMeaningless(meaningless + 1);
     }
 
     return (
@@ -41,7 +42,7 @@ export default function Home() {
                 <div id="map">
                   <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc" version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} />
                   </Wrapper>
                 </div>
                 <div id="trip">
