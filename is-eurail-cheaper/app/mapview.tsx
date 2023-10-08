@@ -2,6 +2,38 @@
 import React from "react";
 import { useEffect, useRef, useMemo } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
+import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
+import { faMapPin } from "@fortawesome/free-solid-svg-icons";
+import ReactDOMServer from "react-dom/server";
+import {createRoot} from "react-dom/client";
+
+function Marker({ map, position, children, onClick }) {
+    const rootRef = useRef();
+    const markerRef = useRef();
+
+    useEffect(() => {
+        if (!rootRef.current) {
+            const container = document.createElement("div");
+            rootRef.current = createRoot(container);
+
+            markerRef.current = new google.maps.marker.AdvancedMarkerView({
+                position,
+                content: container,
+            });
+        }
+
+        return () => (markerRef.current.map = null);
+    }, []);
+
+    useEffect(() => {
+        rootRef.current.render(children);
+        markerRef.current.position = position;
+        markerRef.current.map = map;
+        const listener = markerRef.current.addListener("click", onClick);
+        return () => listener.remove();
+    }, [map, position, children, onClick]);
+}
+
 export default function MapView({latitude, longitude, coords}: {latitude: number; longitude: number, coords: any}) {
     const mapRef = useRef(null);
     const [map, setMap] = React.useState<google.maps.Map | null>(null);
@@ -20,14 +52,31 @@ export default function MapView({latitude, longitude, coords}: {latitude: number
         }));
     }, [latitude, longitude]);
 
-    useEffect(() => {
-        coords.forEach(position => {
-            new window.google.maps.Marker({
-                position,
-                map,
-            })
-        })
-    }, [coords, map]);
+    // useEffect(() => {
+    //     coords.forEach(position => {
+    //         console.log(position);
+    //
+    //         new google.maps.marker.AdvancedMarkerElement(({
+    //             position,
+    //             // content: pinSvg,
+    //             map,
+    //             title: 'A marker using a custom SVG image.',
+    //         }));
+    //     });
+    // }, [coords, map]);
 
-    return <div style={{height: "100vh"}} ref={mapRef} />;
+    return (
+        <div>
+            <div style={{height: "100vh"}} ref={mapRef} />
+            {coords.forEach(position => {
+                console.log("ADDING MARKER", position);
+                return <div><span>{position.lat}{position.lng}</span></div>;
+                // return (
+                //     <Marker map={map} position={position} onClick={() => console.log("clicked")}>
+                //         <FontAwesomeIcon icon={faMapPin} />
+                //     </Marker>
+                // )
+            })}
+        </div>
+    );
 }
