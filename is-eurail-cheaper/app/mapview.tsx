@@ -32,6 +32,18 @@ function Marker({ map, position, children, onClick }) {
         const listener = markerRef.current.addListener("click", onClick);
         return () => listener.remove();
     }, [map, position, children, onClick]);
+
+    return <></>;
+}
+
+function MarkerWrapper({ map, coords }) {
+    return coords.map((position, idx) => {
+        return (
+            <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
+                <FontAwesomeIcon icon={faMapPin} />
+            </Marker>
+        )
+    });
 }
 
 export default function MapView({latitude, longitude, coords}: {latitude: number; longitude: number, coords: any}) {
@@ -68,15 +80,7 @@ export default function MapView({latitude, longitude, coords}: {latitude: number
     return (
         <div>
             <div style={{height: "100vh"}} ref={mapRef} />
-            {coords.forEach(position => {
-                console.log("ADDING MARKER", position);
-                return <div><span>{position.lat}{position.lng}</span></div>;
-                // return (
-                //     <Marker map={map} position={position} onClick={() => console.log("clicked")}>
-                //         <FontAwesomeIcon icon={faMapPin} />
-                //     </Marker>
-                // )
-            })}
+            <MarkerWrapper map={map} coords={coords} />
         </div>
     );
 }
