@@ -20,7 +20,7 @@ class EurailEngine(Engine):
         timestamp = date.strftime(DT_FORMAT + ".000Z")
 
         from_id, to_id = self.station_to_id(from_city), self.station_to_id(to_city)
-        url = self.url.format(fromCityId=from_id, toCityId=to_city, timestamp=timestamp)
+        url = self.url.format(fromCityId=from_id, toCityId=to_id, timestamp=timestamp)
         trips = requests.get(url).json()
 
         journeys = [Journey(price=i.get('price', 0), length=self.get_length(i)) for i in trips]

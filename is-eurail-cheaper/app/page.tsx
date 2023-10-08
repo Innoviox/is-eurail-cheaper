@@ -16,12 +16,9 @@ export default function Home() {
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
-        newCoords.push([lat, lng]);
+        newCoords.push({'lat': lat, 'lng': lng});
         setCoords(newCoords);
-        console.log("adding coords", lat, lng);
-        console.log("setting coords", newCoords);
-        setLat(lat);
-        setLng(lng);
+        console.log(newCoords);
     }
 
     return (
@@ -42,10 +39,10 @@ export default function Home() {
             </nav>
             <div id="container">
                 <div id="map">
-                  {/*<Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">*/}
+                  <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc">
                   {/*<Wrapper apiKey="dead">*/}
                     <MapView latitude={lat} longitude={lng} coords={coords} />
-                  {/*</Wrapper>*/}
+                  </Wrapper>
                 </div>
                 <div id="trip">
                   <TripView addCoords={addCoords}/>
