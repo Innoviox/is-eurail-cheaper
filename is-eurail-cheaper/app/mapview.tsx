@@ -7,6 +7,7 @@ import { faMapPin } from "@fortawesome/free-solid-svg-icons";
 import ReactDOMServer from "react-dom/server";
 import {createRoot} from "react-dom/client";
 
+// absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }) {
     const rootRef = useRef();
     const markerRef = useRef();
@@ -40,7 +41,15 @@ function MarkerWrapper({ map, coords }) {
     return coords.map((position, idx) => {
         return (
             <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
-                <FontAwesomeIcon icon={faMapPin} />
+                {/*<FontAwesomeIcon icon={faMapPin} />*/}
+                <div id="circle-container">
+                    <div className="item">
+                    </div>
+                    <div className="circle" style={{"animation-delay": "0s"}}></div>
+                    <div className="circle" style={{"animation-delay": "1s"}}></div>
+                    <div className="circle" style={{"animation-delay": "2s"}}></div>
+                    <div className="circle" style={{"animation-delay": "3s"}}></div>
+                </div>
             </Marker>
         )
     });
