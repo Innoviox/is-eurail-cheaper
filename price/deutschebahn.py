@@ -70,6 +70,9 @@ class DBEngine(Engine):
         ...
 
     def get_journeys(self, from_city: str, to_city: str, date: dt.datetime) -> list[Journey]:
+        from_city = from_city.split(",")[0].split("(")[0]
+        to_city = to_city.split(",")[0].split("(")[0]
+                
         proxies = {}
         verify = True
 
