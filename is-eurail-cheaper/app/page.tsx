@@ -1,10 +1,10 @@
 'use client'
 import { useState } from "react";
-import Image from 'next/image'
+
 import {Wrapper} from '@googlemaps/react-wrapper';
 
-import MapView from './mapview'
-import TripView from './tripview'
+import MapView from './mapview';
+import TripView from './tripview';
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
