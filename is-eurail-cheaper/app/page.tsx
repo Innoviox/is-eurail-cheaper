@@ -40,7 +40,7 @@ export default function Home() {
             </nav>
             <div id="container">
                 <div id="map">
-                  <Wrapper apiKey="AIzaSyCfa86sCHMFXR6ZHO-GqpUvFpffWCUroOc" version="beta" libraries={["marker"]}>
+                  <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
                     <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} />
                   </Wrapper>
