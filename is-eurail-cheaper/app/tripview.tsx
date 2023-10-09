@@ -219,7 +219,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={eurail_image} className="logo"  alt="E" />
                                                     {eurail[idx][0] === -100 ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={eurail[idx]} />
+                                                        <Picker data={eurail[idx]} parentOpen={open[idx]}/>
                                                     }
                                                 </div>
                                             </div>

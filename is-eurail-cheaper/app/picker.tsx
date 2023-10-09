@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
-export default function Picker({data}) {
+export default function Picker({data, parentOpen}) {
     let topRef = useRef();
 
     let [started, setStarted] = useState(false);
@@ -48,6 +48,7 @@ export default function Picker({data}) {
 
         if (end === 2 && n === data.length) {
             setOpen(2);
+            setClasses(data.map(_ => ["on-top"]));
             return;
         } else if (end === 0 && n === 0) {
             setOpen(0);
@@ -82,7 +83,7 @@ export default function Picker({data}) {
             animate(1, 2);
         } else {
             setOpen(1);
-            animate(data.length, 0);
+            animate(data.length - 1, 0);
         }
     }
 
