@@ -23,14 +23,14 @@ export default function Picker({data, parentOpen} : {data: [number, number][], p
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
-                <div className="tag is-success price-picker-tag">
+                <div className="tag is-success price-picker-tag price">
                     {data[tripN][0]}
                 </div>
 
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faClock} />
                 </div>
-                <div className="tag is-success price-picker-tag">
+                <div className="tag is-success price-picker-tag length">
                     {formatTime(data[tripN][1])}
                 </div>
             </div>
