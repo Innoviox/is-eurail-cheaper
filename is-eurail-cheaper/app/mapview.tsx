@@ -37,10 +37,46 @@ function Marker({ map, position, children, onClick }) {
     return <></>;
 }
 
+function Route({ map, path }) {
+    const routeRef = useRef();
+
+    useEffect(() => {
+        console.log(path);
+        if (!routeRef.current) {
+            routeRef.current = new google.maps.Polyline({
+                path: path,
+                // geodesic: true,
+                strokeColor: "#FF0000",
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+
+        }
+
+        return () => (routeRef.current.map = null);
+    }, []);
+
+    useEffect(() => {
+        // routeRef.current.map = map;
+        routeRef.current.setMap(map);
+        routeRef.current.path = path;
+    }, [map, path]);
+
+    return <></>;
+}
+
 function MarkerWrapper({ map, coords }) {
     let circles = [0]; //, 1, 2, 3];
+    let previousPosition = null;
+    let path = null;
     return coords.map((position, idx) => {
+        if (previousPosition !== null) {
+            path = [previousPosition, position];
+        }
+        previousPosition = position;
         return (
+            <div>
             <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
                 {/*<FontAwesomeIcon icon={faMapPin} />*/}
                 <div id="circle-container">
@@ -52,7 +88,9 @@ function MarkerWrapper({ map, coords }) {
                         )}): <></> }
                 </div>
             </Marker>
-        )
+            { path !== null ? <Route key={`route-${idx}`} map={map} path={path} /> : <></> }
+            </div>
+        );
     });
 }
 
