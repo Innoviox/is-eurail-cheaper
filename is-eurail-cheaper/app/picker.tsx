@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
-export default function Picker({data, parentOpen}) {
+export default function Picker({data, parentOpen} : {data: [number, number][], parentOpen: boolean}) {
     let topRef = useRef();
 
     let [started, setStarted] = useState(false);
@@ -13,7 +13,7 @@ export default function Picker({data, parentOpen}) {
 
     function renderPricePickerElement(tripN: number) {
         let style = {};
-        if (tripN !== 0) {
+        if (tripN !== 0 && topRef.current) {
             style.top = topRef.current.offsetTop + (tripN * 24);
         }
 
@@ -87,19 +87,32 @@ export default function Picker({data, parentOpen}) {
         }
     }
 
-    return (
-        <div className={"flip-parent " + parentCl.join(" ")}>
-            <div onClick={() => startAnimation()}>
-                { renderPricePickerElement(0) }
-            </div>
+    if (parentOpen || open === 0) {
+        return (
+            <div className={"flip-parent " + parentCl.join(" ")}>
+                <div onClick={() => startAnimation()}>
+                    {renderPricePickerElement(0)}
+                </div>
 
-            {
-                data.map((_, i) => {
-                    if (i > 0 && i <= minShow) {
-                        return renderPricePickerElement(i);
-                    }
-                })
-            }
-        </div>
-    );
+                {
+                    data.map((_, i) => {
+                        if (i > 0 && i <= minShow) {
+                            return renderPricePickerElement(i);
+                        }
+                    })
+                }
+            </div>
+        )
+    } else if (open === 1) {
+
+    } else if (open === 2) {
+        startAnimation();
+        return (
+            <div className={"flip-parent " + parentCl.join(" ")}>
+                <div>
+                    {renderPricePickerElement(0)}
+                </div>
+            </div>
+        );
+    }
 }
