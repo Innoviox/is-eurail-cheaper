@@ -38,16 +38,17 @@ function Marker({ map, position, children, onClick }) {
 }
 
 function MarkerWrapper({ map, coords }) {
-    let circles = [0, 1, 2, 3];
+    let circles = [0]; //, 1, 2, 3];
     return coords.map((position, idx) => {
         return (
             <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
                 {/*<FontAwesomeIcon icon={faMapPin} />*/}
                 <div id="circle-container">
                     <div className="item"></div>
+                    {/* add circles on last element*/}
                     { idx === coords.length - 1 ? circles.map(i => {
                         return (
-                            <div className="circle" style={{"animation-delay": `${i}s`}}></div>
+                            <div key={i} className="circle" style={{"animation-delay": `${i}s`}}></div>
                         )}): <></> }
                 </div>
             </Marker>

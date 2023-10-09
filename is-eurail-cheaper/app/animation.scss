@@ -97,10 +97,12 @@
   from {
     transform: scale(0.2, 0.2);
     opacity: 1;
+    //border-width: 2px;
   }
   to {
     transform: scale(2.5, 2.5);
     opacity: 0;
+    //border-width: 1px;
   }
 }
 
@@ -117,7 +119,7 @@
   position: absolute;
   border-radius: 50%;
   //background-color: deepskyblue;
-  border: 1px solid deepskyblue;
+  border: 1px solid red;
   width: 50px;
   height: 50px;
   opacity: 0;
