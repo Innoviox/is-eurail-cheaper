@@ -20,6 +20,8 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
     31: 576, // todo multimonth trips
 };
 
+const sentinel = -100;
+
 export default function TripView({addCoords}) {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
     const city = (idx: number) => [...cities][idx][0];
@@ -118,8 +120,8 @@ export default function TripView({addCoords}) {
         if (fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
-            add("db", [-100, -100]); // start loading wheels
-            add("eurail", [-100, -100]);
+            add("db", [sentinel, sentinel]); // start loading wheels
+            add("eurail", [sentinel, sentinel]);
             add("open", true);
             add("choices", "");
             add("picker", "");
@@ -161,7 +163,7 @@ export default function TripView({addCoords}) {
     }
 
     function sumArr(arr: Array<any>) {
-        return arr.slice(1).reduce((a, b) => a + b, 0);
+        return arr.map(i => i[0] === sentinel ? 0 : i[0]).reduce((a, b) => a + b, 0);
     }
 
     function toggleOpen(idx: number) {
@@ -199,7 +201,7 @@ export default function TripView({addCoords}) {
                                             <div>
                                                 <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
                                                     <Image src={db_image} className="logo" alt="DB" />
-                                                    {db[idx][0] === -100 ?
+                                                    {db[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
                                                         <Picker data={db[idx]} parentOpen={open[idx]}/>
                                                     }
@@ -214,7 +216,7 @@ export default function TripView({addCoords}) {
                                             <div>
                                                 <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
                                                     <Image src={eurail_image} className="logo"  alt="E" />
-                                                    {eurail[idx][0] === -100 ?
+                                                    {eurail[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
                                                         <Picker data={eurail[idx]} parentOpen={open[idx]}/>
                                                     }
@@ -292,6 +294,29 @@ export default function TripView({addCoords}) {
          );
     }
 
+    function renderTotals() {
+        return (
+            <div className="level">
+                <div className="level-item">
+                    <div>
+                        <div className="field is-grouped">
+                            <Image src={db_image} className="logo" alt="DB"/>
+                            {sumArr(db)}
+                        </div>
+                    </div>
+                </div>
+                <div className="level-item">
+                    <div>
+                        <div className="field is-grouped">
+                            <Image src={eurail_image} className="logo" alt="E"/>
+                            {sumArr(eurail)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     function startPickerAnimation(lstname: string) {
 
     }
@@ -306,24 +331,7 @@ export default function TripView({addCoords}) {
                 </div>
                 <div className="divider"></div>
                 <div id="price-totals">
-                    <div className="level">
-                        <div className="level-item">
-                            <div>
-                                <div className="field is-grouped">
-                                    <Image src={db_image} className="logo" alt="DB"/>
-                                    100
-                                </div>
-                            </div>
-                        </div>
-                        <div className="level-item">
-                            <div>
-                                <div className="field is-grouped">
-                                    <Image src={eurail_image} className="logo" alt="E"/>
-                                    100
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {renderTotals()}
                 </div>
             </div>
         );

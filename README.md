@@ -28,9 +28,9 @@
   - [x] Make trips a dropdown
     - [ ] dropdown of possible trips; click => that one's picked
     - [x] animate
-    - [ ] make all same width
+    - [x] make all same width
     - [ ] can't open one dropdown until other is closed?
-    - [ ] combine animateXXXX methods
+    - [x] combine animateXXXX methods
   - [ ] Make hovering the price look nicer
   - [ ] Make hovering the segment look nicer
     - [x] animate
@@ -40,8 +40,8 @@
   - [ ] Update the eurail with pass price
   - [ ] center price display with respect to image
 - [ ] map
-  - [ ] display chosen cities on map
-  - [ ] display line between them
+  - [x] display chosen cities on map
+  - [x] display line between them
     - [ ] display train, bus, etc on line
     - [ ] display actual route
     - [ ] glow route when expanded
@@ -66,3 +66,5 @@
 
 
 https://react-leaflet.js.org/docs/example-svg-overlay/
+
+investigate this https://github.com/juliuste/bahn.guru to see how it works
