@@ -126,18 +126,14 @@ body {
   padding-left: 10px;
 }
 
-.lower {
-  //transform: scaleY(0);
-  //height: 0;
+.lower-closed {
   max-height: 0;
-  overflow: hidden;
-  height: auto;
-  transition: max-height 0.3s;
 }
 
-//.lower-closed .price-picker {
-//  display: none;
-//}
+.lower {
+  overflow: hidden;
+  height: auto;
+}
 
 .first {
   position: relative;

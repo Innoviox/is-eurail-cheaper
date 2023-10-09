@@ -86,11 +86,23 @@
   height: 120px;
 }
 
+@keyframes lower-open {
+  from {
+    max-height: 0;
+  }
+
+  to {
+    max-height: 100px !important;
+  }
+}
+
+.lower {
+  transition: max-height 0.3s;
+}
+
 .lower-open {
-  //transform: scaleY(1) !important;
-  ////transform-duration: 1s;
-  //transition: transform 0.3s ease-out;
-  max-height: 100px !important;
+  animation: lower-open 0.3s;
+  max-height: 100px;
 }
 
 @keyframes scaleIn {
