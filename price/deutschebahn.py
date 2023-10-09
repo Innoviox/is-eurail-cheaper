@@ -72,7 +72,7 @@ class DBEngine(Engine):
     def get_journeys(self, from_city: str, to_city: str, date: dt.datetime) -> list[Journey]:
         from_city = from_city.split(",")[0].split("(")[0]
         to_city = to_city.split(",")[0].split("(")[0]
-                
+
         proxies = {}
         verify = True
 
@@ -144,6 +144,6 @@ class DBEngine(Engine):
                                  proxies=proxies, verify=verify)
         r = response.json()
 
-        journeys = [Journey(price=i['trfRes']['fareSetL'][0]['fareL'][0]['prc'],
+        journeys = [Journey(price=round(i['trfRes']['fareSetL'][0]['fareL'][0]['prc'] / 100),
                             length=i['dur']) for i in r['svcResL'][0]['res']['outConL']]
         return journeys

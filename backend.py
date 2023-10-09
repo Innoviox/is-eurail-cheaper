@@ -29,9 +29,11 @@ eurail = EurailEngine()
 db = DBEngine()
 place_engine = Place()
 
+
 @app.post("/api/price/eurail")
 async def eurail_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
     return {"journeys": eurail.get_journeys(fromCity, toCity, dt.datetime.now())}
+
 
 @app.post("/api/price/db")
 async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form()]):
@@ -40,12 +42,14 @@ async def db_price(fromCity: Annotated[str, Form()], toCity: Annotated[str, Form
     date = dt.datetime.now() + dt.timedelta(weeks=4)
     return {"journeys": db.get_journeys(fromCity, toCity, date)}
 
+
 @app.get("/api/stations")
 async def get_stations(query: Union[str, None]):
     if query is None:
         return {"stations": []}
 
     return {"stations": place_engine.get_stations(query)}
+
 
 @app.get("/api/station")
 async def station_info(place_id: str):

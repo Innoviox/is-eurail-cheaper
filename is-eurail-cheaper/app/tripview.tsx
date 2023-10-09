@@ -46,6 +46,7 @@ export default function TripView({addCoords}) {
     function add(key: string, price: any, set: number | undefined = undefined) {
         switch (key) {
             case "db": {
+                console.log("setting db", price, set);
                 let n = [...db];
                 if (set === undefined) {
                     n.push(price);
@@ -53,6 +54,7 @@ export default function TripView({addCoords}) {
                     n[set] = price;
                 }
                 setDb(n);
+                console.log(n);
                 break;
             }
             case "eurail": {
@@ -112,18 +114,19 @@ export default function TripView({addCoords}) {
         await updateCoords(toCityId);
 
         setCities(cities.set(toCity, toCityId));
-        add("db", [-100, -100]); // start loading wheels
-        add("eurail", [-100, -100]);
-        add("open", true);
-        add("choices", "");
-        add("picker", "");
 
         if (fromCityId !== undefined) {
+            let startLength = db.length; // update this idx when it's done
+
+            add("db", [-100, -100]); // start loading wheels
+            add("eurail", [-100, -100]);
+            add("open", true);
+            add("choices", "");
+            add("picker", "");
+
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-            let startLength = db.length - 1; // update this idx when it's done
-            console.log("startlength", startLength);
 
             for (let endpoint of endpoints) {
                 fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
@@ -133,6 +136,7 @@ export default function TripView({addCoords}) {
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
+                        console.log(data, price);
                         add(endpoint, price, startLength);
                     } else {
                         console.log(`response not ok - price ${endpoint}`);
@@ -165,8 +169,8 @@ export default function TripView({addCoords}) {
     }
 
     function setChoice(idx: number, choice: string) {
-        console.log("set choice", choices);
-        add("choices", choice, idx);
+        // console.log("set choice", choices);
+        // add("choices", choice, idx);
     }
 
     function renderTrip(): React.JSX.Element {
@@ -197,14 +201,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={db_image} className="logo" alt="DB" />
                                                     {db[idx][0] === -100 ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <div className="tags has-addons">
-                                                            <div className="tag">
-                                                                {db[idx][0]}
-                                                            </div>
-                                                            <div className="tag">
-                                                                {db[idx][1]}
-                                                            </div>
-                                                        </div>
+                                                        <Picker data={db[idx]} parentOpen={open[idx]}/>
                                                     }
                                                 </div>
                                             </div>
