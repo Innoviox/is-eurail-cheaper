@@ -11,6 +11,44 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
     let [parentCl, setParentCl] = useState([]);
     let [open, setOpen] = useState(0); // 0 => closed, 1 => opening, 2 => open
 
+    let tagClasses = calculateTagClasses();
+
+    function calculateTagClasses() {
+        let minprice = Math.min(...data.map(i => i[0]));
+        let maxprice = Math.max(...data.map(i => i[0]));
+        let mintime = Math.min(...data.map(i => i[1]));
+        let maxtime = Math.max(...data.map(i => i[1]));
+
+        return data.map(i => {
+            let price = i[0];
+            let time = i[1];
+
+            let priceClass = "is-warning";
+            if (price <= minprice * 1.2) {
+                priceClass = "is-success";
+            } else if (price >= maxprice * 0.8) {
+                priceClass = "is-danger";
+            }
+
+            if (price === minprice) {
+                priceClass += " cheapest";
+            }
+
+            let timeClass = "is-warning";
+            if (time <= mintime * 1.2) {
+                timeClass = "is-success";
+            } else if (time >= maxtime * 0.8) {
+                timeClass = "is-danger";
+            }
+
+            if (time === mintime) {
+                timeClass += " cheapest cheapest-time";
+            }
+
+            return [priceClass, timeClass];
+        });
+    }
+
     function renderPricePickerElement(tripN: number) {
         let style = {};
         if (tripN !== 0 && topRef.current) {
@@ -24,14 +62,14 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
-                <div className="tag is-success price-picker-tag price">
+                <div className={"tag price-picker-tag price " + tagClasses[tripN][0]}>
                     {data[tripN][0]}
                 </div>
 
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faClock} />
                 </div>
-                <div className="tag is-success price-picker-tag length">
+                <div className={"tag price-picker-tag length " + tagClasses[tripN][1]}>
                     {formatTime(data[tripN][1])}
                 </div>
             </div>

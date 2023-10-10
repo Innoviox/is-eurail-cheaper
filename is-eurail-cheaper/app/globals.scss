@@ -217,3 +217,34 @@ body {
 .is-loading {
   z-index: 0;
 }
+
+// https://www.coding-dude.com/wp/css/css-star/#:~:text=To%20make%20this%204%20points,and%20the%20other%20rotates%20%2D45deg%20.
+.cheapest:before{
+  content: "";
+  position: absolute;
+  background: white;
+  width: 5px;
+  height: 5px;
+  transform: rotate(-45deg)  skewX(22.5deg) skewY(22.5deg);
+  top: 4px;
+  left: 30px;
+}
+
+.cheapest:after{
+  content: "";
+  position: absolute;
+  background: white;
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg) skewX(22.5deg) skewY(22.5deg);
+  top: 4px;
+  left: 30px;
+}
+
+.cheapest-time:before {
+  left: 101px !important;
+}
+
+.cheapest-time:after {
+  left: 101px !important;
+}

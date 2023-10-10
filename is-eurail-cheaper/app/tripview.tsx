@@ -38,8 +38,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
-    function extractPrice(trips: Array<{ price: string, length: number }>) {
-        return sortPrices(trips.map(i => [parseInt(i.price), i.length]).slice(0, 5));
+    function extractPrice(trips: Array<{ price: string, length: number | string }>) {
+        return sortPrices(trips.map(i => [parseInt(i.price), parseInt(i.length)]).slice(0, 5));
     }
 
     // todo do this better
