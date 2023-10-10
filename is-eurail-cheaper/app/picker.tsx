@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, Dispatch} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
@@ -6,7 +6,7 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
     let topRef = useRef();
 
     let [started, setStarted] = useState(false);
-    let [classes, setClasses] = useState(data.map(_ => []));
+    let [classes, setClasses]: [string[][], Dispatch<any>] = useState(data.map(_ => []));
     let [minShow, setMinShow] = useState(0);
     let [parentCl, setParentCl] = useState([]);
     let [open, setOpen] = useState(0); // 0 => closed, 1 => opening, 2 => open

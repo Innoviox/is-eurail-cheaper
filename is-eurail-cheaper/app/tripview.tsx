@@ -22,31 +22,28 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
 
 const sentinel = -100;
 
-export default function TripView({addCoords}) {
+export default function TripView({addCoords}: {addCoords: (lat: number, lng: number) => void}) {
     const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
     const city = (idx: number) => [...cities][idx][0];
 
     let [cities, setCities] = useState(new Map<string, string>);
-    let [db, setDb] : [number[][], Dispatch<any>] = useState([]);
-    let [eurail, setEurail] : [any[], Dispatch<any>] = useState([]);
+    let [db, setDb] : [[number, number][][], Dispatch<any>] = useState([]);
+    let [eurail, setEurail] : [[number, number][][], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
-    function sortPrices(n) {
+    function sortPrices(n: [number, number][]) {
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
     function extractPrice(trips: Array<any>) {
-        // for now just use cheapest
-        console.log(trips);
-        console.log(trips.map(i => [parseInt(i.price), i.length]));
         return sortPrices(trips.map(i => [parseInt(i.price), i.length]));
     }
 
     function getlstcpy(lstname: string) {
-        let n;
+        let n: any[] = [];
         switch (lstname) {
             case "db": {
                 n = [...db];
@@ -104,8 +101,8 @@ export default function TripView({addCoords}) {
 
     async function onSearchSubmit(formData: FormData) {
         let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
-        let toCity = formData.get("toCity");
-        let toCityId = formData.get("toCityId");
+        let toCity = formData.get("toCity") as string;
+        let toCityId = formData.get("toCityId") as string;
 
         if (toCityId === fromCityId) { // todo give message
             return;
@@ -118,8 +115,8 @@ export default function TripView({addCoords}) {
         if (fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
-            add("db", [sentinel, sentinel]); // start loading wheels
-            add("eurail", [sentinel, sentinel]);
+            add("db", [[sentinel, sentinel]]); // start loading wheels
+            add("eurail", [[sentinel, sentinel]]);
             add("open", true);
             add("choices", "");
 
@@ -198,7 +195,7 @@ export default function TripView({addCoords}) {
                                             <div>
                                                 <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
                                                     <Image src={db_image} className="logo" alt="DB" />
-                                                    {db[idx][0] === sentinel ?
+                                                    {db[idx][0][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
                                                         <Picker data={db[idx]} parentOpen={open[idx]} setFirst={setFirst("db", idx)}/>
                                                     }
@@ -213,7 +210,7 @@ export default function TripView({addCoords}) {
                                             <div>
                                                 <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
                                                     <Image src={eurail_image} className="logo"  alt="E" />
-                                                    {eurail[idx][0] === sentinel ?
+                                                    {eurail[idx][0][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
                                                         <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={setFirst("eurail", idx)} />
                                                     }
@@ -247,8 +244,8 @@ export default function TripView({addCoords}) {
         }
     }
 
-    function setFirst(lstname, idx) {
-        return (n) => {
+    function setFirst(lstname: string, idx: number) {
+        return (n: number) => {
             console.log("setting first", lstname, n);
             let lst = getlstcpy(lstname)[idx];
             let temp = lst[n];

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import {Dispatch, useState} from "react";
 
 import {Wrapper} from '@googlemaps/react-wrapper';
 
@@ -10,7 +10,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
-    let [coords, setCoords] = useState([]);
+    let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
     let [lat, setLat] = useState(50);
     let [lng, setLng] = useState(10);
     let [meaningless, setMeaningless] = useState(143);
@@ -40,7 +40,7 @@ export default function Home() {
             </nav>
             <div id="container">
                 <div id="map">
-                  <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} version="beta" libraries={["marker"]}>
+                  <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
                     <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} />
                   </Wrapper>

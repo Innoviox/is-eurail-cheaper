@@ -1,10 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent, MouseEvent, useRef } from "react";
+import React, {useState, ChangeEvent, FormEvent, MouseEvent, useRef, Dispatch} from "react";
 import { useOuterClick } from "./outerclick";
 
-export default function SearchBar({onSearchSubmit}) {
+export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: FormData) => Promise<void>}) {
     const innerRef = useOuterClick(closeDropdown);
 
-    let [stations, setStations] = useState([]);
+    let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, string>());
     let [showDropdown, setShowDropdown] = useState(false);
 
@@ -14,7 +14,11 @@ export default function SearchBar({onSearchSubmit}) {
     }
 
     async function prepareForSubmit(formData: FormData) {
-        formData.append("toCityId", stationIds.get(formData.get("toCity")));
+        let toCity = formData.get("toCity");
+        if (toCity === null) {
+            return;
+        }
+        formData.append("toCityId", stationIds.get(toCity as string));
         setShowDropdown(false);
         await onSearchSubmit(formData);
     }
@@ -38,7 +42,7 @@ export default function SearchBar({onSearchSubmit}) {
 
             let newStations: string[] = [];
             let newSIds = stationIds;
-            data.stations.forEach(i => {
+            data.stations.forEach((i: { station: string, id: string }) => {
                 newStations.push(i.station);
                 newSIds.set(i.station, i.id);
             });
