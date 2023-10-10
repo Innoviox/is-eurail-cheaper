@@ -111,11 +111,11 @@ body {
 }
 
 .upper:hover {
-  background: gray;
+  background: #bce0e3;
 }
 
 .upper:hover + .lower {
-  background: lightgray;
+  background: #ddeef0;
 }
 
 .lower .level, .upper.level {
