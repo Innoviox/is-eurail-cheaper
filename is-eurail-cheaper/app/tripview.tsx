@@ -2,7 +2,7 @@ import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrain, faBus, faArrowLeft, faArrowRight, faCity, faDollarSign, faClock} from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
+import Image, {StaticImageData} from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
 import SearchBar from './searchbar';
@@ -32,7 +32,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
-    const endpoints = {"db": [db, setDb], "eurail": [eurail, setEurail]}
+    const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
     function sortPrices(n: [number, number][]) {
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
@@ -43,7 +43,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     // todo do this better
-    // set = 1 => set list to price
+    // set = -1 => set list to price
     function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined = undefined) {
         let n = [...lst];
 
@@ -83,7 +83,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             formData.append("fromCityId", fromCityId);
 
 
-            for (const [key, [lst, setlst]] of Object.entries(endpoints)) {
+            for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
                 fetch(`http://127.0.0.1:8000/api/price/${key}`, {
                     method: 'POST',
                     body: formData,
@@ -147,36 +147,23 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                         {renderUpper(idx)}
                         <div className={"lower " + (open[idx] ? "lower-open" : "lower-closed")}>
                             <div className="lower-inner">
-                                <div className="level">
-                                    <div className="level-left">
-                                        <div className="level-item">
-                                            <div>
-                                                <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "db")}>
-                                                    <Image src={db_image} className="logo" alt="DB" />
-                                                    {db[idx][0][0] === sentinel ?
-                                                        <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(db, setDb, idx, n)}/>
-                                                    }
+                                {Object.entries(endpoints).map(([key, [lst, setlst, img]]) => (
+                                    <div key={key} className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, key)}>
+                                                        <Image src={img} className="logo" alt="DB" />
+                                                        {lst[idx][0][0] === sentinel ?
+                                                            <button className="button is-loading is-ghost">Loading</button> :
+                                                            <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="level">
-                                    <div className="level-left">
-                                        <div className="level-item">
-                                            <div>
-                                                <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, "eurail")}>
-                                                    <Image src={eurail_image} className="logo"  alt="E" />
-                                                    {eurail[idx][0][0] === sentinel ?
-                                                        <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(eurail, setEurail, idx, n)} />
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>
