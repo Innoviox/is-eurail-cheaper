@@ -1,7 +1,7 @@
 import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft, faArrowRight, faCity, faDollarSign, faClock} from '@fortawesome/free-solid-svg-icons';
+import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock} from '@fortawesome/free-solid-svg-icons';
 import Image, {StaticImageData} from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
@@ -221,7 +221,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     </div>
                     <div className="level-item">
                         <div>
-                            <FontAwesomeIcon icon={faArrowRight}/>
+                            <FontAwesomeIcon icon={faArrowRightLong}/>
                         </div>
                     </div>
                     <div className="level-item">

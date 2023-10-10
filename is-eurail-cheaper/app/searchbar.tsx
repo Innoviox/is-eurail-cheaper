@@ -1,5 +1,7 @@
 import React, {useState, ChangeEvent, FormEvent, MouseEvent, useRef, Dispatch} from "react";
 import { useOuterClick } from "./outerclick";
+import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
 export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: FormData) => Promise<void>}) {
     const innerRef = useOuterClick(closeDropdown);
@@ -66,8 +68,11 @@ export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: 
                 <div id="search-container">
                     <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
                         <div className="dropdown-trigger">
-                            <div className="control">
+                            <div className="control has-icons-left">
                                 <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} autoComplete="off" />
+                                <span className="icon is-small is-left">
+                                  <FontAwesomeIcon icon={ faMagnifyingGlassLocation } />
+                                </span>
                             </div>
                         </div>
                         <div className="dropdown-menu" id="dropdown-menu3" role="menu">
