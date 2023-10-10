@@ -31,74 +31,72 @@ export default function TripView({addCoords}) {
     let [eurail, setEurail] : [any[], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
-    let [picker, setPicker]: [string[], Dispatch<any>] = useState([]);
 
     const endpoints = ["db", "eurail"];
 
-    function extractPrice(trips: Array<any>) {
-        // for now just use cheapest
-        // console.log(eurail);
-        // return Math.min(...trips.map(i => parseInt(i.price)).filter(i => i >= 0));
-        console.log(trips);
-        console.log(trips.map(i => [parseInt(i.price), i.length]));
-        return trips.map(i => [parseInt(i.price), i.length]).sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+    function sortPrices(n) {
+        return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
-    // todo do this better
-    function add(key: string, price: any, set: number | undefined = undefined) {
+    function extractPrice(trips: Array<any>) {
+        // for now just use cheapest
+        console.log(trips);
+        console.log(trips.map(i => [parseInt(i.price), i.length]));
+        return sortPrices(trips.map(i => [parseInt(i.price), i.length]));
+    }
+
+    function getlstcpy(lstname: string) {
+        let n;
         switch (key) {
             case "db": {
-                console.log("setting db", price, set);
-                let n = [...db];
-                if (set === undefined) {
-                    n.push(price);
-                } else {
-                    n[set] = price;
-                }
-                setDb(n);
-                console.log(n);
+                n = [...db];
                 break;
             }
             case "eurail": {
-                console.log("setting eurail", price, set);
-                let n = [...eurail];
-                if (set === undefined) {
-                    n.push(price);
-                } else {
-                    n[set] = price;
-                }
+                n = [...eurail];
+                break;
+            }
+            case "open": {
+                n = [...open];
+                break;
+            }
+            case "choices": {
+                n = [...choices];
+                break;
+            }
+        }
+        return n;
+    }
+
+    // todo do this better
+    // set = 1 => set list to price
+    function add(key: string, price: any, set: number | undefined = undefined) {
+        let n = getlstcpy(key);
+
+        // console.log("setting", key, price, set);
+        if (set === -1) {
+            n = price;
+        } else if (set === undefined) {
+            n.push(price);
+        } else {
+            n[set] = price;
+        }
+
+        switch (key) {
+            case "db": {
+                setDb(n);
+                break;
+            }
+            case "eurail": {
                 setEurail(n);
                 break;
             }
             case "open": {
-                let n = [...open];
-                if (set === undefined) {
-                    n.push(price);
-                } else {
-                    n[set] = price;
-                }
                 setOpen(n);
                 break;
             }
             case "choices": {
-                let n = [...choices];
-                if (set === undefined) {
-                    n.push(price);
-                } else {
-                    n[set] = price;
-                }
                 setChoices(n);
-                break;
-            }
-            case "picker": {
-                let n = [...picker];
-                if (set === undefined) {
-                    n.push(price);
-                } else {
-                    n[set] = price;
-                    startPickerAnimation(price);
-                }
-                setPicker(n);
                 break;
             }
         }
@@ -124,7 +122,6 @@ export default function TripView({addCoords}) {
             add("eurail", [sentinel, sentinel]);
             add("open", true);
             add("choices", "");
-            add("picker", "");
 
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
@@ -203,7 +200,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={db_image} className="logo" alt="DB" />
                                                     {db[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={db[idx]} parentOpen={open[idx]}/>
+                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={setFirst("db")}/>
                                                     }
                                                 </div>
                                             </div>
@@ -218,7 +215,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={eurail_image} className="logo"  alt="E" />
                                                     {eurail[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={eurail[idx]} parentOpen={open[idx]}/>
+                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={setFirst("eurail")} />
                                                     }
                                                 </div>
                                             </div>
@@ -247,6 +244,18 @@ export default function TripView({addCoords}) {
                     </div>
                 </div>
             )
+        }
+    }
+
+    function setFirst(lstname) {
+        return (n) => {
+            console.log("setting first", lstname, n);
+            let lst = getlstcpy(lstname);
+            let temp = lst[n];
+            lst.splice(n, 1);
+            lst = sortPrices(lst);
+            lst.unshift(temp);
+            add(lstname, lst, -1);
         }
     }
 

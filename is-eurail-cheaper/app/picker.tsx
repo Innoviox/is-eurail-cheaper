@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
-export default function Picker({data, parentOpen} : {data: [number, number][], parentOpen: boolean}) {
+export default function Picker({data, parentOpen, setFirst} : {data: [number, number][], parentOpen: boolean, setFirst: (n: number) => void}) {
     let topRef = useRef();
 
     let [started, setStarted] = useState(false);
@@ -19,7 +19,8 @@ export default function Picker({data, parentOpen} : {data: [number, number][], p
 
         return (
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
-                 key={tripN} ref={tripN === 0 ? topRef : undefined} style={style}>
+                 key={tripN} ref={tripN === 0 ? topRef : undefined} style={style}
+                 onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
@@ -77,7 +78,7 @@ export default function Picker({data, parentOpen} : {data: [number, number][], p
 
     function startAnimation() {
         if (open === 1) { // already animating => don't start
-            return;
+            return false;
         } else if (open === 0) {
             setOpen(1);
             animate(1, 2);
@@ -85,6 +86,8 @@ export default function Picker({data, parentOpen} : {data: [number, number][], p
             setOpen(1);
             animate(data.length - 1, 0);
         }
+
+        return true;
     }
 
     if (parentOpen || open === 0) {
