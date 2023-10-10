@@ -32,7 +32,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
-    const endpoints = ["db", "eurail"];
+    const endpoints = {"db": [db, setDb], "eurail": [eurail, setEurail]}
 
     function sortPrices(n: [number, number][]) {
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
@@ -42,35 +42,11 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         return sortPrices(trips.map(i => [parseInt(i.price), i.length]));
     }
 
-    function getlstcpy(lstname: string) {
-        let n: any[] = [];
-        switch (lstname) {
-            case "db": {
-                n = [...db];
-                break;
-            }
-            case "eurail": {
-                n = [...eurail];
-                break;
-            }
-            case "open": {
-                n = [...open];
-                break;
-            }
-            case "choices": {
-                n = [...choices];
-                break;
-            }
-        }
-        return n;
-    }
-
     // todo do this better
     // set = 1 => set list to price
-    function add(key: string, price: any, set: number | undefined = undefined) {
-        let n = getlstcpy(key);
+    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined = undefined) {
+        let n = [...lst];
 
-        console.log("setting", key, price, set);
         if (set === -1) {
             n = price;
         } else if (set === undefined) {
@@ -79,24 +55,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             n[set] = price;
         }
 
-        switch (key) {
-            case "db": {
-                setDb(n);
-                break;
-            }
-            case "eurail": {
-                setEurail(n);
-                break;
-            }
-            case "open": {
-                setOpen(n);
-                break;
-            }
-            case "choices": {
-                setChoices(n);
-                break;
-            }
-        }
+        setlst(n);
     }
 
     async function onSearchSubmit(formData: FormData) {
@@ -115,17 +74,17 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         if (fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
-            add("db", [[sentinel, sentinel]]); // start loading wheels
-            add("eurail", [[sentinel, sentinel]]);
-            add("open", true);
-            add("choices", "");
+            add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
+            add(eurail, setEurail, [[sentinel, sentinel]]);
+            add(open, setOpen, true);
+            add(choices, setChoices, "");
 
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
 
-            for (let endpoint of endpoints) {
-                fetch(`http://127.0.0.1:8000/api/price/${endpoint}`, {
+            for (const [key, [lst, setlst]] of Object.entries(endpoints)) {
+                fetch(`http://127.0.0.1:8000/api/price/${key}`, {
                     method: 'POST',
                     body: formData,
                 }).then(async response => {
@@ -133,9 +92,9 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
                         console.log(data, price);
-                        add(endpoint, price, startLength);
+                        add(lst, setlst, price, startLength);
                     } else {
-                        console.log(`response not ok - price ${endpoint}`);
+                        console.log(`response not ok - price ${key}`);
                     }
                 });
             }
@@ -149,7 +108,6 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
         if (response.ok) {
             let data = await response.json();
-            console.log(data);
             addCoords(data.coords.lat, data.coords.lng);
         } else {
             console.log("response not ok - update-coords")
@@ -157,11 +115,11 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     function sumArr(arr: Array<any>) {
-        return arr.map(i => i[0] === sentinel ? 0 : i[0]).reduce((a, b) => a + b, 0);
+        return arr.map(i => i[0][0] === sentinel ? 0 : i[0][0]).reduce((a, b) => a + b, 0);
     }
 
     function toggleOpen(idx: number) {
-        add("open", !open[idx], idx);
+        add(open, setOpen, !open[idx], idx);
     }
 
     function setChoice(idx: number, choice: string) {
@@ -197,7 +155,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                                                     <Image src={db_image} className="logo" alt="DB" />
                                                     {db[idx][0][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={setFirst("db", idx)}/>
+                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(db, setDb, idx, n)}/>
                                                     }
                                                 </div>
                                             </div>
@@ -212,7 +170,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                                                     <Image src={eurail_image} className="logo"  alt="E" />
                                                     {eurail[idx][0][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={setFirst("eurail", idx)} />
+                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(eurail, setEurail, idx, n)} />
                                                     }
                                                 </div>
                                             </div>
@@ -244,20 +202,15 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         }
     }
 
-    function setFirst(lstname: string, idx: number) {
-        return (n: number) => {
-            console.log("setting first", lstname, n);
-            let lst = getlstcpy(lstname)[idx];
-            let temp = lst[n];
-            lst.splice(n, 1);
-            lst = sortPrices(lst);
-            lst.unshift(temp);
-            console.log("new list", lst);
-            add(lstname, lst, idx);
-        }
+    function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
+        let lst = [...data[idx]];
+        let temp = lst[n];
+        lst.splice(n, 1);
+        lst = sortPrices(lst);
+        lst.unshift(temp);
+        console.log("new list", lst);
+        add(data, setlst, lst, idx); // todo this might not work
     }
-
-    // todo improve lstname stuff
 
     function renderUpper(idx: number) {
          return  (
@@ -322,10 +275,6 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                 </div>
             </div>
         )
-    }
-
-    function startPickerAnimation(lstname: string) {
-
     }
 
     if (cities.size > 0) {
