@@ -179,10 +179,14 @@ body {
 
 #alone-searchbar {
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 25%;
   z-index: 1;
-  width: 70%;
+  //width: 70%;
+}
+
+#search-form {
+  width: 100%;
 }
 
 #trip-view {
@@ -190,9 +194,9 @@ body {
   position: relative
 }
 
-#search-form {
-  width: 80%;
-}
+//#search-form {
+//  width: 80%;
+//}
 
 .price-picker:hover {
   filter: brightness(85%);

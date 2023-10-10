@@ -197,12 +197,11 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
     function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
         let lst = [...data[idx]];
-        let temp = lst[n];
-        lst.splice(n, 1);
-        lst = sortPrices(lst);
-        lst.unshift(temp);
-        console.log("new list", lst);
-        add(data, setlst, lst, idx); // todo this might not work
+        let temp = lst[n]; // store target
+        lst.splice(n, 1); // remove target number
+        lst = sortPrices(lst); // sort
+        lst.unshift(temp); // put target at front
+        add(data, setlst, lst, idx);
     }
 
     function renderUpper(idx: number) {
@@ -289,7 +288,9 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             <div id="trip-view">
                 <canvas id="canvas"></canvas>
                 <div id="alone-searchbar">
-                    <h1>Explore Your World</h1>
+                    <div className="content">
+                        <h1>Explore Your World</h1>
+                    </div>
                     <SearchBar onSearchSubmit={onSearchSubmit}/>
                 </div>
             </div>
