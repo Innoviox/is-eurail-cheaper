@@ -47,7 +47,7 @@ export default function TripView({addCoords}) {
 
     function getlstcpy(lstname: string) {
         let n;
-        switch (key) {
+        switch (lstname) {
             case "db": {
                 n = [...db];
                 break;
@@ -73,7 +73,7 @@ export default function TripView({addCoords}) {
     function add(key: string, price: any, set: number | undefined = undefined) {
         let n = getlstcpy(key);
 
-        // console.log("setting", key, price, set);
+        console.log("setting", key, price, set);
         if (set === -1) {
             n = price;
         } else if (set === undefined) {
@@ -200,7 +200,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={db_image} className="logo" alt="DB" />
                                                     {db[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={setFirst("db")}/>
+                                                        <Picker data={db[idx]} parentOpen={open[idx]} setFirst={setFirst("db", idx)}/>
                                                     }
                                                 </div>
                                             </div>
@@ -215,7 +215,7 @@ export default function TripView({addCoords}) {
                                                     <Image src={eurail_image} className="logo"  alt="E" />
                                                     {eurail[idx][0] === sentinel ?
                                                         <button className="button is-loading is-ghost">Loading</button> :
-                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={setFirst("eurail")} />
+                                                        <Picker data={eurail[idx]} parentOpen={open[idx]} setFirst={setFirst("eurail", idx)} />
                                                     }
                                                 </div>
                                             </div>
@@ -247,15 +247,16 @@ export default function TripView({addCoords}) {
         }
     }
 
-    function setFirst(lstname) {
+    function setFirst(lstname, idx) {
         return (n) => {
             console.log("setting first", lstname, n);
-            let lst = getlstcpy(lstname);
+            let lst = getlstcpy(lstname)[idx];
             let temp = lst[n];
             lst.splice(n, 1);
             lst = sortPrices(lst);
             lst.unshift(temp);
-            add(lstname, lst, -1);
+            console.log("new list", lst);
+            add(lstname, lst, idx);
         }
     }
 

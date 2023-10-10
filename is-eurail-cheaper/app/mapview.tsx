@@ -84,7 +84,7 @@ function MarkerWrapper({ map, coords }) {
                     {/* add circles on last element*/}
                     { idx === coords.length - 1 ? circles.map(i => {
                         return (
-                            <div key={i} className="circle" style={{"animation-delay": `${i}s`}}></div>
+                            <div key={i} className="circle" style={{"animationDelay": `${i}s`}}></div>
                         )}): <></> }
                 </div>
             </Marker>
