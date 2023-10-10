@@ -34,12 +34,12 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
     const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
-    function sortPrices(n: [number, number][]) {
+    function sortPrices(n: number[][]) {
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
-    function extractPrice(trips: Array<any>) {
-        return sortPrices(trips.map(i => [parseInt(i.price), i.length]));
+    function extractPrice(trips: Array<{ price: string, length: number }>) {
+        return sortPrices(trips.map(i => [parseInt(i.price), i.length]).slice(0, 5));
     }
 
     // todo do this better
@@ -152,12 +152,18 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                                         <div className="level-left">
                                             <div className="level-item">
                                                 <div>
-                                                    <div className="field is-grouped price-grouping" onClick={() => setChoice(idx, key)}>
-                                                        <Image src={img} className="logo" alt="DB" />
-                                                        {lst[idx][0][0] === sentinel ?
-                                                            <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
-                                                        }
+                                                    <div className="level" onClick={() => setChoice(idx, key)}>
+                                                        <div className="level-left">
+                                                            <div className="level-item">
+                                                                <Image src={img} className="logo" alt="DB" />
+                                                            </div>
+                                                            <div className="level-item">
+                                                                {lst[idx][0][0] === sentinel ?
+                                                                    <button className="button is-loading is-ghost">Loading</button> :
+                                                                    <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

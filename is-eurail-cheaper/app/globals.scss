@@ -61,6 +61,8 @@ body {
 
 #trip {
   flex: 3;
+  box-shadow: -20px 6px 10px 5px rgba(0, 0, 0, 0.1215686275);
+  z-index: 100;
 }
 
 #container {
