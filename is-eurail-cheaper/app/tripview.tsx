@@ -8,6 +8,7 @@ import db_image from "./db.png";
 import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
+import { LevelLeft, LevelRight, LevelItem, Level } from './level';
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -88,7 +89,6 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         add(cities, setCities, [toCity, toCityId]);
 
         if (fromCityId !== undefined) {
-            setSearchEnabled(false);
             let startLength = db.length; // update this idx when it's done
 
             add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
@@ -99,10 +99,9 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             formData.append("fromCity", fromCity);
             formData.append("fromCityId", fromCityId);
 
-
+            setSearchEnabled(false);
             for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
-                // todo backend handle 2 things one time => don't await this
-                await fetch(`http://127.0.0.1:8000/api/price/${key}`, {
+                fetch(`http://127.0.0.1:8000/api/price/${key}`, {
                     method: 'POST',
                     body: formData,
                 }).then(async response => {
@@ -114,6 +113,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     } else {
                         console.log(`response not ok - price ${key}`);
                     }
+                    setSearchEnabled(true); // probably fine? todo
                 });
             }
             setSearchEnabled(true);
