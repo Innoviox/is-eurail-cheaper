@@ -114,7 +114,7 @@ export default function MapView({latitude, longitude, coords, meaningless}: {lat
 
     return (
         <div>
-            <div style={{height: "100vh"}} ref={mapRef} />
+            <div style={{height: "94vh"}} ref={mapRef} />
             <MarkerWrapper map={map} coords={coords} />
         </div>
     );

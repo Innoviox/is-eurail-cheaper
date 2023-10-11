@@ -47,7 +47,8 @@
     - [ ] glow route when expanded
 - [ ] front animation on canvas
 - [ ] settings modal
-- [ ] make page not scroll annoyingly
+- [ ] question modal / shepherd
+- [x] make page not scroll annoyingly
 - [ ] front animation on canvas & searchbar
 - [x] make searchbar disabled while loading
 - [x] no dropdown when less than 3 characters
