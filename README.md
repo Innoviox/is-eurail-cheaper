@@ -50,7 +50,10 @@
 - [ ] question modal / shepherd
 - [ ] clean css w/ variables
 - [x] make page not scroll annoyingly
-- [ ] front animation on canvas & searchbar
+- [x] front animation on canvas & searchbar
+- [ ] front animation on canvas
+- [ ] clean css
+- [x] clear searchbar before animating ***
 - [x] make searchbar disabled while loading
 - [x] no dropdown when less than 3 characters
 - [ ] add question mark & animation to eurail price summary

@@ -10,6 +10,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, string>());
     let [showDropdown, setShowDropdown] = useState(false);
+    let [inputVal, setInputVal] = useState("");
 
     function closeDropdown() {
         console.log("close dropdown");
@@ -36,6 +37,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
     async function handleChange(event: ChangeEvent<HTMLInputElement>) {
         // console.log(event.target.value);
         let val = event.target.value;
+        setInputVal(val);
         if (val.length < 3) {
             setShowDropdown(false);
             return;
@@ -66,6 +68,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
     async function onDropdownClick(event: MouseEvent<HTMLAnchorElement>) {
         let formData = new FormData();
         formData.append("toCity", event.target.getAttribute("data-index"));
+        setInputVal("");
         await prepareForSubmit(formData);
     }
 
@@ -78,7 +81,8 @@ export default function SearchBar({onSearchSubmit, enabled}:
                             <div className="control has-icons-left">
                                 <input className="input" type="text" name="toCity"
                                        placeholder="Next city..." onChange={handleChange}
-                                       autoComplete="off" disabled={!enabled} />
+                                       autoComplete="off" disabled={!enabled}
+                                       value={inputVal} />
                                 <span className="icon is-small is-left">
                                   <FontAwesomeIcon icon={ faMagnifyingGlassLocation } />
                                 </span>

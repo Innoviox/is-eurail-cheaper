@@ -314,12 +314,14 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             <div id="trip-view">
                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                 <div className="divider"></div>
-                <div id="trips-box">
-                    {renderTrip()}
-                </div>
-                <div className="divider"></div>
-                <div id="price-totals">
-                    {renderTotals()}
+                <div className="fade-in">
+                    <div id="trips-box">
+                        {renderTrip()}
+                    </div>
+                    <div className="divider"></div>
+                    <div id="price-totals">
+                        {renderTotals()}
+                    </div>
                 </div>
             </div>
         );
@@ -327,7 +329,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         return (
             <div id="trip-view">
                 <canvas id="canvas"></canvas>
-                <div id="alone-text" className={"content " + (animatingSearch ? "fading" : "")}>
+                <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
                     <h1>Explore Your World</h1>
                 </div>
                 <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
