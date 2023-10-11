@@ -278,11 +278,12 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                 </div>
                 <div className="level-item">
                     <div>
-                        <div className="field is-grouped">
+                        <div className="field is-grouped has-tooltip-bottom">
                             <Image src={eurail_image} className="logo" alt="E"/>
-                            <div id="eurail-sum" data-tooltip={`${sumArr(eurail)} + ${calculateEurailPrice()}`}>
-                                {sumArr(eurail) + calculateEurailPrice()}
-                            </div>
+                            {sumArr(eurail) + calculateEurailPrice()}
+                            <span className="tooltip">
+                                {sumArr(eurail)} + {calculateEurailPrice()}
+                            </span>
                         </div>
                     </div>
                 </div>

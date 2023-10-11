@@ -253,12 +253,41 @@ body {
   left: 101px !important;
 }
 
-#eurail-sum:hover:after {
-  width: 50px;
-  height: 20px;
-  content: attr(data-tooltip);
-  background-color: #73AD21;
+// based on https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_bottom
+.tooltip {
+  visibility: hidden;
+
+  position: absolute;
+
+  background-color: #263238;
+  color: white;
+
+  top: 110%;
+  left: 50%;
+  margin-left: -100%;
+
+  padding: 0 5px;
+  border-radius: 5px;
+  width: 200%;
+  text-align: center
+}
+
+.has-tooltip-bottom .tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+
+.has-tooltip-bottom {
   position: relative;
-  top: 50px;
-  left: 0px;
+  display: inline-block;
+}
+
+.has-tooltip-bottom:hover .tooltip {
+  visibility: visible;
 }
