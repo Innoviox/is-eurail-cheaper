@@ -32,6 +32,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
+    let [searchEnabled, setSearchEnabled] = useState(true);
+
     const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
     function sortPrices(n: number[][]) {
@@ -75,6 +77,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         add(cities, setCities, [toCity, toCityId]);
 
         if (fromCityId !== undefined) {
+            setSearchEnabled(false);
             let startLength = db.length; // update this idx when it's done
 
             add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
@@ -87,7 +90,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
 
             for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
-                fetch(`http://127.0.0.1:8000/api/price/${key}`, {
+                // todo backend handle 2 things one time => don't await this
+                await fetch(`http://127.0.0.1:8000/api/price/${key}`, {
                     method: 'POST',
                     body: formData,
                 }).then(async response => {
@@ -101,6 +105,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     }
                 });
             }
+            setSearchEnabled(true);
         }
     }
 
@@ -275,7 +280,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     if (cities.length > 0) {
         return (
             <div id="trip-view">
-                <SearchBar onSearchSubmit={onSearchSubmit}/>
+                <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                 <div className="divider"></div>
                 <div id="trips-box">
                     {renderTrip()}
@@ -294,7 +299,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     <div className="content">
                         <h1>Explore Your World</h1>
                     </div>
-                    <SearchBar onSearchSubmit={onSearchSubmit}/>
+                    <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
                 </div>
             </div>
         );

@@ -3,7 +3,8 @@ import { useOuterClick } from "./outerclick";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
-export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: FormData) => Promise<void>}) {
+export default function SearchBar({onSearchSubmit, enabled}:
+                                  {onSearchSubmit: (formData: FormData) => Promise<void>, enabled: boolean}) {
     const innerRef = useOuterClick(closeDropdown);
 
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
@@ -34,7 +35,13 @@ export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: 
 
     async function handleChange(event: ChangeEvent<HTMLInputElement>) {
         // console.log(event.target.value);
-        const response = await fetch(`http://127.0.0.1:8000/api/stations?query=${event.target.value}`, {
+        let val = event.target.value;
+        if (val.length < 3) {
+            setShowDropdown(false);
+            return;
+        }
+
+        const response = await fetch(`http://127.0.0.1:8000/api/stations?query=${val}`, {
            method: 'GET'
         });
 
@@ -69,7 +76,9 @@ export default function SearchBar({onSearchSubmit}: {onSearchSubmit: (formData: 
                     <div id="searchDropdown" className={"search-block dropdown" + (showDropdown ? " is-active" : "")}>
                         <div className="dropdown-trigger">
                             <div className="control has-icons-left">
-                                <input className="input" type="text" name="toCity" placeholder="Next city..." onChange={handleChange} autoComplete="off" />
+                                <input className="input" type="text" name="toCity"
+                                       placeholder="Next city..." onChange={handleChange}
+                                       autoComplete="off" disabled={!enabled} />
                                 <span className="icon is-small is-left">
                                   <FontAwesomeIcon icon={ faMagnifyingGlassLocation } />
                                 </span>

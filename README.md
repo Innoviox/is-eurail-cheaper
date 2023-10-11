@@ -26,19 +26,19 @@
 
 - [ ] Trip UI
   - [x] Make trips a dropdown
-    - [ ] dropdown of possible trips; click => that one's picked
+    - [x] dropdown of possible trips; click => that one's picked
     - [x] animate
     - [x] make all same width
     - [ ] can't open one dropdown until other is closed?
     - [x] combine animateXXXX methods
-  - [ ] Make hovering the price look nicer
-  - [ ] Make hovering the segment look nicer
+  - [x] Make hovering the price look nicer
+  - [x] Make hovering the segment look nicer
     - [x] animate
   - [x] Make the price display look nicer
   - [ ] Make the price inline display look nicer
-  - [ ] Update the summed trips
+  - [x] Update the summed trips
   - [ ] Update the eurail with pass price
-  - [ ] center price display with respect to image
+  - [x] center price display with respect to image
 - [ ] map
   - [x] display chosen cities on map
   - [x] display line between them
@@ -48,6 +48,15 @@
 - [ ] front animation on canvas
 - [ ] settings modal
 - [ ] make page not scroll annoyingly
+- [ ] front animation on canvas & searchbar
+- [x] make searchbar disabled while loading
+- [x] no dropdown when less than 3 characters
+- [ ] gray out unavailable map countries => add with certain eurail pass
+- [ ] backend
+  - [ ] implement guru for search and db
+  - [ ] implement flixbus
+  - [ ] make sure returned results make sense
+  - [ ] deep future: link to sale page
 
 # API exploration
 
