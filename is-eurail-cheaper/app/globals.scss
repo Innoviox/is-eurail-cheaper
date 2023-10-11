@@ -252,7 +252,7 @@ body {
 #eurail-sum:hover:after {
   width: 50px;
   height: 20px;
-  content: attr(data-p1);
+  content: attr(data-tooltip);
   background-color: #73AD21;
   position: relative;
   top: 50px;
