@@ -25,6 +25,8 @@ const eurailprices = new Map<number, number>([
 
 const sentinel = -100;
 
+let everAnimated = false;
+
 export default function TripView({addCoords}: {addCoords: (lat: number, lng: number) => void}) {
     const city = (idx: number) => cities[idx][0];
 
@@ -85,8 +87,11 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             return;
         }
 
-        setAnimatingSearch(true);
-        setTimeout(() => setAnimatingSearch(false), 500); // todo interact with css variable?
+        if (!everAnimated) {
+            setAnimatingSearch(true);
+            setTimeout(() => setAnimatingSearch(false), 500); // todo interact with css variable?
+            everAnimated = true;
+        }
 
         await updateCoords(toCityId);
 
@@ -295,20 +300,6 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         )
     }
 
-    //
-
-    // if (animatingSearch) {
-    //     return (
-    //         <div id="trip-view">
-    //             <div id="alone-search-bar" className="animating-search-bar">
-    //                 <div className="content fading">
-    //                     <h1>Explore Your World</h1>
-    //                 </div>
-    //                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
-    //             </div>
-    //         </div>
-    //     )
-    // } else
     if (!animatingSearch && cities.length > 0) {
         return (
             <div id="trip-view">
