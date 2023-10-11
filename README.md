@@ -48,6 +48,7 @@
 - [ ] front animation on canvas
 - [ ] settings modal
 - [ ] question modal / shepherd
+- [ ] clean css w/ variables
 - [x] make page not scroll annoyingly
 - [ ] front animation on canvas & searchbar
 - [x] make searchbar disabled while loading

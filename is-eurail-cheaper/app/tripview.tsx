@@ -10,15 +10,17 @@ import City from './city';
 import Picker from './picker';
 
 // todo currency, class
-const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
-    4: 211,
-    5: 243,
-    7: 288,
-    10: 344,
-    15: 380,
-    22: 445,
-    31: 576, // todo multimonth trips
-};
+// https://www.eurail.com/en/eurail-passes/global-pass
+// todo multimonth trips
+const eurailprices = new Map<number, number>([
+    [4, 211],
+    [5, 243],
+    [7, 288],
+    [10, 344],
+    [15, 380],
+    [22, 445],
+    [31, 576]
+]);
 
 const sentinel = -100;
 
@@ -42,6 +44,15 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
     function extractPrice(trips: Array<{ price: string, length: number | string }>) {
         return sortPrices(trips.map(i => [parseInt(i.price), parseInt(i.length)]).slice(0, 5));
+    }
+
+    function calculateEurailPrice() {
+        for (const [days, price] of eurailprices.entries()) {
+            if (days >= cities.length) {
+                return price;
+            }
+        }
+        return 0; // todo ??
     }
 
     // todo do this better
@@ -269,7 +280,9 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     <div>
                         <div className="field is-grouped">
                             <Image src={eurail_image} className="logo" alt="E"/>
-                            {sumArr(eurail)}
+                            <div id="eurail-sum" data-p1={sumArr(eurail)} data-p2={calculateEurailPrice()}>
+                                {sumArr(eurail) + calculateEurailPrice()}
+                            </div>
                         </div>
                     </div>
                 </div>
