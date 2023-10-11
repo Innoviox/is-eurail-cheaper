@@ -23,10 +23,10 @@ const eurailprices = { // https://www.eurail.com/en/eurail-passes/global-pass
 const sentinel = -100;
 
 export default function TripView({addCoords}: {addCoords: (lat: number, lng: number) => void}) {
-    const getLastItemInMap = (map: Map<string, string>) => [...map][map.size-1];
-    const city = (idx: number) => [...cities][idx][0];
+    const city = (idx: number) => cities[idx][0];
 
-    let [cities, setCities] = useState(new Map<string, string>);
+    // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
+    let [cities, setCities]: [[string, string][], Dispatch<any>] = useState([]);
     let [db, setDb] : [[number, number][][], Dispatch<any>] = useState([]);
     let [eurail, setEurail] : [[number, number][][], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
@@ -59,17 +59,20 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     async function onSearchSubmit(formData: FormData) {
-        let [fromCity, fromCityId] = cities.size === 0 ? [undefined, undefined] : getLastItemInMap(cities);
+        /// i guess we can't have nice things
+        let fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
+        let fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
         let toCity = formData.get("toCity") as string;
         let toCityId = formData.get("toCityId") as string;
 
         if (toCityId === fromCityId) { // todo give message
+            console.log("returning at check");
             return;
         }
 
         await updateCoords(toCityId);
 
-        setCities(cities.set(toCity, toCityId));
+        add(cities, setCities, [toCity, toCityId]);
 
         if (fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
@@ -130,8 +133,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     function renderTrip(): React.JSX.Element {
         return (
             <div>
-                {Array.from(cities.keys(), (city: string, idx: number) => (
-                    <div key={city}>
+                {cities.map((city: [string, string], idx: number) => (
+                    <div key={city[0]}>
                         {renderPrices(idx)}
                     </div>
                 ))}
@@ -140,7 +143,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     function renderPrices(idx: number) {
-        if (idx < cities.size - 1) {
+        if (idx < cities.length - 1) {
             return (
                 <div>
                     <div className="prices-container">
@@ -175,7 +178,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     </div>
                 </div>
             );
-        } else if (idx === cities.size - 1) {
+        } else if (idx === cities.length - 1) {
             return (
                 <div className="level">
                     <div className="level-left">
@@ -269,7 +272,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         )
     }
 
-    if (cities.size > 0) {
+    if (cities.length > 0) {
         return (
             <div id="trip-view">
                 <SearchBar onSearchSubmit={onSearchSubmit}/>
