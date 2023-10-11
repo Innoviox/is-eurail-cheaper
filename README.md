@@ -37,7 +37,7 @@
   - [x] Make the price display look nicer
   - [ ] Make the price inline display look nicer
   - [x] Update the summed trips
-  - [ ] Update the eurail with pass price
+  - [x] Update the eurail with pass price
   - [x] center price display with respect to image
 - [ ] map
   - [x] display chosen cities on map
@@ -53,6 +53,7 @@
 - [ ] front animation on canvas & searchbar
 - [x] make searchbar disabled while loading
 - [x] no dropdown when less than 3 characters
+- [ ] add question mark & animation to eurail price summary
 - [ ] gray out unavailable map countries => add with certain eurail pass
 - [ ] backend
   - [ ] implement guru for search and db

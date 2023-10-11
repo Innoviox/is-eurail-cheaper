@@ -163,17 +163,16 @@
   //transition: all 0.3s ease-out;
 }
 
-//.item::after {
-//  border-left: 3px solid transparent;
-//  border-right: 3px solid transparent;
-//  border-top: 3px solid red;
-//  content: '';
-//  height: 0;
-//  left: 50%;
-//  position: absolute;
-//  top: 90%;
-//  transform: translate(-50%, 0);
-//  //transition: all 0.3s ease-out;
-//  width: 0;
-//  z-index: 1;
-//}
+.animating-search-bar {
+  position: absolute;
+  top: 10px !important; // todo variable
+  left: 10px !important;
+  width: 520px !important; // todo ???
+  transition: all 0.5s ease-in-out;
+}
+
+.fading {
+    //animation: fading 0.5s;
+  opacity: 0;
+  transition: opacity 0.5s;
+}

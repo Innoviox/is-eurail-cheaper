@@ -8,7 +8,7 @@ import db_image from "./db.png";
 import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
-import { LevelLeft, LevelRight, LevelItem, Level } from './level';
+// import { LevelLeft, LevelRight, LevelItem, Level } from './level';
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -36,6 +36,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
     let [searchEnabled, setSearchEnabled] = useState(true);
+    let [animatingSearch, setAnimatingSearch] = useState(false);
 
     const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -83,6 +84,9 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             console.log("returning at check");
             return;
         }
+
+        setAnimatingSearch(true);
+        setTimeout(() => setAnimatingSearch(false), 500); // todo interact with css variable?
 
         await updateCoords(toCityId);
 
@@ -291,7 +295,21 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         )
     }
 
-    if (cities.length > 0) {
+    //
+
+    // if (animatingSearch) {
+    //     return (
+    //         <div id="trip-view">
+    //             <div id="alone-search-bar" className="animating-search-bar">
+    //                 <div className="content fading">
+    //                     <h1>Explore Your World</h1>
+    //                 </div>
+    //                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
+    //             </div>
+    //         </div>
+    //     )
+    // } else
+    if (!animatingSearch && cities.length > 0) {
         return (
             <div id="trip-view">
                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
@@ -309,10 +327,10 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         return (
             <div id="trip-view">
                 <canvas id="canvas"></canvas>
-                <div id="alone-searchbar">
-                    <div className="content">
-                        <h1>Explore Your World</h1>
-                    </div>
+                <div id="alone-text" className={"content " + (animatingSearch ? "fading" : "")}>
+                    <h1>Explore Your World</h1>
+                </div>
+                <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
                     <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
                 </div>
             </div>
