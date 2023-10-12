@@ -9,6 +9,7 @@ import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
 import PriceDisplay from "./PriceDisplay";
+import Background from "./Background";
 // import { LevelLeft, LevelRight, LevelItem, Level } from './level';
 
 // todo currency, class
@@ -353,7 +354,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     } else {
         return (
             <div id="trip-view">
-                <canvas id="canvas"></canvas>
+                <Background ending={animatingSearch} />
                 <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
                     <h1>Explore Your World</h1>
                 </div>
