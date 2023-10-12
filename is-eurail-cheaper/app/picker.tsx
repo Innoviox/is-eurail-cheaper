@@ -147,7 +147,8 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
     } else if (open === 1) {
 
     } else if (open === 2) {
-        startAnimation();
+        setOpen(0);
+        animate(0, 0);
         return (
             <div className={"flip-parent " + parentCl.join(" ")}>
                 <div>

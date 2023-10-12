@@ -101,9 +101,9 @@ export default function SearchBar({onSearchSubmit, enabled}:
                         </div>
                     </div>
                 </div>
-                        {/*<div className="level-item">*/}
-                        {/*    <input className="search-block input" type="date" name="date" />*/}
-                        {/*</div>*/}
+                {/*<div className="level-item">*/}
+                {/*    <input className="search-block input" type="date" name="date" />*/}
+                {/*</div>*/}
             </form>
         </div>
     );

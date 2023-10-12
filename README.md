@@ -35,7 +35,7 @@
   - [x] Make hovering the segment look nicer
     - [x] animate
   - [x] Make the price display look nicer
-  - [ ] Make the price inline display look nicer
+  - [x] Make the price inline display look nicer
   - [x] Update the summed trips
   - [x] Update the eurail with pass price
   - [x] center price display with respect to image
@@ -52,7 +52,6 @@
 - [x] make page not scroll annoyingly
 - [x] front animation on canvas & searchbar
 - [ ] front animation on canvas
-- [ ] clean css
 - [x] clear searchbar before animating ***
 - [x] make searchbar disabled while loading
 - [x] no dropdown when less than 3 characters
