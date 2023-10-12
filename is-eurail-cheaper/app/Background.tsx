@@ -17,12 +17,6 @@ const IMG_SIZE = 50;
 export default function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
 
-    let lines = [];
-
-    // let startPoints = [];
-
-
-
     let imgObjs = images.map((img) => {
         let i = new Image();
         i.src = img.props.src.src;
@@ -31,7 +25,7 @@ export default function Background({children: images, ending}: {children: ReactE
 
     let imagePositions = images.map(_ => [200, 200]);
     let imageAngles = images.map((_, idx) => idx * (360 / images.length));
-
+    let lines = images.map((img, idx) => [imagePositions[idx], img]);
 
     function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
         ctx.save();
@@ -47,6 +41,10 @@ export default function Background({children: images, ending}: {children: ReactE
             let [x, y] = imagePositions[idx];
             let angle = imageAngles[idx];
             rotateAndPaintImage(ctx, img, angle * TO_RADIANS, x, y, IMG_SIZE / 2, IMG_SIZE / 2);
+
+            x += Math.cos(angle * TO_RADIANS) * 2;
+            y += Math.sin(angle * TO_RADIANS) * 2;
+            imagePositions[idx] = [x, y];
         });
     };
 
