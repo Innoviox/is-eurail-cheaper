@@ -4,6 +4,7 @@ import {renderToStaticMarkup} from "react-dom/server";
 // import plane from "./airplane.png";
 
 const TO_RADIANS = Math.PI/180;
+const IMG_SIZE = 50;
 
 // not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
@@ -31,13 +32,13 @@ export default function Background({children: images, ending}: {children: ReactE
         ctx.save();
         ctx.translate( positionX, positionY );
         ctx.rotate( angleInRad );
-        ctx.drawImage( image, -axisX, -axisY );
+        ctx.drawImage( image, -axisX, -axisY, IMG_SIZE, IMG_SIZE );
         ctx.restore();
     }
 
     const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        rotateAndPaintImage(ctx, imgObjs[0], 45 * TO_RADIANS, 100, 100, 100, 100);
+        rotateAndPaintImage(ctx, imgObjs[0], 45 * TO_RADIANS, 500, 500, 100, 100);
     };
 
     useEffect(() => {
@@ -63,6 +64,6 @@ export default function Background({children: images, ending}: {children: ReactE
     }, []);
 
     return (
-        <canvas ref={canvasRef} id="canvas"></canvas>
+        <canvas ref={canvasRef} id="canvasa" width="1000px" height="800px"></canvas>
     );
 }

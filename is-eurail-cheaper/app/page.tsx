@@ -12,6 +12,7 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 import Background from './Background';
 import airplane from "./airplane.png";
 import train from "./train.png";
+import bus from "./bus.png";
 import Image from "next/image";
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
     return <Background ending={false}>
         <Image src={airplane} alt="plane" />
         <Image src={train} alt="plane" />
+        <Image src={bus} alt="bus" />
     </Background>
 
     // return (
