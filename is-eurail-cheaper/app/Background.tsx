@@ -7,6 +7,7 @@ const TO_RADIANS = Math.PI/180;
 const IMG_SIZE = 50;
 const SPEED = 2;
 const WOBBLE = 10;
+const MAX_TRAIL = 500;
 
 // not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
@@ -16,6 +17,8 @@ const WOBBLE = 10;
 // plane => <a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Plane icons created by Darius Dan - Flaticon</a>
 // train => <a href="https://www.flaticon.com/free-icons/train" title="train icons">Train icons created by Freepik - Flaticon</a>
 // bus => <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Freepik - Flaticon</a>
+// boat => <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">Boat icons created by smalllikeart - Flaticon</a>
+// tram => <a href="https://www.flaticon.com/free-icons/tram" title="tram icons">Tram icons created by Freepik - Flaticon</a>
 export default function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
 
@@ -25,10 +28,17 @@ export default function Background({children: images, ending}: {children: ReactE
         return i;
     });
 
+    let tilt = Math.floor(Math.random() * 90);
     let imagePositions = images.map(_ => [200, 200]);
-    let imageAngles = images.map((_, idx) => idx * (360 / images.length) + 1);
+    let imageAngles = images.map((_, idx) => idx * (360 / images.length) + tilt);
+    // let lines = images.map(_ => []);
     let lines = [];
     let currentLines = [...imagePositions];
+    // let
+
+    let dist = function(p1, p2) {
+        return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+    }
 
     function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
         ctx.save();
@@ -40,6 +50,23 @@ export default function Background({children: images, ending}: {children: ReactE
 
     const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        let collide = images.map((_, idx) => {
+            let collides = false;
+            let p1 = imagePositions[idx];
+            images.map((_, idx2) => {
+                if (idx === idx2) {
+                    return;
+                }
+
+                let p2 = imagePositions[idx2];
+                if (dist(p1, p2) < IMG_SIZE) {
+                    collides = true;
+                }
+            });
+            return collides;
+        });
+
         // draw lines
         currentLines.map((pos, idx) => {
             let [x, y] = pos;
@@ -60,7 +87,7 @@ export default function Background({children: images, ending}: {children: ReactE
             ctx.lineTo(x2, y2);
             ctx.stroke();
         });
-        
+
         imgObjs.map((img, idx) => {
             let [x, y] = imagePositions[idx];
             let angle = imageAngles[idx];
@@ -71,22 +98,39 @@ export default function Background({children: images, ending}: {children: ReactE
             imagePositions[idx] = [x, y];
 
             let bounce = false;
-            if (x <= 0 || x >= ctx.canvas.width) {
+            if (x <= IMG_SIZE / 2 || x >= ctx.canvas.width - (IMG_SIZE / 2)) {
                 bounce = true;
                 if (angle > 180) {
                     imageAngles[idx] = 540 - angle
                 } else {
                     imageAngles[idx] = 180 - angle;
                 }
-            } else if (y < 0 || y >= ctx.canvas.height) {
+
+                if (x < IMG_SIZE) {
+                    imagePositions[idx][0] = IMG_SIZE / 2;
+                } else {
+                    imagePositions[idx][0] = ctx.canvas.width - (IMG_SIZE / 2);
+                }
+            } else if (y < IMG_SIZE / 2 || y >= ctx.canvas.height - (IMG_SIZE / 2)) {
                 bounce = true;
                 imageAngles[idx] = 360 - angle;
+
+                if (y < IMG_SIZE) {
+                    imagePositions[idx][1] = IMG_SIZE / 2;
+                } else {
+                    imagePositions[idx][1] = ctx.canvas.height - (IMG_SIZE / 2);
+                }
             }
 
-            if (bounce) {
+            // if (collide[idx]) {
+            //     imageAngles[idx] = Math.floor(Math.random() * 360);
+            // }
+
+            if (bounce) {// || collide[idx]) {
                 lines.push([currentLines[idx], [x, y]]);
                 currentLines[idx] = [x, y];
                 imageAngles[idx] += Math.floor(Math.random() * WOBBLE) - WOBBLE / 2;
+                imageAngles[idx] %= 360; // clamp to 360
             }
         });
     };
