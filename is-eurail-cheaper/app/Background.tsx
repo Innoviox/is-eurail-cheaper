@@ -1,6 +1,15 @@
 import { MutableRefObject, useRef, useEffect } from "react";
 
+const TO_RADIANS = Math.PI/180;
+
+// not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
+// https://stackoverflow.com/questions/3793397/html5-canvas-drawimage-with-at-an-angle
+
+// images
+// plane => <a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Plane icons created by Darius Dan - Flaticon</a>
+// train => <a href="https://www.flaticon.com/free-icons/train" title="train icons">Train icons created by Freepik - Flaticon</a>
+// bus => <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Freepik - Flaticon</a>
 export default function Background({ending}: {ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
 
@@ -18,16 +27,13 @@ export default function Background({ending}: {ending: boolean}) {
         ctx.restore();
     }
 
-    const draw = (ctx) => {
+    const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(50, 100, 20*Math.sin(2), 0, 2*Math.PI);
-        ctx.fill();
+
     };
 
     useEffect(() => {
-        let animationFrameId;
+        let animationFrameId: number;
 
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
@@ -45,7 +51,7 @@ export default function Background({ending}: {ending: boolean}) {
         return () => {
             window.cancelAnimationFrame(animationFrameId)
         };
-    }, [draw]);
+    }, []);
 
     return (
         <canvas ref={canvasRef} id="canvas"></canvas>
