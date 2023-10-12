@@ -19,13 +19,18 @@ export default function Background({children: images, ending}: {children: ReactE
 
     let lines = [];
 
-    let startPoints = [];
+    // let startPoints = [];
+
+
 
     let imgObjs = images.map((img) => {
         let i = new Image();
         i.src = img.props.src.src;
         return i;
     });
+
+    let imagePositions = images.map(_ => [200, 200]);
+    let imageAngles = images.map((_, idx) => idx * (360 / images.length));
 
 
     function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
@@ -38,7 +43,11 @@ export default function Background({children: images, ending}: {children: ReactE
 
     const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        rotateAndPaintImage(ctx, imgObjs[0], 45 * TO_RADIANS, 500, 500, 100, 100);
+        imgObjs.map((img, idx) => {
+            let [x, y] = imagePositions[idx];
+            let angle = imageAngles[idx];
+            rotateAndPaintImage(ctx, img, angle * TO_RADIANS, x, y, IMG_SIZE / 2, IMG_SIZE / 2);
+        });
     };
 
     useEffect(() => {
