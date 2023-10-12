@@ -47,6 +47,25 @@ export default function Background({children: images, ending}: {children: ReactE
             x += Math.cos(angle * TO_RADIANS) * SPEED;
             y += Math.sin(angle * TO_RADIANS) * SPEED;
             imagePositions[idx] = [x, y];
+
+            let bounce = false;
+            // if (x < 0 || x > ctx.canvas.width || y < 0 || y > ctx.canvas.height) {
+            //
+            // }
+
+            if (x <= 0) {
+                bounce = true;
+                if (angle > 180) {
+                    imageAngles[idx] = angle - 180;
+                } else {
+                    imageAngles[idx] = 180 - angle;
+                }
+            }
+
+            if (bounce) {
+                lines.push([currentLines[idx], [x, y]]);
+                currentLines[idx] = [x, y];
+            }
         });
 
         // draw lines
@@ -59,6 +78,16 @@ export default function Background({children: images, ending}: {children: ReactE
             ctx.lineTo(x2, y2);
             ctx.stroke();
         });
+
+        lines.map((line) => {
+            let [x, y] = line[0];
+            let [x2, y2] = line[1];
+            ctx.beginPath();
+            ctx.strokeStyle = "blue";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        })
     };
 
     useEffect(() => {
