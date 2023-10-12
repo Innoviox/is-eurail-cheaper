@@ -1,4 +1,7 @@
-import { MutableRefObject, useRef, useEffect } from "react";
+import {MutableRefObject, useRef, useEffect, ReactElement} from "react";
+import {renderToStaticMarkup} from "react-dom/server";
+// import {Children} from "react";
+// import plane from "./airplane.png";
 
 const TO_RADIANS = Math.PI/180;
 
@@ -10,14 +13,19 @@ const TO_RADIANS = Math.PI/180;
 // plane => <a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Plane icons created by Darius Dan - Flaticon</a>
 // train => <a href="https://www.flaticon.com/free-icons/train" title="train icons">Train icons created by Freepik - Flaticon</a>
 // bus => <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Freepik - Flaticon</a>
-export default function Background({ending}: {ending: boolean}) {
+export default function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
 
     let lines = [];
 
     let startPoints = [];
 
-    let images = [];
+    let imgObjs = images.map((img) => {
+        let i = new Image();
+        i.src = img.props.src.src;
+        return i;
+    });
+
 
     function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
         ctx.save();
@@ -29,7 +37,7 @@ export default function Background({ending}: {ending: boolean}) {
 
     const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+        rotateAndPaintImage(ctx, imgObjs[0], 45 * TO_RADIANS, 100, 100, 100, 100);
     };
 
     useEffect(() => {
@@ -38,15 +46,16 @@ export default function Background({ending}: {ending: boolean}) {
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
 
-        // context.font='14px FontAwesome';
-        // context.fillText('\uf0c8', 40, 40);
 
         //Our draw came here
         const render = () => {
+            console.log("rendering");
             draw(context);
             animationFrameId = window.requestAnimationFrame(render);
         };
+
         render();
+        // setTimeout()
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)
