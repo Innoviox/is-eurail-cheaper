@@ -8,6 +8,7 @@ import db_image from "./db.png";
 import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
+import PriceDisplay from "./PriceDisplay";
 // import { LevelLeft, LevelRight, LevelItem, Level } from './level';
 
 // todo currency, class
@@ -180,19 +181,13 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                                         <div className="level-left">
                                             <div className="level-item">
                                                 <div>
-                                                    <div className="level" onClick={() => setChoice(idx, key)}>
-                                                        <div className="level-left">
-                                                            <div className="level-item">
-                                                                <Image src={img} className="logo" alt="DB" />
-                                                            </div>
-                                                            <div className="level-item">
-                                                                {lst[idx][0][0] === sentinel ?
-                                                                    <button className="button is-loading is-ghost">Loading</button> :
-                                                                    <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    {/*// todo do i need choices? onClick={() => setChoice(idx, key)}*/}
+                                                    <PriceDisplay img={img}>
+                                                        {lst[idx][0][0] === sentinel ?
+                                                            <button className="button is-loading is-ghost">Loading</button> :
+                                                            <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
+                                                        }
+                                                    </PriceDisplay>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,21 +274,28 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             <div className="level">
                 <div className="level-item">
                     <div>
-                        <div className="field is-grouped">
-                            <Image src={db_image} className="logo" alt="DB"/>
+                        {/*<div className="field is-grouped">*/}
+                        {/*    <Image src={db_image} className="logo" alt="DB"/>*/}
+                        {/*    {sumArr(db)}*/}
+                        {/*</div>*/}
+                        <PriceDisplay img={db_image}>
                             {sumArr(db)}
-                        </div>
+                        </PriceDisplay>
                     </div>
                 </div>
                 <div className="level-item">
                     <div>
-                        <div className="field is-grouped has-tooltip-bottom">
-                            <Image src={eurail_image} className="logo" alt="E"/>
+                        <PriceDisplay img={eurail_image}>
                             {sumArr(eurail) + calculateEurailPrice()}
-                            <span className="tooltip">
-                                {sumArr(eurail)} + {calculateEurailPrice()}
-                            </span>
-                        </div>
+                        </PriceDisplay>
+
+                        {/*<div className="field is-grouped has-tooltip-bottom">*/}
+                        {/*    <Image src={eurail_image} className="logo" alt="E"/>*/}
+                        {/*    {sumArr(eurail) + calculateEurailPrice()}*/}
+                        {/*    <span className="tooltip">*/}
+                        {/*        {sumArr(eurail)} + {calculateEurailPrice()}*/}
+                        {/*    </span>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
             </div>
