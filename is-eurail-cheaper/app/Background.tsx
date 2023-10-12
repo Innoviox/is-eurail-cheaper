@@ -25,7 +25,7 @@ export default function Background({children: images, ending}: {children: ReactE
     });
 
     let imagePositions = images.map(_ => [200, 200]);
-    let imageAngles = images.map((_, idx) => idx * (360 / images.length));
+    let imageAngles = images.map((_, idx) => idx * (360 / images.length) + 1);
     let lines = [];
     let currentLines = [...imagePositions];
 
@@ -49,17 +49,16 @@ export default function Background({children: images, ending}: {children: ReactE
             imagePositions[idx] = [x, y];
 
             let bounce = false;
-            // if (x < 0 || x > ctx.canvas.width || y < 0 || y > ctx.canvas.height) {
-            //
-            // }
-
-            if (x <= 0) {
+            if (x <= 0 || x >= ctx.canvas.width) {
                 bounce = true;
                 if (angle > 180) {
-                    imageAngles[idx] = angle - 180;
+                    imageAngles[idx] = 540 - angle
                 } else {
                     imageAngles[idx] = 180 - angle;
                 }
+            } else if (y < 0 || y >= ctx.canvas.height) {
+                bounce = true;
+                imageAngles[idx] = 360 - angle;
             }
 
             if (bounce) {
@@ -113,6 +112,6 @@ export default function Background({children: images, ending}: {children: ReactE
     }, []);
 
     return (
-        <canvas ref={canvasRef} id="canvasa" width="1000px" height="800px"></canvas>
+        <canvas ref={canvasRef} id="canvasa" width="400px" height="400px"></canvas>
     );
 }
