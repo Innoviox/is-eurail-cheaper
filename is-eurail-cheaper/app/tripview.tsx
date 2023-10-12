@@ -1,7 +1,7 @@
 import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
+import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock, faTicket, faRoute, faEquals} from '@fortawesome/free-solid-svg-icons';
 import Image, {StaticImageData} from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
@@ -40,6 +40,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
+    let [showFullEuro, setShowFullEuro] = useState(true);
 
     const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -279,18 +280,22 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         } else {
             classes = ["is-danger", "is-success"];
         }
+        classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
+
+        console.log(showFullEuro);
+
         return (
             <div className="level">
                 <div className="level-item">
                     <div>
                         <PriceDisplay img={db_image}>
-                            <div className="flip-parent">
+                            <div className="flip-parent" key="db">
                                 <div className="tags has-addons">
                                     <div className="tag is-info price-picker-tag">
                                         <FontAwesomeIcon icon={faDollarSign} />
                                     </div>
                                     <div className={"tag price-picker-tag price " + classes[0]}>
-                                        {sumArr(db)}
+                                        {sumdb}
                                     </div>
                                 </div>
                             </div>
@@ -300,14 +305,26 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                 <div className="level-item">
                     <div>
                         <PriceDisplay img={eurail_image}>
-                            <div className="flip-parent">
-                                <div className="tags has-addons">
+                            <div className="flip-parent" key="eu">
+                              <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
                                     <div className="tag is-info price-picker-tag">
                                         <FontAwesomeIcon icon={faDollarSign} />
                                     </div>
-                                    <div className={"tag price-picker-tag price " + classes[1]}>
-                                        {sumArr(eurail) + calculateEurailPrice()}
-                                    </div>
+                                  {showFullEuro ? <>
+                                      <div className={"tag price-picker-tag price " + classes[2]}>
+                                          {sumeu}
+                                      </div>
+                                      <div className="tag is-info price-picker-tag">
+                                          <FontAwesomeIcon icon={faTicket} />
+                                      </div>
+                                      <div className={"tag price-picker-tag price is-danger"}>
+                                          {euprice}
+                                      </div>
+                                  </> : <>
+                                      <div className={"tag price-picker-tag price " + classes[1]}>
+                                          {sumeu + euprice}
+                                      </div>
+                                  </>}
                                 </div>
                             </div>
                         </PriceDisplay>
