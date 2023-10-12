@@ -5,6 +5,7 @@ import {renderToStaticMarkup} from "react-dom/server";
 
 const TO_RADIANS = Math.PI/180;
 const IMG_SIZE = 50;
+const SPEED = 2;
 
 // not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
@@ -25,7 +26,8 @@ export default function Background({children: images, ending}: {children: ReactE
 
     let imagePositions = images.map(_ => [200, 200]);
     let imageAngles = images.map((_, idx) => idx * (360 / images.length));
-    let lines = images.map((img, idx) => [imagePositions[idx], img]);
+    let lines = [];
+    let currentLines = [...imagePositions];
 
     function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
         ctx.save();
@@ -42,9 +44,20 @@ export default function Background({children: images, ending}: {children: ReactE
             let angle = imageAngles[idx];
             rotateAndPaintImage(ctx, img, angle * TO_RADIANS, x, y, IMG_SIZE / 2, IMG_SIZE / 2);
 
-            x += Math.cos(angle * TO_RADIANS) * 2;
-            y += Math.sin(angle * TO_RADIANS) * 2;
+            x += Math.cos(angle * TO_RADIANS) * SPEED;
+            y += Math.sin(angle * TO_RADIANS) * SPEED;
             imagePositions[idx] = [x, y];
+        });
+
+        // draw lines
+        currentLines.map((pos, idx) => {
+            let [x, y] = pos;
+            let [x2, y2] = imagePositions[idx];
+            ctx.beginPath();
+            ctx.strokeStyle = "blue";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
         });
     };
 
