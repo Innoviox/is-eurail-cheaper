@@ -6,6 +6,7 @@ import {renderToStaticMarkup} from "react-dom/server";
 const TO_RADIANS = Math.PI/180;
 const IMG_SIZE = 50;
 const SPEED = 2;
+const WOBBLE = 10;
 
 // not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
@@ -39,6 +40,27 @@ export default function Background({children: images, ending}: {children: ReactE
 
     const draw = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        // draw lines
+        currentLines.map((pos, idx) => {
+            let [x, y] = pos;
+            let [x2, y2] = imagePositions[idx];
+            ctx.beginPath();
+            ctx.strokeStyle = "blue";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        });
+
+        lines.map((line) => {
+            let [x, y] = line[0];
+            let [x2, y2] = line[1];
+            ctx.beginPath();
+            ctx.strokeStyle = "blue";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        });
+        
         imgObjs.map((img, idx) => {
             let [x, y] = imagePositions[idx];
             let angle = imageAngles[idx];
@@ -64,29 +86,9 @@ export default function Background({children: images, ending}: {children: ReactE
             if (bounce) {
                 lines.push([currentLines[idx], [x, y]]);
                 currentLines[idx] = [x, y];
+                imageAngles[idx] += Math.floor(Math.random() * WOBBLE) - WOBBLE / 2;
             }
         });
-
-        // draw lines
-        currentLines.map((pos, idx) => {
-            let [x, y] = pos;
-            let [x2, y2] = imagePositions[idx];
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-        });
-
-        lines.map((line) => {
-            let [x, y] = line[0];
-            let [x2, y2] = line[1];
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-        })
     };
 
     useEffect(() => {
