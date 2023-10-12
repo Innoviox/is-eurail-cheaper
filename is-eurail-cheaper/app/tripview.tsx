@@ -1,7 +1,7 @@
 import React, {FormEvent, Dispatch} from "react";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock} from '@fortawesome/free-solid-svg-icons';
+import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
 import Image, {StaticImageData} from 'next/image';
 import eurail_image from "./eurail.png";
 import db_image from "./db.png";
@@ -233,7 +233,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                 <div className="level-left">
                     <div className="level-item">
                         <div>
-                            <FontAwesomeIcon icon={faCity} />
+                            <FontAwesomeIcon icon={faRoute} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -270,32 +270,47 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     function renderTotals() {
+        let classes = [];
+        let sumdb = sumArr(db);
+        let sumeu = sumArr(eurail);
+        let euprice = calculateEurailPrice();
+        if (sumdb < sumeu + euprice) {
+            classes = ["is-success", "is-danger"];
+        } else {
+            classes = ["is-danger", "is-success"];
+        }
         return (
             <div className="level">
                 <div className="level-item">
                     <div>
-                        {/*<div className="field is-grouped">*/}
-                        {/*    <Image src={db_image} className="logo" alt="DB"/>*/}
-                        {/*    {sumArr(db)}*/}
-                        {/*</div>*/}
                         <PriceDisplay img={db_image}>
-                            {sumArr(db)}
+                            <div className="flip-parent">
+                                <div className="tags has-addons">
+                                    <div className="tag is-info price-picker-tag">
+                                        <FontAwesomeIcon icon={faDollarSign} />
+                                    </div>
+                                    <div className={"tag price-picker-tag price " + classes[0]}>
+                                        {sumArr(db)}
+                                    </div>
+                                </div>
+                            </div>
                         </PriceDisplay>
                     </div>
                 </div>
                 <div className="level-item">
                     <div>
                         <PriceDisplay img={eurail_image}>
-                            {sumArr(eurail) + calculateEurailPrice()}
+                            <div className="flip-parent">
+                                <div className="tags has-addons">
+                                    <div className="tag is-info price-picker-tag">
+                                        <FontAwesomeIcon icon={faDollarSign} />
+                                    </div>
+                                    <div className={"tag price-picker-tag price " + classes[1]}>
+                                        {sumArr(eurail) + calculateEurailPrice()}
+                                    </div>
+                                </div>
+                            </div>
                         </PriceDisplay>
-
-                        {/*<div className="field is-grouped has-tooltip-bottom">*/}
-                        {/*    <Image src={eurail_image} className="logo" alt="E"/>*/}
-                        {/*    {sumArr(eurail) + calculateEurailPrice()}*/}
-                        {/*    <span className="tooltip">*/}
-                        {/*        {sumArr(eurail)} + {calculateEurailPrice()}*/}
-                        {/*    </span>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
             </div>
