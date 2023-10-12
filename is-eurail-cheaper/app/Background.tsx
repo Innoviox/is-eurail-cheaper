@@ -32,7 +32,7 @@ export default function Background({children: images, ending}: {children: ReactE
     let imagePositions = images.map(_ => [200, 200]);
     let imageAngles = images.map((_, idx) => idx * (360 / images.length) + tilt);
     // let lines = images.map(_ => []);
-    let lines = [];
+    let lines = images.map(_ => []);
     let currentLines = [...imagePositions];
     // let
 
@@ -46,6 +46,53 @@ export default function Background({children: images, ending}: {children: ReactE
         ctx.rotate( angleInRad );
         ctx.drawImage( image, -axisX, -axisY, IMG_SIZE, IMG_SIZE );
         ctx.restore();
+    }
+
+    function renderTrail(ctx, idx) {
+        let [x, y] = currentLines[idx];
+        let [x2, y2] = imagePositions[idx];
+        ctx.beginPath();
+        ctx.strokeStyle = "blue";
+        ctx.moveTo(x, y);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        lines[idx].map((line) => {
+            let [x, y] = line[0];
+            let [x2, y2] = line[1];
+            ctx.beginPath();
+            ctx.strokeStyle = "blue";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        });
+    }
+
+    function cutLine(line, length) {
+        // cut line to length from second element
+        let [p1, p2] = line;
+        let [x1, y1] = p1;
+        let [x2, y2] = p2;
+        let m = (y2 - y1) / (x2 - x1);
+
+        let xmul = 1;
+        let ymul = 1;
+        if (m < 0) {
+            if (x2 < x1) {
+                xmul = -1;
+            } else if (y2 < y1) {
+                ymul = -1;
+            }
+        } else if (m > 0) {
+            if (x2 < x1) {
+                xmul = -1;
+                ymul = -1;
+            }
+        }
+
+        let xp = x2 - xmul * (length / Math.sqrt(1 + Math.pow(m, 2)));
+        let yp = y2 - ymul * (length / Math.sqrt(1 + Math.pow(m, -2)));
+        return [[xp, yp], p2];
     }
 
     const draw = (ctx: CanvasRenderingContext2D) => {
@@ -67,28 +114,24 @@ export default function Background({children: images, ending}: {children: ReactE
             return collides;
         });
 
-        // draw lines
-        currentLines.map((pos, idx) => {
-            let [x, y] = pos;
-            let [x2, y2] = imagePositions[idx];
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-        });
-
-        lines.map((line) => {
-            let [x, y] = line[0];
-            let [x2, y2] = line[1];
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-        });
-
         imgObjs.map((img, idx) => {
+            let dists = lines[idx].map((line) => dist(line[0], line[1]))
+            let total_distance = dists.reduce((a, b) => a + b, 0);
+            total_distance += dist(currentLines[idx], imagePositions[idx]);
+            let i = 0;
+            while (total_distance > MAX_TRAIL) {
+                if (dists[i] < (total_distance - MAX_TRAIL)) {
+                    lines[idx].shift();
+                    total_distance -= dists[i];
+                } else {
+                    lines[idx][0] = cutLine(lines[idx][0], dists[i] - (total_distance - MAX_TRAIL));
+                    break;
+                }
+                i += 1;
+            }
+
+            renderTrail(ctx, idx);
+
             let [x, y] = imagePositions[idx];
             let angle = imageAngles[idx];
             rotateAndPaintImage(ctx, img, angle * TO_RADIANS, x, y, IMG_SIZE / 2, IMG_SIZE / 2);
@@ -127,7 +170,7 @@ export default function Background({children: images, ending}: {children: ReactE
             // }
 
             if (bounce) {// || collide[idx]) {
-                lines.push([currentLines[idx], [x, y]]);
+                lines[idx].push([currentLines[idx], [x, y]]);
                 currentLines[idx] = [x, y];
                 imageAngles[idx] += Math.floor(Math.random() * WOBBLE) - WOBBLE / 2;
                 imageAngles[idx] %= 360; // clamp to 360
