@@ -30,9 +30,7 @@ export default function Home() {
         setMeaningless(meaningless + 1);
     }
 
-    console.log("calling home");
-
-    // setTimeout(() => setEnding(true), 5000);
+    setTimeout(() => setEnding(true), 5000);
 
     return <Background ending={ending}>
         <Image src={airplane} alt="plane" />
