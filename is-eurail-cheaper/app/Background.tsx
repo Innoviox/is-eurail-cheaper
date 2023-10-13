@@ -21,7 +21,7 @@ const COLLISIONS = false;
 // boat => <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">Boat icons created by smalllikeart - Flaticon</a>
 // tram => <a href="https://www.flaticon.com/free-icons/tram" title="tram icons">Tram icons created by Freepik - Flaticon</a>
 const Background = memo(function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
-    const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
+    const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
     let imgObjs = images.map((img) => {
         let i = new Image();
@@ -209,7 +209,13 @@ const Background = memo(function Background({children: images, ending}: {childre
         let animationFrameId: number;
 
         const canvas = canvasRef.current;
+        if (canvas === null) {
+            return
+        }
         const context = canvas.getContext('2d');
+        if (context === null) {
+            return;
+        }
 
         const render = () => {
             draw(context);
