@@ -293,6 +293,11 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
         return (
             <div className="level">
+                <div className="level-left">
+                    <div>
+                        <span>Price Totals:</span>
+                    </div>
+                </div>
                 <div className="level-item">
                     <div>
                         <PriceDisplay img={db_image}>

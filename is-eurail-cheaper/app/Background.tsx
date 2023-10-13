@@ -30,7 +30,7 @@ const Background = memo(function Background({children: images, ending}: {childre
     });
 
     let tilt = Math.floor(Math.random() * 90);
-    let speeds = [3, 3, 3, 3, 3];
+    let speeds = [5, 3, 3, 3, 3];
     let max_trails = useRef(images.map(_ => MAX_TRAIL));
     let imagePositions = useRef(images.map(_ => [200, 200]));
     let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
