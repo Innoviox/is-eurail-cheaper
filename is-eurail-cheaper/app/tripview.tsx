@@ -9,8 +9,12 @@ import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
 import PriceDisplay from "./PriceDisplay";
-import Background from "./Background";
-// import { LevelLeft, LevelRight, LevelItem, Level } from './level';
+import Background from './Background';
+import airplane from "./airplane.png";
+import train from "./train.png";
+import bus from "./bus.png";
+import boat from "./boat.png";
+import tram from "./tram.png";
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -42,6 +46,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
     let [showFullEuro, setShowFullEuro] = useState(true);
+    let [ending, setEnding] = useState(false);
 
     const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -92,6 +97,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
         if (!everAnimated) {
             setAnimatingSearch(true);
+            setEnding(true);
             setTimeout(() => setAnimatingSearch(false), 500); // todo interact with css variable?
             everAnimated = true;
         }
@@ -335,33 +341,75 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         )
     }
 
-    if (!animatingSearch && cities.length > 0) {
-        return (
-            <div id="trip-view">
-                <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
-                <div className="divider"></div>
-                <div className="fade-in">
-                    <div id="trips-box">
-                        {renderTrip()}
-                    </div>
+    // if (!animatingSearch && cities.length > 0) {
+    //     return (
+    //         <div id="trip-view">
+    //             <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
+    //             <div className="divider"></div>
+    //             <div className="fade-in">
+    //                 <div id="trips-box">
+    //                     {renderTrip()}
+    //                 </div>
+    //                 <div className="divider"></div>
+    //                 <div id="price-totals">
+    //                     {renderTotals()}
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // } else {
+    //     return (
+    //         <div id="trip-view">
+    //             <Background ending={animatingSearch}>
+    //                 <Image src={airplane} alt="plane" />
+    //                 <Image src={train} alt="train" />
+    //                 <Image src={bus} alt="bus" />
+    //                 <Image src={boat} alt="boat" />
+    //                 <Image src={tram} alt="tram" />
+    //             </Background>
+    //             <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
+    //                 <h1>Explore Your World</h1>
+    //             </div>
+    //             <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
+    //                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
+    //             </div>
+    //         </div>
+    //     );
+    // }
+
+    return (
+        <div id="trip-view">
+            <Background ending={ending}>
+                <Image src={airplane} alt="plane" />
+                <Image src={train} alt="train" />
+                <Image src={bus} alt="bus" />
+                <Image src={boat} alt="boat" />
+                <Image src={tram} alt="tram" />
+            </Background>
+            {!animatingSearch && cities.length > 0 ?
+                <div className="above">
+                    <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                     <div className="divider"></div>
-                    <div id="price-totals">
-                        {renderTotals()}
+                    <div className="fade-in">
+                        <div id="trips-box">
+                            {renderTrip()}
+                        </div>
+                        <div className="divider"></div>
+                        <div id="price-totals">
+                            {renderTotals()}
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
-    } else {
-        return (
-            <div id="trip-view">
-                <Background ending={animatingSearch} />
-                <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
-                    <h1>Explore Your World</h1>
-                </div>
-                <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
-                    <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
-                </div>
-            </div>
-        );
-    }
+                :
+                <>
+                    <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
+                        <h1>Explore Your World</h1>
+                    </div>
+                    <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
+                        <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
+                    </div>
+                </>
+            }
+        </div>
+    )
 }

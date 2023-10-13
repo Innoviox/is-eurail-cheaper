@@ -30,7 +30,7 @@ const Background = memo(function Background({children: images, ending}: {childre
     });
 
     let tilt = Math.floor(Math.random() * 90);
-    let speeds = [10, 7, 2, 5, 4];
+    let speeds = [3, 3, 3, 3, 3];
     let max_trails = useRef(images.map(_ => MAX_TRAIL));
     let imagePositions = useRef(images.map(_ => [200, 200]));
     let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
@@ -76,6 +76,10 @@ const Background = memo(function Background({children: images, ending}: {childre
     function cutLine(line: number[][], length: number) {
         // cut line to length from second element
         let [p1, p2] = line;
+        if (length < 0) {
+            return [p2, p2];
+        }
+
         let [x1, y1] = p1;
         let [x2, y2] = p2;
         let m = (y2 - y1) / (x2 - x1);
@@ -101,6 +105,7 @@ const Background = memo(function Background({children: images, ending}: {childre
     }
 
     const draw = (ctx: CanvasRenderingContext2D) => {
+        let ratio = 1;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         let collide = images.map((_, idx) => {
@@ -136,7 +141,7 @@ const Background = memo(function Background({children: images, ending}: {childre
             let i = 0;
             while (total_distance > max_trails.current[idx]) {
                 if (lines.current[idx].length === 0) {
-                    let newLine = cutLine(currentLine, dcl - (total_distance - max_trails.current[idx]));
+                    let newLine = cutLine(currentLine, dcl - Math.max(0, (total_distance - max_trails.current[idx])));
                     currentLines.current[idx] = newLine[0];
                     break;
                 } else {
@@ -212,6 +217,7 @@ const Background = memo(function Background({children: images, ending}: {childre
         if (canvas === null) {
             return
         }
+
         const context = canvas.getContext('2d');
         if (context === null) {
             return;
@@ -230,7 +236,7 @@ const Background = memo(function Background({children: images, ending}: {childre
     }, [ending]);
 
     return (
-        <canvas ref={canvasRef} id="canvasa" width="400px" height="400px"></canvas>
+        <canvas ref={canvasRef} id="canvas" width="450px" height="700px" />
     );
 });
 
