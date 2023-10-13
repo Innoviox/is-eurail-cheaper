@@ -3,18 +3,18 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock, faTicket, faRoute, faEquals} from '@fortawesome/free-solid-svg-icons';
 import Image, {StaticImageData} from 'next/image';
-import eurail_image from "./eurail.png";
-import db_image from "./db.png";
+import eurail_image from "./img/eurail.png";
+import db_image from "./img/db.png";
 import SearchBar from './searchbar';
 import City from './city';
 import Picker from './picker';
 import PriceDisplay from "./PriceDisplay";
 import Background from './Background';
-import airplane from "./airplane.png";
-import train from "./train.png";
-import bus from "./bus.png";
-import boat from "./boat.png";
-import tram from "./tram.png";
+import airplane from "./img/airplane.png";
+import train from "./img/train.png";
+import bus from "./img/bus.png";
+import boat from "./img/boat.png";
+import tram from "./img/tram.png";
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass

@@ -31,6 +31,8 @@ const Background = memo(function Background({children: images, ending}: {childre
 
     let tilt = Math.floor(Math.random() * 90);
     let speeds = [5, 3, 3, 3, 3];
+    let colors = ["orange", "red", "blue", "green", "purple"];
+
     let max_trails = useRef(images.map(_ => MAX_TRAIL));
     let imagePositions = useRef(images.map(_ => [200, 200]));
     let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
@@ -53,23 +55,23 @@ const Background = memo(function Background({children: images, ending}: {childre
         ctx.restore();
     }
 
-    function renderTrail(ctx: CanvasRenderingContext2D, idx: number) {
-        let [x, y] = currentLines.current[idx];
-        let [x2, y2] = imagePositions.current[idx];
+    function drawLine(ctx: CanvasRenderingContext2D, p1: number[], p2: number[], color: string) {
         ctx.beginPath();
-        ctx.strokeStyle = "blue";
-        ctx.moveTo(x, y);
-        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        // ctx.lineJoin = "round";
+        // ctx.globalCompositeOperation = "lighter";
+        // ctx.shadowBlur = 10;
+        ctx.moveTo(p1[0], p1[1]);
+        ctx.lineTo(p2[0], p2[1]);
         ctx.stroke();
+    }
+
+    function renderTrail(ctx: CanvasRenderingContext2D, idx: number, color: string) {
+        drawLine(ctx, currentLines.current[idx], imagePositions.current[idx], color);
 
         lines.current[idx].map((line) => {
-            let [x, y] = line[0];
-            let [x2, y2] = line[1];
-            ctx.beginPath();
-            ctx.strokeStyle = "blue";
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
+            drawLine(ctx, line[0], line[1], color);
         });
     }
 
@@ -156,7 +158,7 @@ const Background = memo(function Background({children: images, ending}: {childre
                 i += 1;
             }
 
-            renderTrail(ctx, idx);
+            renderTrail(ctx, idx, colors[idx]);
 
             let [x, y] = imagePositions.current[idx];
             let angle = imageAngles.current[idx];
@@ -167,7 +169,8 @@ const Background = memo(function Background({children: images, ending}: {childre
             imagePositions.current[idx] = [x, y];
 
             if (ending) {
-                max_trails.current[idx] -= speeds[idx];
+                speeds[idx] += 0.1;
+                // max_trails.current[idx] -= speeds[idx];
                 return;
             }
 
