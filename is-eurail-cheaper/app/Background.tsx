@@ -33,9 +33,17 @@ const Background = memo(function Background({children: images, ending}: {childre
     let speeds = [5, 3, 3, 3, 3];
     let colors = ["orange", "red", "blue", "green", "purple"];
 
+    // let startingPositions = [[-100, 100], [-200, 100], [100, -250], [550, 200], [300, 900]];
+    // let startingAngles = [20, 45, 100, 170, 260];
+    let [startingPositions, startingAngles] = generateStart();
+    let imagePositions = useRef(startingPositions);
+    let imageAngles = useRef(startingAngles);
+    let starting = useRef(images.map(_ => true));
+
+
     let max_trails = useRef(images.map(_ => MAX_TRAIL));
-    let imagePositions = useRef(images.map(_ => [200, 200]));
-    let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
+    // let imagePositions = useRef(images.map(_ => [200, 200]));
+    // let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
     // let lines = images.map(_ => []);
     let lines: MutableRefObject<number[][][][]> = useRef(images.map(_ => []));
     let currentLines = useRef([...imagePositions.current]);
@@ -44,6 +52,62 @@ const Background = memo(function Background({children: images, ending}: {childre
 
     let dist = function(p1: number[], p2: number[]) {
         return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+    }
+
+    function generateStart(width: number = 450, height: number = 700, minOffset: number = 100, maxOffset: number = 200): [number[][], number[]] { // todo make this work for scaled canvas
+        let positions: number[][] = [];
+        let angles: number[] = [];
+        images.forEach(_ => {
+            let side = Math.floor(Math.random() * 4);
+            switch (side) { // 0 top, 1 right, 2 bottom, 3 left
+                case 0: {
+                    let x = Math.floor(Math.random() * width);
+                    let y = -(minOffset + Math.floor(Math.random() * maxOffset));
+                    positions.push([x, y]);
+                    if (x < width / 2) {
+                        angles.push(Math.floor(Math.random() * 90));
+                    } else {
+                        angles.push(Math.floor(Math.random() * 90) + 90);
+                    }
+                    break;
+                }
+                case 1: {
+                    let x = width + (minOffset + Math.floor(Math.random() * maxOffset));
+                    let y = Math.floor(Math.random() * height);
+                    positions.push([x, y]);
+                    if (y < height / 2) {
+                        angles.push(Math.floor(Math.random() * 90) + 90);
+                    } else {
+                        angles.push(Math.floor(Math.random() * 90) + 180);
+                    }
+                    break;
+                }
+                case 2: {
+                    let x = Math.floor(Math.random() * width);
+                    let y = height + (minOffset + Math.floor(Math.random() * maxOffset));
+                    positions.push([x, y]);
+                    if (x < width / 2) {
+                        angles.push(Math.floor(Math.random() * 90) + 270);
+                    } else {
+                        angles.push(Math.floor(Math.random() * 90) + 180);
+                    }
+                    break;
+                }
+                case 3: {
+                    let x = -(minOffset + Math.floor(Math.random() * maxOffset));
+                    let y = Math.floor(Math.random() * height);
+                    positions.push([x, y]);
+                    if (y < height / 2) {
+                        angles.push(Math.floor(Math.random() * 90));
+                    } else {
+                        angles.push(Math.floor(Math.random() * 90) + 270);
+                    }
+                    break;
+                }
+            }
+        });
+        console.log([positions, angles]);
+        return [positions, angles];
     }
 
     function rotateAndPaintImage ( ctx: CanvasRenderingContext2D, image: HTMLImageElement, angleInRad: number ,
@@ -59,9 +123,6 @@ const Background = memo(function Background({children: images, ending}: {childre
         ctx.beginPath();
         ctx.strokeStyle = color;
         ctx.lineWidth = 3;
-        // ctx.lineJoin = "round";
-        // ctx.globalCompositeOperation = "lighter";
-        // ctx.shadowBlur = 10;
         ctx.moveTo(p1[0], p1[1]);
         ctx.lineTo(p2[0], p2[1]);
         ctx.stroke();
@@ -134,7 +195,7 @@ const Background = memo(function Background({children: images, ending}: {childre
             return collides;
         });
 
-        imgObjs.map((img, idx) => {
+        imgObjs.forEach((img, idx) => {
             let dists = lines.current[idx].map((line) => dist(line[0], line[1]))
             let total_distance = dists.reduce((a, b) => a + b, 0);
             let currentLine = [currentLines.current[idx], imagePositions.current[idx]];
@@ -167,6 +228,15 @@ const Background = memo(function Background({children: images, ending}: {childre
             x += Math.cos(angle * TO_RADIANS) * speeds[idx];
             y += Math.sin(angle * TO_RADIANS) * speeds[idx];
             imagePositions.current[idx] = [x, y];
+
+            if (starting.current[idx]) {
+                if (x > IMG_SIZE / 2 && x < ctx.canvas.width - (IMG_SIZE / 2) &&
+                    y > IMG_SIZE / 2 && y < ctx.canvas.height - (IMG_SIZE / 2)) {
+                    starting.current[idx] = false;
+                } else {
+                    return;
+                }
+            }
 
             if (ending) {
                 speeds[idx] += 0.1;
