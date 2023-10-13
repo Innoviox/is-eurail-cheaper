@@ -1,4 +1,4 @@
-import {MutableRefObject, useRef, useEffect, ReactElement} from "react";
+import {MutableRefObject, useRef, useEffect, ReactElement, memo} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
 // import {Children} from "react";
 // import plane from "./airplane.png";
@@ -8,6 +8,7 @@ const IMG_SIZE = 50;
 const SPEED = 2;
 const WOBBLE = 10;
 const MAX_TRAIL = 500;
+const COLLISIONS = false;
 
 // not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
@@ -19,7 +20,7 @@ const MAX_TRAIL = 500;
 // bus => <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Freepik - Flaticon</a>
 // boat => <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">Boat icons created by smalllikeart - Flaticon</a>
 // tram => <a href="https://www.flaticon.com/free-icons/tram" title="tram icons">Tram icons created by Freepik - Flaticon</a>
-export default function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
+const Background = memo(function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement> = useRef(null)
 
     let imgObjs = images.map((img) => {
@@ -29,18 +30,22 @@ export default function Background({children: images, ending}: {children: ReactE
     });
 
     let tilt = Math.floor(Math.random() * 90);
-    let imagePositions = images.map(_ => [200, 200]);
-    let imageAngles = images.map((_, idx) => idx * (360 / images.length) + tilt);
+    let speeds = [10, 7, 2, 5, 4];
+    let max_trails = useRef(images.map(_ => MAX_TRAIL));
+    let imagePositions = useRef(images.map(_ => [200, 200]));
+    let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
     // let lines = images.map(_ => []);
-    let lines = images.map(_ => []);
-    let currentLines = [...imagePositions];
+    let lines: MutableRefObject<number[][][][]> = useRef(images.map(_ => []));
+    let currentLines = useRef([...imagePositions.current]);
+    let canCollide = useRef(images.map(_ => 0));
     // let
 
-    let dist = function(p1, p2) {
+    let dist = function(p1: number[], p2: number[]) {
         return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
     }
 
-    function rotateAndPaintImage ( ctx, image, angleInRad , positionX, positionY, axisX, axisY ) {
+    function rotateAndPaintImage ( ctx: CanvasRenderingContext2D, image: HTMLImageElement, angleInRad: number ,
+                                   positionX: number, positionY: number, axisX: number, axisY: number ) {
         ctx.save();
         ctx.translate( positionX, positionY );
         ctx.rotate( angleInRad );
@@ -48,16 +53,16 @@ export default function Background({children: images, ending}: {children: ReactE
         ctx.restore();
     }
 
-    function renderTrail(ctx, idx) {
-        let [x, y] = currentLines[idx];
-        let [x2, y2] = imagePositions[idx];
+    function renderTrail(ctx: CanvasRenderingContext2D, idx: number) {
+        let [x, y] = currentLines.current[idx];
+        let [x2, y2] = imagePositions.current[idx];
         ctx.beginPath();
         ctx.strokeStyle = "blue";
         ctx.moveTo(x, y);
         ctx.lineTo(x2, y2);
         ctx.stroke();
 
-        lines[idx].map((line) => {
+        lines.current[idx].map((line) => {
             let [x, y] = line[0];
             let [x2, y2] = line[1];
             ctx.beginPath();
@@ -68,7 +73,7 @@ export default function Background({children: images, ending}: {children: ReactE
         });
     }
 
-    function cutLine(line, length) {
+    function cutLine(line: number[][], length: number) {
         // cut line to length from second element
         let [p1, p2] = line;
         let [x1, y1] = p1;
@@ -99,14 +104,22 @@ export default function Background({children: images, ending}: {children: ReactE
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         let collide = images.map((_, idx) => {
+            if (!COLLISIONS) {
+                return false;
+            }
+            if (canCollide.current[idx] > 0){
+                canCollide.current[idx] -= 1;
+                return false;
+            }
+
             let collides = false;
-            let p1 = imagePositions[idx];
+            let p1 = imagePositions.current[idx];
             images.map((_, idx2) => {
                 if (idx === idx2) {
                     return;
                 }
 
-                let p2 = imagePositions[idx2];
+                let p2 = imagePositions.current[idx2];
                 if (dist(p1, p2) < IMG_SIZE) {
                     collides = true;
                 }
@@ -115,65 +128,79 @@ export default function Background({children: images, ending}: {children: ReactE
         });
 
         imgObjs.map((img, idx) => {
-            let dists = lines[idx].map((line) => dist(line[0], line[1]))
+            let dists = lines.current[idx].map((line) => dist(line[0], line[1]))
             let total_distance = dists.reduce((a, b) => a + b, 0);
-            total_distance += dist(currentLines[idx], imagePositions[idx]);
+            let currentLine = [currentLines.current[idx], imagePositions.current[idx]];
+            let dcl = dist(currentLine[0], currentLine[1]);
+            total_distance += dcl;
             let i = 0;
-            while (total_distance > MAX_TRAIL) {
-                if (dists[i] < (total_distance - MAX_TRAIL)) {
-                    lines[idx].shift();
-                    total_distance -= dists[i];
-                } else {
-                    lines[idx][0] = cutLine(lines[idx][0], dists[i] - (total_distance - MAX_TRAIL));
+            while (total_distance > max_trails.current[idx]) {
+                if (lines.current[idx].length === 0) {
+                    let newLine = cutLine(currentLine, dcl - (total_distance - max_trails.current[idx]));
+                    currentLines.current[idx] = newLine[0];
                     break;
+                } else {
+                    if (dists[i] < (total_distance - max_trails.current[idx])) {
+                        lines.current[idx].shift();
+                        total_distance -= dists[i];
+                    } else {
+                        lines.current[idx][0] = cutLine(lines.current[idx][0], dists[i] - (total_distance - max_trails.current[idx]));
+                        break;
+                    }
                 }
                 i += 1;
             }
 
             renderTrail(ctx, idx);
 
-            let [x, y] = imagePositions[idx];
-            let angle = imageAngles[idx];
+            let [x, y] = imagePositions.current[idx];
+            let angle = imageAngles.current[idx];
             rotateAndPaintImage(ctx, img, angle * TO_RADIANS, x, y, IMG_SIZE / 2, IMG_SIZE / 2);
 
-            x += Math.cos(angle * TO_RADIANS) * SPEED;
-            y += Math.sin(angle * TO_RADIANS) * SPEED;
-            imagePositions[idx] = [x, y];
+            x += Math.cos(angle * TO_RADIANS) * speeds[idx];
+            y += Math.sin(angle * TO_RADIANS) * speeds[idx];
+            imagePositions.current[idx] = [x, y];
+
+            if (ending) {
+                max_trails.current[idx] -= speeds[idx];
+                return;
+            }
 
             let bounce = false;
             if (x <= IMG_SIZE / 2 || x >= ctx.canvas.width - (IMG_SIZE / 2)) {
                 bounce = true;
                 if (angle > 180) {
-                    imageAngles[idx] = 540 - angle
+                    imageAngles.current[idx] = 540 - angle
                 } else {
-                    imageAngles[idx] = 180 - angle;
+                    imageAngles.current[idx] = 180 - angle;
                 }
 
                 if (x < IMG_SIZE) {
-                    imagePositions[idx][0] = IMG_SIZE / 2;
+                    imagePositions.current[idx][0] = IMG_SIZE / 2;
                 } else {
-                    imagePositions[idx][0] = ctx.canvas.width - (IMG_SIZE / 2);
+                    imagePositions.current[idx][0] = ctx.canvas.width - (IMG_SIZE / 2);
                 }
             } else if (y < IMG_SIZE / 2 || y >= ctx.canvas.height - (IMG_SIZE / 2)) {
                 bounce = true;
-                imageAngles[idx] = 360 - angle;
+                imageAngles.current[idx] = 360 - angle;
 
                 if (y < IMG_SIZE) {
-                    imagePositions[idx][1] = IMG_SIZE / 2;
+                    imagePositions.current[idx][1] = IMG_SIZE / 2;
                 } else {
-                    imagePositions[idx][1] = ctx.canvas.height - (IMG_SIZE / 2);
+                    imagePositions.current[idx][1] = ctx.canvas.height - (IMG_SIZE / 2);
                 }
             }
 
-            // if (collide[idx]) {
-            //     imageAngles[idx] = Math.floor(Math.random() * 360);
-            // }
+            if (collide[idx]) {
+                canCollide.current[idx] = 50;
+                imageAngles.current[idx] = Math.floor(Math.random() * 360);
+            }
 
-            if (bounce) {// || collide[idx]) {
-                lines[idx].push([currentLines[idx], [x, y]]);
-                currentLines[idx] = [x, y];
-                imageAngles[idx] += Math.floor(Math.random() * WOBBLE) - WOBBLE / 2;
-                imageAngles[idx] %= 360; // clamp to 360
+            if (bounce || collide[idx]) {
+                lines.current[idx].push([currentLines.current[idx], [x, y]]);
+                currentLines.current[idx] = [x, y];
+                imageAngles.current[idx] += Math.floor(Math.random() * WOBBLE) - WOBBLE / 2;
+                imageAngles.current[idx] %= 360; // clamp to 360
             }
         });
     };
@@ -181,26 +208,24 @@ export default function Background({children: images, ending}: {children: ReactE
     useEffect(() => {
         let animationFrameId: number;
 
-        const canvas = canvasRef.current
-        const context = canvas.getContext('2d')
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
 
-
-        //Our draw came here
         const render = () => {
-            console.log("rendering");
             draw(context);
             animationFrameId = window.requestAnimationFrame(render);
         };
 
         render();
-        // setTimeout()
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)
         };
-    }, []);
+    }, [ending]);
 
     return (
         <canvas ref={canvasRef} id="canvasa" width="400px" height="400px"></canvas>
     );
-}
+});
+
+export default Background;

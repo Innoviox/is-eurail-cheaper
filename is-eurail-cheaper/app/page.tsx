@@ -34,7 +34,7 @@ export default function Home() {
 
     return <Background ending={ending}>
         <Image src={airplane} alt="plane" />
-        <Image src={train} alt="plane" />
+        <Image src={train} alt="train" />
         <Image src={bus} alt="bus" />
         <Image src={boat} alt="boat" />
         <Image src={tram} alt="tram" />
