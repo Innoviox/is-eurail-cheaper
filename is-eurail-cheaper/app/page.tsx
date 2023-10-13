@@ -22,7 +22,7 @@ export default function Home() {
     let [lat, setLat] = useState(50);
     let [lng, setLng] = useState(10);
     let [meaningless, setMeaningless] = useState(143);
-
+    let [ending, setEnding] = useState(false);
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
         newCoords.push({'lat': lat, 'lng': lng});
@@ -30,9 +30,11 @@ export default function Home() {
         setMeaningless(meaningless + 1);
     }
 
-    console.log("hello!");
+    console.log("calling home");
 
-    return <Background ending={false}>
+    setTimeout(() => setEnding(true), 5000);
+
+    return <Background ending={ending}>
         <Image src={airplane} alt="plane" />
         <Image src={train} alt="plane" />
         <Image src={bus} alt="bus" />
