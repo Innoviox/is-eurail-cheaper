@@ -32,7 +32,7 @@ export default function Home() {
 
     console.log("calling home");
 
-    setTimeout(() => setEnding(true), 5000);
+    // setTimeout(() => setEnding(true), 5000);
 
     return <Background ending={ending}>
         <Image src={airplane} alt="plane" />
