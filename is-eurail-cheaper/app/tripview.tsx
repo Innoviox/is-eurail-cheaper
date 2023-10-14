@@ -113,7 +113,7 @@ export default function TripView({addCoords}:
 
         add(cities, setCities, [toCity, toCityId]);
 
-        if (fromCity !== undefined && fromCityId !== undefined) {
+        if (fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
             add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
