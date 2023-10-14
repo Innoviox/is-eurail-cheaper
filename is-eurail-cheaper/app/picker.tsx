@@ -1,9 +1,9 @@
-import React, {useState, useRef, Dispatch} from "react";
+import React, {useState, useRef, Dispatch, MutableRefObject} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
 export default function Picker({data, parentOpen, setFirst} : {data: [number, number][], parentOpen: boolean, setFirst: (n: number) => void}) {
-    let topRef = useRef();
+    let topRef = useRef<HTMLElement>(null);
 
     let [started, setStarted] = useState(false);
     let [classes, setClasses]: [string[][], Dispatch<any>] = useState(data.map(_ => []));
@@ -50,14 +50,14 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
     }
 
     function renderPricePickerElement(tripN: number) {
-        let style = {};
+        let style = { top: 0 };
         if (tripN !== 0 && topRef.current) {
             style.top = topRef.current.offsetTop + (tripN * 24);
         }
 
         return (
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
-                 key={tripN} ref={tripN === 0 ? topRef : undefined} style={style}
+                 key={tripN} ref={tripN === 0 ? topRef : null} style={style}
                  onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />

@@ -1,8 +1,7 @@
-import Image from "next/image";
-import Picker from "@/app/picker";
-import React from "react";
+import Image, {StaticImageData} from "next/image";
+import React, {ReactElement} from "react";
 
-export default function PriceDisplay({children, img}) {
+export default function PriceDisplay({children, img}: {children: ReactElement[], img: StaticImageData}) {
     return (
         <div className="level">
             <div className="level-left">
