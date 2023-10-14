@@ -3,6 +3,13 @@ import parseParams from './api/lib/params.js';
 import station from './api/lib/station.js';
 
 
+function parseJourney(journey) {
+    let price = journey.price.amount;
+    let start = Date.parse(journey.legs[0].plannedDeparture);
+    let end = Date.parse(journey.legs[journey.legs.length - 1].plannedArrival);
+    return { "price": price, "length": (end - start) / 1000 };
+}
+
 export default async (req, res) => {
     let params = parseParams({}); // get defaults
     // todo catch errors and such
@@ -13,7 +20,7 @@ export default async (req, res) => {
     params.origin = origin;
     params.destination = destination;
     params.date = new Date(); // todo
-    let data;
-    await journeys(params, params.date).then(results => data = results);
-    return res.status(200).json(data);
+    let data = await journeys(params, params.date)
+        .then(results => results.map(parseJourney));
+    return res.status(200).json({ "journeys": data });
 }

@@ -11,6 +11,7 @@ import robots from 'express-robots-txt'
 import reachableFrom from './reachableFrom.js'
 import { stationsByQuery, stationById } from './stations.js'
 import journey from './journey.js'
+import eurail from './eurail.js'
 
 const port = process.env.PORT
 if (!port) throw new Error('please provide a PORT environment variable')
@@ -36,7 +37,8 @@ const cache = apicache.options({
 
 api.get('/stations', cache('24 hours'), stationsByQuery)
 api.get('/stations/:id', cache('24 hours'), stationById)
-api.get('/journeys', journey)
+api.get('/price/db', journey)
+api.get('/price/eurail', eurail)
 // api.get('/:id', cache('24 hours'), reachableFrom) // todo: prefix this path, since requests would fail if any id started with /stations
 
 api.disable('x-powered-by')

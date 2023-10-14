@@ -129,7 +129,6 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
-                        console.log(data, price);
                         add(lst, setlst, price, startLength);
                     } else {
                         console.log(`response not ok - price ${key}`);
