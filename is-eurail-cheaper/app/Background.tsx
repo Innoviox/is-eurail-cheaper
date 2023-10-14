@@ -54,8 +54,8 @@ const Background = memo(function Background({children: images, ending}: {childre
         return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
     }
 
-    function generateStart(width: number = 450, height: number = 700, minOffset: number = 100, maxOffset: number = 200): [number[][], number[]] { // todo make this work for scaled canvas
-        let ang = () => 35 + Math.floor(Math.random() * 30);
+    function generateStart(width: number = 450, height: number = 700, minOffset: number = 50, maxOffset: number = 100): [number[][], number[]] { // todo make this work for scaled canvas
+        let ang = () => 20 + Math.floor(Math.random() * 50);
         let buffer = 200;
         let positions: number[][] = [];
         let angles: number[] = [];
@@ -86,10 +86,8 @@ const Background = memo(function Background({children: images, ending}: {childre
                 }
                 case 2: {
                     let x = buffer + Math.floor(Math.random() * (width - buffer));
-                    console.log("GENERATED", side, x);
                     let y = height + (minOffset + Math.floor(Math.random() * maxOffset));
                     positions.push([x, y]);
-                    console.log(positions);
                     if (x < width / 2) {
                         angles.push(ang() + 270);
                     } else {
@@ -305,7 +303,7 @@ const Background = memo(function Background({children: images, ending}: {childre
             animationFrameId = window.requestAnimationFrame(render);
         };
 
-        render();
+        setTimeout(render, 750);
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)

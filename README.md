@@ -57,9 +57,10 @@
 - [x] no dropdown when less than 3 characters
 - [ ] add question mark & animation to eurail price summary
 - [ ] gray out unavailable map countries => add with certain eurail pass
+- [ ] settings - set date
 - [x] end canvas animation
 - [ ] backend
-  - [ ] implement guru for search and db
+  - [x] implement guru for search and db
   - [ ] implement flixbus
   - [ ] make sure returned results make sense => make sure eurail timing is neutral (?)
   - [ ] deep future: link to sale page
