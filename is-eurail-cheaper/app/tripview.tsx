@@ -16,6 +16,8 @@ import bus from "./img/bus.png";
 import boat from "./img/boat.png";
 import tram from "./img/tram.png";
 
+const PRICE_API = (endpoint: string, origin: string, destination: string) => `http://localhost:2424/price/${endpoint}?origin=${origin}&destination=${destination}`;
+
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
 // todo multimonth trips
@@ -121,9 +123,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
 
             setSearchEnabled(false);
             for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
-                fetch(`http://127.0.0.1:8000/api/price/${key}`, {
-                    method: 'POST',
-                    body: formData,
+                fetch(PRICE_API(key, fromCity, toCity), {
+                    method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
                         let data = await response.json();

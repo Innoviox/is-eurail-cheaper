@@ -34,7 +34,19 @@
 		"query-string": "^7.1.3",
 		"redis": "^3.1.2",
 		"trainline-stations": "^2.0.1",
-		"uic-codes": "^0.3.0"
+		"uic-codes": "^0.3.0",
+		"fetch-ponyfill": "^7.1.0",
+		"hafas-client": "^6.1.1",
+		"hast-util-to-html": "^8.0.4",
+		"hastscript": "^7.2.0",
+		"helmet": "^4.6.0",
+		"horsey": "^4.2.2",
+		"js-beautify": "^1.14.9",
+		"moment-duration-format": "^2.3.2",
+		"ms": "^2.1.3",
+		"p-retry": "^4.6.2",
+		"p-timeout": "^5.1.0",
+		"unist-builder": "^3.0.1"
 	},
 	"devDependencies": {
 		"countries-list": "^2.6.1",
