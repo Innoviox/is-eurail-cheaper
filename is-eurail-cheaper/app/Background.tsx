@@ -53,7 +53,7 @@ const Background = memo(function Background({children: images, ending}: {childre
         return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
     }
 
-    function generateStart(width: number = 450, height: number = 700, minOffset: number = 50, maxOffset: number = 100): [number[][], number[]] { // todo make this work for scaled canvas
+    function generateStart(width: number = 450, height: number = 700, minOffset: number = 0, maxOffset: number = 100): [number[][], number[]] { // todo make this work for scaled canvas
         let ang = () => 20 + Math.floor(Math.random() * 50);
         let buffer = 200;
         let positions: number[][] = [];
@@ -300,8 +300,6 @@ const Background = memo(function Background({children: images, ending}: {childre
             draw(context);
             animationFrameId = window.requestAnimationFrame(render);
         };
-
-        // render();
 
         if (!ending) {
             setTimeout(render, 750);

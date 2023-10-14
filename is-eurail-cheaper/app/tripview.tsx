@@ -37,6 +37,7 @@ const sentinel = -100;
 let everAnimated = false;
 
 type Location = { longitude: number, latitude: number };
+type Endpoint = [[number, number][][], Dispatch<any>, StaticImageData]
 
 export default function TripView({addCoords}:
                                  {addCoords: (lat: number, lng: number) => void}) {
@@ -54,13 +55,13 @@ export default function TripView({addCoords}:
     let [showFullEuro, setShowFullEuro] = useState(true);
     let [ending, setEnding] = useState(false);
 
-    const endpoints = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
+    const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
     function sortPrices(n: number[][]) {
         return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
     }
 
-    function extractPrice(trips: Array<{ price: string, length: number | string }>) {
+    function extractPrice(trips: Array<{ price: string, length: string }>) {
         return sortPrices(trips.map(i => [parseInt(i.price), parseInt(i.length)]).slice(0, 5));
     }
 
@@ -112,7 +113,7 @@ export default function TripView({addCoords}:
 
         add(cities, setCities, [toCity, toCityId]);
 
-        if (fromCityId !== undefined) {
+        if (fromCity !== undefined && fromCityId !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
             add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
@@ -349,42 +350,6 @@ export default function TripView({addCoords}:
             </div>
         )
     }
-
-    // if (!animatingSearch && cities.length > 0) {
-    //     return (
-    //         <div id="trip-view">
-    //             <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
-    //             <div className="divider"></div>
-    //             <div className="fade-in">
-    //                 <div id="trips-box">
-    //                     {renderTrip()}
-    //                 </div>
-    //                 <div className="divider"></div>
-    //                 <div id="price-totals">
-    //                     {renderTotals()}
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     );
-    // } else {
-    //     return (
-    //         <div id="trip-view">
-    //             <Background ending={animatingSearch}>
-    //                 <Image src={airplane} alt="plane" />
-    //                 <Image src={train} alt="train" />
-    //                 <Image src={bus} alt="bus" />
-    //                 <Image src={boat} alt="boat" />
-    //                 <Image src={tram} alt="tram" />
-    //             </Background>
-    //             <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
-    //                 <h1>Explore Your World</h1>
-    //             </div>
-    //             <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
-    //                 <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
-    //             </div>
-    //         </div>
-    //     );
-    // }
 
     return (
         <div id="trip-view">

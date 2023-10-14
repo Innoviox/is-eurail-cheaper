@@ -1,19 +1,15 @@
 'use client'
 import React, {MutableRefObject, ReactElement} from "react";
-import { useEffect, useRef, useMemo } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
-import { faMapPin } from "@fortawesome/free-solid-svg-icons";
-import ReactDOMServer from "react-dom/server";
-import {createRoot} from "react-dom/client";
+import { useEffect, useRef } from "react";
+import {createRoot, Root} from "react-dom/client";
 import colors from "./colors";
 
 type LatLng = {lat: number, lng: number};
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }:
-                { map: google.maps.Map, position: LatLng, children: ReactElement, onClick: () => void}) {
-    const rootRef = useRef();
-    const markerRef = useRef();
+                { map: google.maps.Map | null, position: LatLng, children: ReactElement, onClick: () => void}) {
+    const rootRef: MutableRefObject<Root> = useRef();
+    const markerRef: MutableRefObject<google.maps.marker.AdvancedMarkerView> = useRef();
 
     useEffect(() => {
         if (!rootRef.current) {
@@ -40,8 +36,8 @@ function Marker({ map, position, children, onClick }:
     return <></>;
 }
 
-function Route({ map, path }: {map: google.maps.Map, path: LatLng[]}) {
-    const routeRef: MutableRefObject<google.maps.Polyline> = useRef();
+function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
+    const routeRef: MutableRefObject<google.maps.Polyline | null> = useRef(null);
 
     useEffect(() => {
         if (!routeRef.current) {
@@ -53,11 +49,14 @@ function Route({ map, path }: {map: google.maps.Map, path: LatLng[]}) {
                 strokeWeight: 2
             });
         }
-        return () => { routeRef.current.setMap(null) };
+        return () => { routeRef !== null && routeRef.current.setMap(null) };
     }, []);
 
     useEffect(() => {
-        // routeRef.current.map = map;
+        if (routeRef === null) {
+            return;
+        }
+
         routeRef.current.setMap(map);
         routeRef.current.setPath(path);
     }, [map, path]);
@@ -65,7 +64,7 @@ function Route({ map, path }: {map: google.maps.Map, path: LatLng[]}) {
     return <></>;
 }
 
-function MarkerWrapper({ map, coords }: {map: google.maps.Map, coords: LatLng[]}) {
+function MarkerWrapper({ map, coords }: {map: google.maps.Map | null, coords: LatLng[]}) {
     let circles = [0]; //, 1, 2, 3];
     let previousPosition: LatLng;
     let path: LatLng[];
@@ -119,7 +118,7 @@ export default function MapView({latitude, longitude, coords, meaningless}: {lat
     return (
         <div>
             <div style={{height: "94vh"}} ref={mapRef} />
-            <MarkerWrapper map={map} coords={coords} />
+            <MarkerWrapper map={map ?? null} coords={coords} />
         </div>
     );
 }
