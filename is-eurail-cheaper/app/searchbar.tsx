@@ -3,12 +3,16 @@ import { useOuterClick } from "./outerclick";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
+const STATIONS_API = "http://localhost:2424/stations?query=";
+
+type Location = { longitude: number, latitude: number };
+
 export default function SearchBar({onSearchSubmit, enabled}:
-                                  {onSearchSubmit: (formData: FormData) => Promise<void>, enabled: boolean}) {
+                                  {onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>, enabled: boolean}) {
     const innerRef = useOuterClick(closeDropdown);
 
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
-    let [stationIds, setStationIds] = useState(new Map<string, string>());
+    let [stationIds, setStationIds] = useState(new Map<string, [string, Location]>());
     let [showDropdown, setShowDropdown] = useState(false);
     let [inputVal, setInputVal] = useState("");
 
@@ -22,9 +26,11 @@ export default function SearchBar({onSearchSubmit, enabled}:
         if (toCity === null) {
             return;
         }
-        formData.append("toCityId", stationIds.get(toCity as string));
+
+        let [id, loc] = stationIds.get(toCity as string) ?? ["", {longitude: 0, latitude: 0}];
+        formData.append("toCityId", id);
         setShowDropdown(false);
-        await onSearchSubmit(formData);
+        await onSearchSubmit(formData, loc);
     }
 
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -43,7 +49,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
             return;
         }
 
-        const response = await fetch(`http://127.0.0.1:8000/api/stations?query=${val}`, {
+        const response = await fetch(STATIONS_API + val, {
            method: 'GET'
         });
 
@@ -53,9 +59,9 @@ export default function SearchBar({onSearchSubmit, enabled}:
 
             let newStations: string[] = [];
             let newSIds = stationIds;
-            data.stations.forEach((i: { station: string, id: string }) => {
-                newStations.push(i.station);
-                newSIds.set(i.station, i.id);
+            data.forEach((i: { name: string, id: string, location: Location }) => {
+                newStations.push(i.name);
+                newSIds.set(i.name, [i.id, i.location]);
             });
             setStations(newStations);
             setStationIds(newSIds);

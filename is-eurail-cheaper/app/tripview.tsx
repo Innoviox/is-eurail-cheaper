@@ -33,6 +33,8 @@ const sentinel = -100;
 
 let everAnimated = false;
 
+type Location = { longitude: number, latitude: number };
+
 export default function TripView({addCoords}: {addCoords: (lat: number, lng: number) => void}) {
     const city = (idx: number) => cities[idx][0];
 
@@ -83,7 +85,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
         setlst(n);
     }
 
-    async function onSearchSubmit(formData: FormData) {
+    async function onSearchSubmit(formData: FormData, location: Location) {
         /// i guess we can't have nice things
         let fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
         let fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
@@ -102,7 +104,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
             everAnimated = true;
         }
 
-        await updateCoords(toCityId);
+        addCoords(location.latitude, location.longitude);
 
         add(cities, setCities, [toCity, toCityId]);
 
