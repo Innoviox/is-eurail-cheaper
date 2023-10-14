@@ -55,18 +55,17 @@ const Background = memo(function Background({children: images, ending}: {childre
     }
 
     function generateStart(width: number = 450, height: number = 700, minOffset: number = 100, maxOffset: number = 200): [number[][], number[]] { // todo make this work for scaled canvas
-        let ang = () => 35 + Math.floor(Math.random() * 20);
+        let ang = () => 35 + Math.floor(Math.random() * 30);
+        let buffer = 200;
         let positions: number[][] = [];
         let angles: number[] = [];
         for (let i = 0; i < images.length; i++) {
             let side = Math.floor(Math.random() * 4);
             switch (side) { // 0 top, 1 right, 2 bottom, 3 left
                 case 0: {
-                    let x = Math.floor(Math.random() * width);
-                    console.log("GENERATED", side, x);
+                    let x = buffer + Math.floor(Math.random() * (width - buffer));
                     let y = -(minOffset + Math.floor(Math.random() * maxOffset));
                     positions.push([x, y]);
-                    console.log(positions);
                     if (x < width / 2) {
                         angles.push(ang());
                     } else {
@@ -76,10 +75,8 @@ const Background = memo(function Background({children: images, ending}: {childre
                 }
                 case 1: {
                     let x = width + (minOffset + Math.floor(Math.random() * maxOffset));
-                    console.log("GENERATED", side, x);
-                    let y = Math.floor(Math.random() * height);
+                    let y = buffer + Math.floor(Math.random() * (height - buffer));
                     positions.push([x, y]);
-                    console.log(positions);
                     if (y < height / 2) {
                         angles.push(ang() + 90);
                     } else {
@@ -88,7 +85,7 @@ const Background = memo(function Background({children: images, ending}: {childre
                     break;
                 }
                 case 2: {
-                    let x = Math.floor(Math.random() * width);
+                    let x = buffer + Math.floor(Math.random() * (width - buffer));
                     console.log("GENERATED", side, x);
                     let y = height + (minOffset + Math.floor(Math.random() * maxOffset));
                     positions.push([x, y]);
@@ -102,10 +99,8 @@ const Background = memo(function Background({children: images, ending}: {childre
                 }
                 case 3: {
                     let x = -(minOffset + Math.floor(Math.random() * maxOffset));
-                    console.log("GENERATED", side, x);
-                    let y = Math.floor(Math.random() * height);
+                    let y = buffer + Math.floor(Math.random() * (height - buffer));
                     positions.push([x, y]);
-                    console.log(positions);
                     if (y < height / 2) {
                         angles.push(ang());
                     } else {
