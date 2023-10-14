@@ -132,6 +132,7 @@ export default function TripView({addCoords}:
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
+                        console.log(data, price);
                         add(lst, setlst, price, startLength);
                     } else {
                         console.log(`response not ok - price ${key}`);
@@ -157,7 +158,7 @@ export default function TripView({addCoords}:
     }
 
     function sumArr(arr: Array<any>) {
-        return arr.map(i => i[0][0] === sentinel ? 0 : i[0][0]).reduce((a, b) => a + b, 0);
+        return arr.length === 0 ? 0 : arr.map(i => i.length === 0 || i[0][0] === sentinel ? 0 : i[0][0]).reduce((a, b) => a + b, 0);
     }
 
     function toggleOpen(idx: number) {
@@ -196,7 +197,7 @@ export default function TripView({addCoords}:
                                                 <div>
                                                     {/*// todo do i need choices? onClick={() => setChoice(idx, key)}*/}
                                                     <PriceDisplay img={img}>
-                                                        {lst[idx][0][0] === sentinel ?
+                                                        {lst[idx].length === 0 || lst[idx][0][0] === sentinel ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
                                                             <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
                                                         }
