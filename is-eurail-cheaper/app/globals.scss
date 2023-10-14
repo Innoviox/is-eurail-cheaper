@@ -159,8 +159,19 @@ body {
   margin-bottom: 10px;
 }
 
+.dot {
+  border-radius: 50%;
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
 .city {
-  color: black !important;
+  border-radius: 25px;
+  padding: 0 5px;
+  border: 1px solid red;
 }
 
 .upper.level {
