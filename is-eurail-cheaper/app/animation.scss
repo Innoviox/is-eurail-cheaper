@@ -131,7 +131,7 @@
   position: absolute;
   border-radius: 50%;
   //background-color: deepskyblue;
-  border: 1px solid red;
+  //border: 1px solid red;
   width: 50px;
   height: 50px;
   opacity: 0;
@@ -141,14 +141,8 @@
 .item {
   z-index: 1;
   border-radius: 50%;
-  //border: 1px solid red;
-  background-color: red;
-  //width: 30px;
-  //height: 30px;
-
+  //background-color: red;
   align-items: center;
-  //background-color: #FFFFFF;
-  //border-radius: 50%;
   color: #263238;
   display: flex;
   font-size: 14px;
@@ -158,9 +152,6 @@
   justify-content: center;
   padding: 4px;
   position: relative;
-
-  //position: relative;
-  //transition: all 0.3s ease-out;
 }
 
 .animating-search-bar {

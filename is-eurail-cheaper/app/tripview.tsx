@@ -15,6 +15,7 @@ import train from "./img/train.png";
 import bus from "./img/bus.png";
 import boat from "./img/boat.png";
 import tram from "./img/tram.png";
+import colors from "./colors";
 
 const PRICE_API = (endpoint: string, origin: string, destination: string) => `http://localhost:2424/price/${endpoint}?origin=${origin}&destination=${destination}`;
 
@@ -37,7 +38,8 @@ let everAnimated = false;
 
 type Location = { longitude: number, latitude: number };
 
-export default function TripView({addCoords}: {addCoords: (lat: number, lng: number) => void}) {
+export default function TripView({addCoords}:
+                                 {addCoords: (lat: number, lng: number) => void}) {
     const city = (idx: number) => cities[idx][0];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
@@ -219,7 +221,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} />
+                                <City name={city(idx)} color={colors[idx]} />
                             </div>
                         </div>
                     </div>
@@ -238,8 +240,8 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
     }
 
     function renderUpper(idx: number) {
-         return  (
-             <div className="upper level" onClick={() => toggleOpen(idx)}>
+        return  (
+            <div className="upper level" onClick={() => toggleOpen(idx)}>
                 <div className="level-left">
                     <div className="level-item">
                         <div>
@@ -248,7 +250,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} />
+                            <City name={city(idx)} color={colors[idx]} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -258,7 +260,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} />
+                            <City name={city(idx + 1)} color={colors[idx + 1]} />
                         </div>
                     </div>
                 </div>
@@ -276,7 +278,7 @@ export default function TripView({addCoords}: {addCoords: (lat: number, lng: num
                     : <></>}
                 </div>
             </div>
-         );
+        );
     }
 
     function renderTotals() {

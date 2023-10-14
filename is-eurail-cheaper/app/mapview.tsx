@@ -6,6 +6,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMapPin } from "@fortawesome/free-solid-svg-icons";
 import ReactDOMServer from "react-dom/server";
 import {createRoot} from "react-dom/client";
+import colors from "./colors";
 
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }) {
@@ -46,14 +47,11 @@ function Route({ map, path }) {
             routeRef.current = new google.maps.Polyline({
                 path: path,
                 // geodesic: true,
-                strokeColor: "#FF0000",
+                strokeColor: "#879799",
                 strokeOpacity: 1.0,
                 strokeWeight: 2
             });
-
-
         }
-
         return () => (routeRef.current.map = null);
     }, []);
 
@@ -80,11 +78,12 @@ function MarkerWrapper({ map, coords }) {
             <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
                 {/*<FontAwesomeIcon icon={faMapPin} />*/}
                 <div id="circle-container">
-                    <div className="item"></div>
+                    <div className="item" style={{backgroundColor: colors[idx]}}></div>
                     {/* add circles on last element*/}
                     { idx === coords.length - 1 ? circles.map(i => {
                         return (
-                            <div key={i} className="circle" style={{"animationDelay": `${i}s`}}></div>
+                            <div key={i} className="circle" style={{"animationDelay": `${i}s`,
+                                                                    "border": `1px solid ${colors[idx]}`}} />
                         )}): <></> }
                 </div>
             </Marker>

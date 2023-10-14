@@ -46,7 +46,7 @@ export default function Home() {
                   </Wrapper>
                 </div>
                 <div id="trip">
-                  <TripView addCoords={addCoords}/>
+                  <TripView addCoords={addCoords} />
                 </div>
             </div>
         </main>

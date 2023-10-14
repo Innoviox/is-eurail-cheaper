@@ -1,11 +1,10 @@
 import React from "react";
 
 
-export default function City({name}: {name: string}) {
+export default function City({name, color}: {name: string, color: string}) {
     return (
-        // <button className="city button is-outlined is-rounded">{name}</button>
         <div className="city">
-            <span className="dot" />
+            <span className="dot" style={{"background-color": color}} />
             <span>{name}</span>
         </div>
     )
