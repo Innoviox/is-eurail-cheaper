@@ -55,57 +55,66 @@ const Background = memo(function Background({children: images, ending}: {childre
     }
 
     function generateStart(width: number = 450, height: number = 700, minOffset: number = 100, maxOffset: number = 200): [number[][], number[]] { // todo make this work for scaled canvas
+        let ang = () => 35 + Math.floor(Math.random() * 20);
         let positions: number[][] = [];
         let angles: number[] = [];
-        images.forEach(_ => {
+        for (let i = 0; i < images.length; i++) {
             let side = Math.floor(Math.random() * 4);
             switch (side) { // 0 top, 1 right, 2 bottom, 3 left
                 case 0: {
                     let x = Math.floor(Math.random() * width);
+                    console.log("GENERATED", side, x);
                     let y = -(minOffset + Math.floor(Math.random() * maxOffset));
                     positions.push([x, y]);
+                    console.log(positions);
                     if (x < width / 2) {
-                        angles.push(Math.floor(Math.random() * 90));
+                        angles.push(ang());
                     } else {
-                        angles.push(Math.floor(Math.random() * 90) + 90);
+                        angles.push(ang() + 90);
                     }
                     break;
                 }
                 case 1: {
                     let x = width + (minOffset + Math.floor(Math.random() * maxOffset));
+                    console.log("GENERATED", side, x);
                     let y = Math.floor(Math.random() * height);
                     positions.push([x, y]);
+                    console.log(positions);
                     if (y < height / 2) {
-                        angles.push(Math.floor(Math.random() * 90) + 90);
+                        angles.push(ang() + 90);
                     } else {
-                        angles.push(Math.floor(Math.random() * 90) + 180);
+                        angles.push(ang() + 180);
                     }
                     break;
                 }
                 case 2: {
                     let x = Math.floor(Math.random() * width);
+                    console.log("GENERATED", side, x);
                     let y = height + (minOffset + Math.floor(Math.random() * maxOffset));
                     positions.push([x, y]);
+                    console.log(positions);
                     if (x < width / 2) {
-                        angles.push(Math.floor(Math.random() * 90) + 270);
+                        angles.push(ang() + 270);
                     } else {
-                        angles.push(Math.floor(Math.random() * 90) + 180);
+                        angles.push(ang() + 180);
                     }
                     break;
                 }
                 case 3: {
                     let x = -(minOffset + Math.floor(Math.random() * maxOffset));
+                    console.log("GENERATED", side, x);
                     let y = Math.floor(Math.random() * height);
                     positions.push([x, y]);
+                    console.log(positions);
                     if (y < height / 2) {
-                        angles.push(Math.floor(Math.random() * 90));
+                        angles.push(ang());
                     } else {
-                        angles.push(Math.floor(Math.random() * 90) + 270);
+                        angles.push(ang() + 270);
                     }
                     break;
                 }
             }
-        });
+        }
         console.log([positions, angles]);
         return [positions, angles];
     }

@@ -51,12 +51,14 @@
 - [ ] clean css w/ variables
 - [x] make page not scroll annoyingly
 - [x] front animation on canvas & searchbar
-- [ ] front animation on canvas
+- [x] front animation on canvas
+- [ ] 
 - [x] clear searchbar before animating ***
 - [x] make searchbar disabled while loading
 - [x] no dropdown when less than 3 characters
 - [ ] add question mark & animation to eurail price summary
 - [ ] gray out unavailable map countries => add with certain eurail pass
+- [ ] end canvas animation
 - [ ] backend
   - [ ] implement guru for search and db
   - [ ] implement flixbus
