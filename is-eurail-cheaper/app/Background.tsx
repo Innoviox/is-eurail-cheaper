@@ -40,7 +40,6 @@ const Background = memo(function Background({children: images, ending}: {childre
     let imageAngles = useRef(startingAngles);
     let starting = useRef(images.map(_ => true));
 
-
     let max_trails = useRef(images.map(_ => MAX_TRAIL));
     // let imagePositions = useRef(images.map(_ => [200, 200]));
     // let imageAngles = useRef(images.map((_, idx) => idx * (360 / images.length) + tilt));
@@ -108,7 +107,6 @@ const Background = memo(function Background({children: images, ending}: {childre
                 }
             }
         }
-        console.log([positions, angles]);
         return [positions, angles];
     }
 
@@ -303,7 +301,13 @@ const Background = memo(function Background({children: images, ending}: {childre
             animationFrameId = window.requestAnimationFrame(render);
         };
 
-        setTimeout(render, 750);
+        // render();
+
+        if (!ending) {
+            setTimeout(render, 750);
+        } else {
+            render();
+        }
 
         return () => {
             window.cancelAnimationFrame(animationFrameId)
