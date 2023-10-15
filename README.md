@@ -1,7 +1,7 @@
 # is-eurail-cheaper
 
 - frontend: `npm run dev`
-- backend: `uvicorn backend:app --reload`
+- backend: `PORT=2424 npm start`
 
 ## Roadmap
 
