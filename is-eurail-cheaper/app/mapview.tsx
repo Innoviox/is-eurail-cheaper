@@ -8,7 +8,8 @@ type LatLng = {lat: number, lng: number};
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }:
                 { map: google.maps.Map | null, position: LatLng, children: ReactElement, onClick: () => void}) {
-    const rootRef: MutableRefObject<Root> = useRef();
+    const rootRef: MutableRefObject<Root | undefined> = useRef();
+    // @ts-ignore -- this class does actually exist but typescript can't see it
     const markerRef: MutableRefObject<google.maps.marker.AdvancedMarkerView> = useRef();
 
     useEffect(() => {
@@ -16,6 +17,7 @@ function Marker({ map, position, children, onClick }:
             const container = document.createElement("div");
             rootRef.current = createRoot(container);
 
+            // @ts-ignore
             markerRef.current = new google.maps.marker.AdvancedMarkerView({
                 position,
                 content: container,
@@ -26,7 +28,9 @@ function Marker({ map, position, children, onClick }:
     }, []);
 
     useEffect(() => {
-        rootRef.current.render(children);
+        if (rootRef.current) {
+            rootRef.current.render(children);
+        }
         markerRef.current.position = position;
         markerRef.current.map = map;
         const listener = markerRef.current.addListener("click", onClick);
@@ -49,11 +53,11 @@ function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
                 strokeWeight: 2
             });
         }
-        return () => { routeRef !== null && routeRef.current.setMap(null) };
+        return () => { routeRef.current !== null && routeRef.current.setMap(null) };
     }, []);
 
     useEffect(() => {
-        if (routeRef === null) {
+        if (routeRef.current === null) {
             return;
         }
 

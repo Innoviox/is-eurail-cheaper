@@ -1,5 +1,5 @@
 import React, {useState, ChangeEvent, FormEvent, MouseEvent, useRef, Dispatch, MutableRefObject} from "react";
-import { useOuterClick } from "./outerclick";
+import { useOuterClick } from "./outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,7 +9,7 @@ type Location = { longitude: number, latitude: number };
 
 export default function SearchBar({onSearchSubmit, enabled}:
                                   {onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>, enabled: boolean}) {
-    const innerRef: MutableRefObject<HTMLElement> = useOuterClick(closeDropdown);
+    const innerRef: MutableRefObject<HTMLDivElement> = useOuterClick(closeDropdown);
 
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, [string, Location]>());

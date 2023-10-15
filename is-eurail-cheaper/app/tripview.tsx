@@ -113,16 +113,13 @@ export default function TripView({addCoords}:
 
         add(cities, setCities, [toCity, toCityId]);
 
-        if (fromCityId !== undefined) {
+        if (fromCity !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
             add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
             add(eurail, setEurail, [[sentinel, sentinel]]);
             add(open, setOpen, true);
             add(choices, setChoices, "");
-
-            formData.append("fromCity", fromCity);
-            formData.append("fromCityId", fromCityId);
 
             setSearchEnabled(false);
             for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
@@ -376,14 +373,14 @@ export default function TripView({addCoords}:
                     </div>
                 </div>
                 :
-                <>
+                <div className="floating">
                     <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
                         <h1>Explore Your World</h1>
                     </div>
                     <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
                         <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
                     </div>
-                </>
+                </div>
             }
         </div>
     )

@@ -1,4 +1,4 @@
-import React, {useState, useRef, Dispatch, MutableRefObject} from "react";
+import React, {useState, useRef, Dispatch, MutableRefObject, LegacyRef} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
 
@@ -57,7 +57,7 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
 
         return (
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
-                 key={tripN} ref={tripN === 0 ? topRef : null} style={style}
+                 key={tripN} ref={tripN === 0 ? topRef as LegacyRef<HTMLDivElement> : undefined} style={style}
                  onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
