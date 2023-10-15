@@ -8,6 +8,9 @@ import TripView from './tripview';
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { initialize } from "./colors";
+
+initialize();
 
 export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
