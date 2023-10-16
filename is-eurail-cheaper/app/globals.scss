@@ -116,11 +116,13 @@ body {
 }
 
 .upper:hover {
-  background: #bce0e3;
+  //background: #bce0e3;
+  //background: #edf0da;
 }
 
 .upper:hover + .lower {
-  background: #ddeef0;
+  //background: #ddeef0;
+  //background: #edf0da;
 }
 
 .lower .level, .upper.level {

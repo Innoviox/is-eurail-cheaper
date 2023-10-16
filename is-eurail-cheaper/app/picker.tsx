@@ -1,6 +1,6 @@
 import React, {useState, useRef, Dispatch, MutableRefObject, LegacyRef} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faDollarSign} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faDollarSign, faCaretUp, faCaretDown} from "@fortawesome/free-solid-svg-icons";
 
 export default function Picker({data, parentOpen, setFirst} : {data: [number, number][], parentOpen: boolean, setFirst: (n: number) => void}) {
     let topRef = useRef<HTMLElement>(null);
@@ -72,6 +72,14 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
                 <div className={"tag price-picker-tag length " + tagClasses[tripN][1]}>
                     {formatTime(data[tripN][1])}
                 </div>
+
+                {
+                    tripN === 0 ?
+                        <div className="tag price-picker-tag">
+                            <FontAwesomeIcon icon={open === 0 ? faCaretDown : faCaretUp} />
+                        </div>
+                        : <></>
+                }
             </div>
         )
     }
