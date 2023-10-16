@@ -292,8 +292,6 @@ export default function TripView({addCoords}:
         }
         classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
 
-        console.log(showFullEuro);
-
         return (
             <div className="level">
                 <div className="level-left">
