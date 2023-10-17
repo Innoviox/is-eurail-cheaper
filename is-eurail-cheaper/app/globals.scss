@@ -115,12 +115,19 @@ body {
   height: 30px;
 }
 
+.upper {
+  //background: #e8eef2;
+  padding: 1px;
+}
+
 .upper:hover {
-  //background: #bce0e3;
+  //filter: brightness(85%);
+  background: #c7d3dd;
   //background: #edf0da;
 }
 
 .upper:hover + .lower {
+  //filter: brightness(95%);
   //background: #ddeef0;
   //background: #edf0da;
 }
