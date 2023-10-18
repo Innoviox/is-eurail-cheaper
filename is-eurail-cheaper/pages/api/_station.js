@@ -11,7 +11,6 @@ const _station = (s) => {
 				return false
 			})
 		.catch(
-			// eslint-disable-next-line n/handle-callback-err
 			(error) => false,
 		)
 }
