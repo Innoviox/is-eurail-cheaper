@@ -25,7 +25,7 @@ function Marker({ map, position, children, onClick }:
         }
 
         return () => {markerRef.current.map = null};
-    }, []);
+    }, [position]);
 
     useEffect(() => {
         if (rootRef.current) {
@@ -54,7 +54,7 @@ function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
             });
         }
         return () => { routeRef.current !== null && routeRef.current.setMap(null) };
-    }, []);
+    }, [path]);
 
     useEffect(() => {
         if (routeRef.current === null) {

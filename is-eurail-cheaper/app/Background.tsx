@@ -21,6 +21,11 @@ const Background = memo(function Background({children: images, ending}: {childre
     const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
     let imgObjs = images.map((img) => {
+        // https://stackoverflow.com/questions/68324216/next-js-image-is-not-defined
+        if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+            return;
+        }
+
         let i = new Image();
         i.src = img.props.src.src;
         return i;

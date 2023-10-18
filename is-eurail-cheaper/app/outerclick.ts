@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 
 
-// In a utility library:
+// https://stackoverflow.com/questions/71193818/react-onclick-argument-of-type-eventtarget-is-not-assignable-to-parameter-of-t
 function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !("nodeType" in e)) {
         throw new Error(`Node expected`);
