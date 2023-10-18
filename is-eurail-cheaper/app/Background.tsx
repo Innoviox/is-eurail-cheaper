@@ -112,8 +112,12 @@ const Background = memo(function Background({children: images, ending}: {childre
         return [positions, angles];
     }
 
-    function rotateAndPaintImage ( ctx: CanvasRenderingContext2D, image: HTMLImageElement, angleInRad: number ,
+    function rotateAndPaintImage ( ctx: CanvasRenderingContext2D, image: HTMLImageElement | undefined, angleInRad: number ,
                                    positionX: number, positionY: number, axisX: number, axisY: number ) {
+        if (image === undefined) {
+            return;
+        }
+
         ctx.save();
         ctx.translate( positionX, positionY );
         ctx.rotate( angleInRad );
