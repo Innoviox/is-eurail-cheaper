@@ -1,6 +1,6 @@
 import _journeys from './_journeys.js';
 import parseParams from './_params.js';
-import station from './station.js';
+import _station from './_station.js';
 
 
 function parseJourney(journey) {
@@ -14,8 +14,8 @@ export default async function handler (req, res) {
     let params = parseParams({}); // get defaults
     // todo catch errors and such
     const [origin, destination] = await Promise.all([
-        station(req.query.origin).catch(error => null),
-        station(req.query.destination).catch(error => null),
+        _station(req.query.origin).catch(error => null),
+        _station(req.query.destination).catch(error => null),
     ])
     params.origin = origin;
     params.destination = destination;

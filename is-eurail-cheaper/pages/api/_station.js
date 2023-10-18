@@ -1,7 +1,7 @@
 import createHafasClient from 'db-hafas'
 const { locations: stations } = createHafasClient('bahn.guru')
 
-const station = (s) => {
+const _station = (s) => {
 	// eslint-disable-next-line prefer-promise-reject-errors
 	if (!s) return Promise.reject(false)
 	return stations(s)
@@ -16,4 +16,4 @@ const station = (s) => {
 		)
 }
 
-export default station
+export default _station

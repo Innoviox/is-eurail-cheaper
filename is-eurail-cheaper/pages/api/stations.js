@@ -1,4 +1,4 @@
-import cleanStationName from 'db-clean-station-name'
+import cleanStationName from 'db-clean-_station-name'
 import fs from 'fs'
 import isUicLocationCode from 'is-uic-location-code'
 import countries from 'i18n-iso-countries'
@@ -97,14 +97,14 @@ export default async function handler(req, res) {
 // 		if (maybeStation) return res.json(maybeStation)
 //
 // 		const hafasCandidates = await fetchStations(String(id))
-// 		const [station] = hafasCandidates
+// 		const [_station] = hafasCandidates
 // 			.map(fixHafasStationId)
 // 			.filter(hafasStation => hafasStation.id === String(id))
 // 			.map(createStation)
 // 			.map(fixStationName)
 //
-// 		if (station) return res.json(station)
-// 		return res.status(404).json({ error: true, message: 'station not found' })
+// 		if (_station) return res.json(_station)
+// 		return res.status(404).json({ error: true, message: '_station not found' })
 // 	} catch (error) {
 // 		console.error(error)
 // 		return res.status(500).json({ error: true, message: 'internal error' })
