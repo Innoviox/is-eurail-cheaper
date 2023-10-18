@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import { dirname, resolve } from 'path'
 import uicCodes from 'uic-codes'
 import { fileURLToPath, URL } from 'url'
-import stations from '_stations_json'
+import stationsMap from './_stations_json.js'
 
 const fetchStations = async query => {
 	const urlA = new URL('https://v5.db.transport.rest/locations?poi=false&addresses=false')
