@@ -9,9 +9,9 @@ import redis from 'redis'
 import robots from 'express-robots-txt'
 
 import reachableFrom from './reachableFrom.js'
-import { stationsByQuery, stationById } from './stations.js'
-import journey from './journey.js'
-import eurail from './eurail.js'
+import { stationsByQuery, stationById } from '../../api/stations.js'
+import journey from '../../api/journey.js'
+import eurail from '../../api/eurail.js'
 
 const port = process.env.PORT
 if (!port) throw new Error('please provide a PORT environment variable')

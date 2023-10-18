@@ -1,4 +1,4 @@
-import strftime from 'strftime';
+import _strftime from 'pages/api/_strftime';
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 let url = (fromCityId, toCityId, timestamp) => `https://api.timetable.eurail.com/v2/timetable?origin=${fromCityId}&destination=${toCityId}&timestamp=${timestamp}&tripsNumber=5&currency=USD`
@@ -14,7 +14,7 @@ async function get_journeys(from_city, to_city, date) {
     // todo currency
     // todo date
     let now = new Date();
-    let timestamp = strftime(DT_FORMAT, now);
+    let timestamp = _strftime(DT_FORMAT, now);
 
     let from_id = await stationToId(from_city);
     let to_id = await stationToId(to_city);
@@ -32,6 +32,6 @@ async function get_journeys(from_city, to_city, date) {
         }));
 }
 
-export default async (req, res) => {
+export default async function handler (req, res) {
     res.status(200).json({ "journeys": await get_journeys(req.query.origin, req.query.destination, req.query.date) });
 }

@@ -7,7 +7,7 @@ import moment from 'moment-timezone'
 import { boolean } from 'boolean'
 import l from 'lodash'
 import { stringify } from 'query-string'
-import { formatHafasStationId } from './stations.js'
+import { formatHafasStationId } from '../../api/stations.js'
 
 const hafas = createHafas('direkt.bahn.guru')
 

@@ -7,7 +7,7 @@ import { dirname, resolve } from 'path'
 import uicCodes from 'uic-codes'
 import { fileURLToPath, URL } from 'url'
 
-const stationsMap = new Map(Object.entries(JSON.parse(fs.readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), './stations.json')))))
+const stationsMap = new Map(Object.entries(JSON.parse(fs.readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), './_stations.json')))))
 
 const fetchStations = async query => {
 	const urlA = new URL('https://v5.db.transport.rest/locations?poi=false&addresses=false')
@@ -68,7 +68,7 @@ const createStation = hafasStation => {
 	}
 }
 
-export const stationsByQuery = async (req, res) => {
+export default async function handler(req, res) {
 	const { query } = req.query
 	if (!query) return res.status(400).json({ error: true, message: 'missing `query` parameter' })
 
@@ -88,25 +88,25 @@ export const stationsByQuery = async (req, res) => {
 	}
 }
 
-export const stationById = async (req, res) => {
-	const { id } = req.params
-	if (!id) return res.status(400).json({ error: true, message: 'missing `id` path parameter' })
-
-	try {
-		const maybeStation = stationsMap.get(String(req.params.id))
-		if (maybeStation) return res.json(maybeStation)
-
-		const hafasCandidates = await fetchStations(String(id))
-		const [station] = hafasCandidates
-			.map(fixHafasStationId)
-			.filter(hafasStation => hafasStation.id === String(id))
-			.map(createStation)
-			.map(fixStationName)
-
-		if (station) return res.json(station)
-		return res.status(404).json({ error: true, message: 'station not found' })
-	} catch (error) {
-		console.error(error)
-		return res.status(500).json({ error: true, message: 'internal error' })
-	}
-}
+// export const stationById = async (req, res) => {
+// 	const { id } = req.params
+// 	if (!id) return res.status(400).json({ error: true, message: 'missing `id` path parameter' })
+//
+// 	try {
+// 		const maybeStation = stationsMap.get(String(req.params.id))
+// 		if (maybeStation) return res.json(maybeStation)
+//
+// 		const hafasCandidates = await fetchStations(String(id))
+// 		const [station] = hafasCandidates
+// 			.map(fixHafasStationId)
+// 			.filter(hafasStation => hafasStation.id === String(id))
+// 			.map(createStation)
+// 			.map(fixStationName)
+//
+// 		if (station) return res.json(station)
+// 		return res.status(404).json({ error: true, message: 'station not found' })
+// 	} catch (error) {
+// 		console.error(error)
+// 		return res.status(500).json({ error: true, message: 'internal error' })
+// 	}
+// }

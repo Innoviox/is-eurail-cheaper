@@ -1,6 +1,6 @@
-import journeys from './api/lib/journeys.js';
-import parseParams from './api/lib/params.js';
-import station from './api/lib/station.js';
+import journeys from '../juliuste-api/src/api/lib/journeys.js';
+import parseParams from '../juliuste-api/src/api/lib/params.js';
+import station from '../juliuste-api/src/api/lib/station.js';
 
 
 function parseJourney(journey) {
@@ -10,7 +10,7 @@ function parseJourney(journey) {
     return { "price": price, "length": (end - start) / 1000 };
 }
 
-export default async (req, res) => {
+export default async function handler (req, res) {
     let params = parseParams({}); // get defaults
     // todo catch errors and such
     const [origin, destination] = await Promise.all([
