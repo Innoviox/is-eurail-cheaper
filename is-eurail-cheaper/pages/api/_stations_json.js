@@ -1,4 +1,4 @@
-{
+export default stations = {
   "2001166": {
     "id": "2001166",
     "name": "Pola de Lena",
