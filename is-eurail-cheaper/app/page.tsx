@@ -10,7 +10,12 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { initialize } from "./colors";
 
+import Image, {StaticImageData} from 'next/image';
+import scale from "./img/scale.png";
+
 initialize();
+
+// scale: <a href="https://www.flaticon.com/free-icons/scale" title="scale icons">Scale icons created by Freepik - Flaticon</a>
 
 export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
@@ -28,11 +33,16 @@ export default function Home() {
     return (
         <main id="main">
             <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
+                <div className="navbar-brand">
+                    <div className="navbar-item">
+                        <Image src={scale} alt="scale" className="logo" />
+                    </div>
+                </div>
                 <div className="navbar-menu">
                     <div className="navbar-start">
-                        <a className="navbar-item">
-                          Home
-                        </a>
+                        <span className="navbar-item">
+                          Is Eurail Cheaper?
+                        </span>
                     </div>
                     <div className="navbar-end">
                         <a className="navbar-item">
