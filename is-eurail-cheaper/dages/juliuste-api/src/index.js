@@ -10,7 +10,7 @@ import robots from 'express-robots-txt'
 
 import reachableFrom from './reachableFrom.js'
 import { stationsByQuery, stationById } from '../../api/stations.js'
-import journey from '../../api/journey.js'
+import journey from '../../api/db.js'
 import eurail from '../../api/eurail.js'
 
 const port = process.env.PORT

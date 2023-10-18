@@ -9,7 +9,7 @@
 	"author": "Julius Tens <mail@juliustens.eu>",
 	"type": "module",
 	"scripts": {
-		"build-stations": "node src/build-stations.js > ../api/stations.json",
+		"build-stations": "node src/build-stations.js > ../api/_stations.json",
 		"check-deps": "depcheck",
 		"fix": "npm run lint -- --fix",
 		"lint": "eslint src",

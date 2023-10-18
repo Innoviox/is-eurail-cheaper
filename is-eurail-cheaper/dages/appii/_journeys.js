@@ -3,7 +3,7 @@ import { profile as dbProfileRaw } from 'hafas-client/p/db/index.js'
 import { parseHook } from 'hafas-client/lib/profile-hooks.js'
 import { parseJourney as _parseJourney } from 'hafas-client/parse/journey.js'
 import moment from 'moment-timezone'
-import settings from '../settings.js'
+import settings from '../juliuste-api/src/api/settings.js'
 import isNull from 'lodash/isNull.js'
 
 const parseJourneyWithPrice = ({ parsed }, raw) => {
@@ -100,7 +100,7 @@ const fetchJourneys = async (from, to, opt = {}) => {
 	return journeys
 }
 
-const journeys = (params, day) => {
+const _journeys = (params, day) => {
 	const dayTimestamp = +(moment.tz(day, settings.timezone).startOf('day'))
 	return fetchJourneys(params.origin.id, params.destination.id, {
 		departure: moment(day).toDate(),
@@ -138,4 +138,4 @@ const journeys = (params, day) => {
 		})
 }
 
-export default journeys
+export default _journeys

@@ -1,9 +1,9 @@
 import { URL } from 'url'
 
-export { default as params } from './lib/params.js'
+export { default as params } from '../../../api/_params.js'
 export * as options from './lib/options.js'
-export { default as station } from './lib/station.js'
-export { default as journeys } from './lib/journeys.js'
+export { default as station } from '../../../api/station.js'
+export { default as journeys } from '../../../api/_journeys.js'
 export { default as settings } from './settings.js'
 
 export const shopLink = (origin, destination, date, journey, params) => {

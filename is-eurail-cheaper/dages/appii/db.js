@@ -1,6 +1,6 @@
-import journeys from '../juliuste-api/src/api/lib/journeys.js';
-import parseParams from '../juliuste-api/src/api/lib/params.js';
-import station from '../juliuste-api/src/api/lib/station.js';
+import _journeys from './_journeys.js';
+import parseParams from './_params.js';
+import station from './station.js';
 
 
 function parseJourney(journey) {
@@ -20,7 +20,7 @@ export default async function handler (req, res) {
     params.origin = origin;
     params.destination = destination;
     params.date = new Date(); // todo
-    let data = await journeys(params, params.date)
+    let data = await _journeys(params, params.date)
         .then(results => results.map(parseJourney));
     return res.status(200).json({ "journeys": data });
 }
