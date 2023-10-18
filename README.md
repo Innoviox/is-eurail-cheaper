@@ -15,9 +15,9 @@
   - [ ] add settings page with
     - [ ] currency
     - [ ] how far ahead to calculate
-  - [ ] fix eurail price display
-  - [ ] make navbar nicer
-  - [ ] 
+  - [ ] add arrow next to .upper
+  - [x] fix eurail price display
+  - [x] make navbar nicer
 
 ## Roadmap
 
