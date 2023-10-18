@@ -3,7 +3,7 @@ import { profile as dbProfileRaw } from 'hafas-client/p/db/index.js'
 import { parseHook } from 'hafas-client/lib/profile-hooks.js'
 import { parseJourney as _parseJourney } from 'hafas-client/parse/journey.js'
 import moment from 'moment-timezone'
-import settings from '../../dages/juliuste-api/src/api/settings.js'
+import settings from './_settings.js'
 import isNull from 'lodash/isNull.js'
 
 const parseJourneyWithPrice = ({ parsed }, raw) => {

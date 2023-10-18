@@ -1,4 +1,4 @@
-import cleanStationName from 'db-clean-_station-name'
+import cleanStationName from 'db-clean-station-name'
 import fs from 'fs'
 import isUicLocationCode from 'is-uic-location-code'
 import countries from 'i18n-iso-countries'

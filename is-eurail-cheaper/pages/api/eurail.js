@@ -6,7 +6,7 @@
  * Week number (%V) code based on Taco van den Broek's prototype:
  * http://techblog.procurios.nl/k/news/view/33796/14863/calculate-iso-8601-week-and-year-in-javascript.html
  */
-import _strftime from './_strftime.js';
+import strftime from 'strftime';
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 let url = (fromCityId, toCityId, timestamp) => `https://api.timetable.eurail.com/v2/timetable?origin=${fromCityId}&destination=${toCityId}&timestamp=${timestamp}&tripsNumber=5&currency=USD`
@@ -22,7 +22,7 @@ async function get_journeys(from_city, to_city, date) {
     // todo currency
     // todo date
     let now = new Date();
-    let timestamp = _strftime(DT_FORMAT, now);
+    let timestamp = strftime(DT_FORMAT, now);
 
     let from_id = await stationToId(from_city);
     let to_id = await stationToId(to_city);
