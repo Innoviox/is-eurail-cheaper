@@ -1,11 +1,8 @@
 import {MutableRefObject, useRef, useEffect, ReactElement, memo} from "react";
-import {renderToStaticMarkup} from "react-dom/server";
-// import {Children} from "react";
-// import plane from "./airplane.png";
 
 const TO_RADIANS = Math.PI/180;
 const IMG_SIZE = 50;
-const SPEED = 2;
+// const SPEED = 2;
 const WOBBLE = 10;
 const MAX_TRAIL = 500;
 const COLLISIONS = false;
@@ -29,7 +26,7 @@ const Background = memo(function Background({children: images, ending}: {childre
         return i;
     });
 
-    let tilt = Math.floor(Math.random() * 90);
+    // let tilt = Math.floor(Math.random() * 90);
     let speeds = [5, 3, 3, 3, 3];
     let colors = ["orange", "red", "blue", "green", "purple"];
 
@@ -168,7 +165,6 @@ const Background = memo(function Background({children: images, ending}: {childre
     }
 
     const draw = (ctx: CanvasRenderingContext2D) => {
-        let ratio = 1;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         let collide = images.map((_, idx) => {

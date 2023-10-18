@@ -1,7 +1,7 @@
-import React, {FormEvent, Dispatch} from "react";
-import { useState, useEffect } from "react";
+import React, {Dispatch} from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTrain, faBus, faArrowLeft, faArrowRightLong, faCity, faDollarSign, faClock, faTicket, faRoute, faEquals} from '@fortawesome/free-solid-svg-icons';
+import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
 import Image, {StaticImageData} from 'next/image';
 import eurail_image from "./img/eurail.png";
 import db_image from "./img/db.png";
@@ -122,7 +122,7 @@ export default function TripView({addCoords}:
             add(choices, setChoices, "");
 
             setSearchEnabled(false);
-            for (const [key, [lst, setlst, img]] of Object.entries(endpoints)) {
+            for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
                 fetch(PRICE_API(key, fromCity, toCity), {
                     method: 'GET'
                 }).then(async response => {
@@ -141,30 +141,12 @@ export default function TripView({addCoords}:
         }
     }
 
-    async function updateCoords(toCityId: string) {
-        const response = await fetch(`http://127.0.0.1:8000/api/station?place_id=${toCityId}`, {
-            method: 'GET'
-        });
-
-        if (response.ok) {
-            let data = await response.json();
-            addCoords(data.coords.lat, data.coords.lng);
-        } else {
-            console.log("response not ok - update-coords")
-        }
-    }
-
     function sumArr(arr: Array<any>) {
         return arr.length === 0 ? 0 : arr.map(i => i.length === 0 || i[0][0] === sentinel ? 0 : i[0][0]).reduce((a, b) => a + b, 0);
     }
 
     function toggleOpen(idx: number) {
         add(open, setOpen, !open[idx], idx);
-    }
-
-    function setChoice(idx: number, choice: string) {
-        // console.log("set choice", choices);
-        // add("choices", choice, idx);
     }
 
     function renderTrip(): React.JSX.Element {
@@ -281,16 +263,16 @@ export default function TripView({addCoords}:
     }
 
     function renderTotals() {
-        let classes = [];
+        // let classes: string[];
         let sumdb = sumArr(db);
         let sumeu = sumArr(eurail);
         let euprice = calculateEurailPrice();
-        if (sumdb < sumeu + euprice) {
-            classes = ["is-success", "is-danger"];
-        } else {
-            classes = ["is-danger", "is-success"];
-        }
-        classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
+        // if (sumdb < sumeu + euprice) {
+        //     classes = ["is-success", "is-danger"];
+        // } else {
+        //     classes = ["is-danger", "is-success"];
+        // }
+        // classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
 
         return (
             <div id="total">

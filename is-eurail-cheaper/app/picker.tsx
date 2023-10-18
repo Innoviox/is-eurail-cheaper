@@ -1,14 +1,12 @@
-import React, {useState, useRef, Dispatch, MutableRefObject, LegacyRef} from "react";
+import React, {useState, useRef, Dispatch, LegacyRef} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign, faCaretUp, faCaretDown} from "@fortawesome/free-solid-svg-icons";
 
 export default function Picker({data, parentOpen, setFirst} : {data: [number, number][], parentOpen: boolean, setFirst: (n: number) => void}) {
     let topRef = useRef<HTMLElement>(null);
 
-    let [started, setStarted] = useState(false);
     let [classes, setClasses]: [string[][], Dispatch<any>] = useState(data.map(_ => []));
     let [minShow, setMinShow] = useState(0);
-    let [parentCl, setParentCl] = useState([]);
     let [open, setOpen] = useState(0); // 0 => closed, 1 => opening, 2 => open
 
     let tagClasses = calculateTagClasses();
@@ -138,7 +136,7 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
 
     if (parentOpen || open === 0) {
         return (
-            <div className={"flip-parent " + parentCl.join(" ")}>
+            <div className={"flip-parent "}>
                 <div onClick={() => startAnimation()}>
                     {renderPricePickerElement(0)}
                 </div>
@@ -158,7 +156,7 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
         setOpen(0);
         animate(0, 0);
         return (
-            <div className={"flip-parent " + parentCl.join(" ")}>
+            <div className={"flip-parent "}>
                 <div>
                     {renderPricePickerElement(0)}
                 </div>

@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent, FormEvent, MouseEvent, useRef, Dispatch, MutableRefObject} from "react";
+import React, {useState, ChangeEvent, FormEvent, MouseEvent, Dispatch, RefObject} from "react";
 import { useOuterClick } from "./outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +9,7 @@ type Location = { longitude: number, latitude: number };
 
 export default function SearchBar({onSearchSubmit, enabled}:
                                   {onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>, enabled: boolean}) {
-    const innerRef: MutableRefObject<HTMLDivElement> = useOuterClick(closeDropdown);
+    const innerRef: RefObject<HTMLDivElement> = useOuterClick(closeDropdown);
 
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, [string, Location]>());
@@ -73,7 +73,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
 
     async function onDropdownClick(event: MouseEvent<HTMLAnchorElement>) {
         let formData = new FormData();
-        formData.append("toCity", event.target.getAttribute("data-index"));
+        formData.append("toCity", (event.target as HTMLAnchorElement).getAttribute("data-index") ?? "");
         setInputVal("");
         await prepareForSubmit(formData);
     }
@@ -98,7 +98,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
                             <div className="dropdown-content">
                                 {stations.map((station, idx) => {
                                     return (
-                                        <a onClick={onDropdownClick} className="dropdown-item" key={station} data-index={station}>
+                                        <a onClick={onDropdownClick} className="dropdown-item" key={idx} data-index={station}>
                                             {station}
                                         </a>
                                     )

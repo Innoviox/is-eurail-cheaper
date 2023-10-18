@@ -10,7 +10,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { initialize } from "./colors";
 
-import Image, {StaticImageData} from 'next/image';
+import Image from 'next/image';
 import scale from "./img/scale.png";
 
 initialize();
@@ -19,10 +19,9 @@ initialize();
 
 export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
-    let [lat, setLat] = useState(50);
-    let [lng, setLng] = useState(10);
+    let lat = 50, lng = 10;
     let [meaningless, setMeaningless] = useState(143);
-    let [ending, setEnding] = useState(false);
+
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
         newCoords.push({'lat': lat, 'lng': lng});

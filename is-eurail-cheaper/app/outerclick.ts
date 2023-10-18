@@ -1,9 +1,17 @@
 import { useRef, useEffect } from "react";
 
+
+// In a utility library:
+function assertIsNode(e: EventTarget | null): asserts e is Node {
+    if (!e || !("nodeType" in e)) {
+        throw new Error(`Node expected`);
+    }
+}
+
 // https://stackoverflow.com/a/54292872/6342812
 export function useOuterClick(callback: (e: Event) => void) {
-    const callbackRef = useRef<() => void>(); // initialize mutable ref, which stores callback
-    const innerRef = useRef<HTMLDivElement>(); // returned to client, who marks "border" element
+    const callbackRef = useRef<(e: Event) => void>(); // initialize mutable ref, which stores callback
+    const innerRef = useRef<HTMLDivElement>(null); // returned to client, who marks "border" element
 
     // update cb on each render, so second useEffect has access to current value
     useEffect(() => { callbackRef.current = callback; });
@@ -12,6 +20,7 @@ export function useOuterClick(callback: (e: Event) => void) {
         document.addEventListener("click", handleClick);
         return () => document.removeEventListener("click", handleClick);
         function handleClick(e: MouseEvent) {
+            assertIsNode(e.target);
             if (innerRef.current && callbackRef.current &&
                 !innerRef.current.contains(e.target)
             ) callbackRef.current(e);
