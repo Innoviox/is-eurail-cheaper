@@ -309,7 +309,7 @@ export default function TripView({addCoords}:
                                             <div className="tag is-info price-picker-tag">
                                                 <FontAwesomeIcon icon={faDollarSign} />
                                             </div>
-                                            <div className={"tag price-picker-tag price " + classes[0]}>
+                                            <div className={"tag price-picker-tag price "}>
                                                 {sumdb}
                                             </div>
                                         </div>
@@ -330,17 +330,17 @@ export default function TripView({addCoords}:
                                                 <FontAwesomeIcon icon={faDollarSign} />
                                             </div>
                                             {showFullEuro ? <>
-                                                <div className={"tag price-picker-tag price " + classes[2]}>
+                                                <div className={"tag price-picker-tag price "}>
                                                     {sumeu}
                                                 </div>
                                                 <div className="tag is-info price-picker-tag">
                                                     <FontAwesomeIcon icon={faTicket} />
                                                 </div>
-                                                <div className={"tag price-picker-tag price is-danger"}>
+                                                <div className={"tag price-picker-tag price"}>
                                                     {euprice}
                                                 </div>
                                             </> : <>
-                                                <div className={"tag price-picker-tag price " + classes[1]}>
+                                                <div className={"tag price-picker-tag price "}>
                                                     {sumeu + euprice}
                                                 </div>
                                             </>}
