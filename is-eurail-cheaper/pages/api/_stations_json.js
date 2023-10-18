@@ -1,4 +1,4 @@
-export default stationsMap = {
+const stationsMap = new Map(Object.entries({
   "2001166": {
     "id": "2001166",
     "name": "Pola de Lena",
@@ -202509,4 +202509,6 @@ export default stationsMap = {
       "latitude": 38.71387
     }
   }
-}
+}));
+
+export default stationsMap;
