@@ -17,7 +17,7 @@ import boat from "./img/boat.png";
 import tram from "./img/tram.png";
 import colors from "./colors";
 
-const PRICE_API = (endpoint: string, origin: string, destination: string) => `http://${window.location.origin}/api/${endpoint}?origin=${origin}&destination=${destination}`;
+const PRICE_API = (endpoint: string, origin: string, destination: string) => `https://is-eurail-cheaper.vercel.app//api/${endpoint}?origin=${origin}&destination=${destination}`;
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass

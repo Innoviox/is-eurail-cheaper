@@ -3,7 +3,7 @@ import { useOuterClick } from "./outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
-const STATIONS_API = `http://${window.location.origin}/api/stations?query=`;
+const STATIONS_API = "https://is-eurail-cheaper.vercel.app//api/stations?query=";
 
 type Location = { longitude: number, latitude: number };
 
