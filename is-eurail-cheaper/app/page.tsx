@@ -7,7 +7,7 @@ import MapView from './mapview';
 import TripView from './tripview';
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { initialize } from "./colors";
 
 import Image, {StaticImageData} from 'next/image';
@@ -45,6 +45,9 @@ export default function Home() {
                         </span>
                     </div>
                     <div className="navbar-end">
+                        <a className="navbar-item">
+                            <FontAwesomeIcon icon={faQuestion} />
+                        </a>
                         <a className="navbar-item">
                             <FontAwesomeIcon icon={faGear} />
                         </a>
