@@ -303,6 +303,26 @@ export default function TripView({addCoords}:
                     <div className="level-left">
                         <div className="level-item">
                             <div>
+                                <PriceDisplay img={db_image}>
+                                    <div className="flip-parent" key="db">
+                                        <div className="tags has-addons">
+                                            <div className="tag is-info price-picker-tag">
+                                                <FontAwesomeIcon icon={faDollarSign} />
+                                            </div>
+                                            <div className={"tag price-picker-tag price " + classes[0]}>
+                                                {sumdb}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PriceDisplay>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="level">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div>
                                 <PriceDisplay img={eurail_image}>
                                     <div className="flip-parent" key="eu">
                                         <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
@@ -324,26 +344,6 @@ export default function TripView({addCoords}:
                                                     {sumeu + euprice}
                                                 </div>
                                             </>}
-                                        </div>
-                                    </div>
-                                </PriceDisplay>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="level">
-                    <div className="level-left">
-                        <div className="level-item">
-                            <div>
-                                <PriceDisplay img={db_image}>
-                                    <div className="flip-parent" key="db">
-                                        <div className="tags has-addons">
-                                            <div className="tag is-info price-picker-tag">
-                                                <FontAwesomeIcon icon={faDollarSign} />
-                                            </div>
-                                            <div className={"tag price-picker-tag price " + classes[0]}>
-                                                {sumdb}
-                                            </div>
                                         </div>
                                     </div>
                                 </PriceDisplay>
