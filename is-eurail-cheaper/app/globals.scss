@@ -96,6 +96,15 @@ body {
 #trip-view {
   background: white;
   height: 100%;
+  //padding: 10px;
+  position: relative
+}
+
+.above {
+  padding: 10px;
+}
+
+.floating {
   padding: 10px;
 }
 
@@ -132,9 +141,15 @@ body {
   //background: #edf0da;
 }
 
-.lower .level, .upper.level {
+.upper::before {
+
+}
+
+.lower .level, .upper.level, #total .level, #total .content {
   margin-bottom: 0 !important;
 }
+
+
 
 .lower-inner {
   border-left: 2px solid gray;
@@ -224,11 +239,6 @@ body {
 
 #search-form {
   width: 100%;
-}
-
-#trip-view {
-  height: 100%;
-  position: relative
 }
 
 //#search-form {

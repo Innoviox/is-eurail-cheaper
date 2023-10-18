@@ -3,6 +3,22 @@
 - frontend: `npm run dev`
 - backend: `PORT=2424 npm start`
 
+# Todos
+
+- [ ] backend
+  - [ ] ability to set date: default 2 weeks ahead
+  - [ ] create international-bahn scraper & scrape for a bunch (?) of stations (somehow)
+  - [ ] return route
+- [ ] frontend
+  - [ ] incorporate route to map
+  - [ ] fix station colors => set from palette?
+  - [ ] add settings page with
+    - [ ] currency
+    - [ ] how far ahead to calculate
+  - [ ] fix eurail price display
+  - [ ] make navbar nicer
+  - [ ] 
+
 ## Roadmap
 
 - [ ] danUI

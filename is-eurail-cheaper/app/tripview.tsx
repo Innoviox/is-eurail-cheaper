@@ -293,54 +293,62 @@ export default function TripView({addCoords}:
         classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
 
         return (
-            <div className="level">
-                <div className="level-left">
-                    <div>
-                        <span>Price Totals:</span>
+            <div id="total">
+                <div className="content">
+                    <center>
+                        <h3>Price Totals</h3>
+                    </center>
+                </div>
+                <div className="level">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div>
+                                <PriceDisplay img={eurail_image}>
+                                    <div className="flip-parent" key="eu">
+                                        <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
+                                            <div className="tag is-info price-picker-tag">
+                                                <FontAwesomeIcon icon={faDollarSign} />
+                                            </div>
+                                            {showFullEuro ? <>
+                                                <div className={"tag price-picker-tag price " + classes[2]}>
+                                                    {sumeu}
+                                                </div>
+                                                <div className="tag is-info price-picker-tag">
+                                                    <FontAwesomeIcon icon={faTicket} />
+                                                </div>
+                                                <div className={"tag price-picker-tag price is-danger"}>
+                                                    {euprice}
+                                                </div>
+                                            </> : <>
+                                                <div className={"tag price-picker-tag price " + classes[1]}>
+                                                    {sumeu + euprice}
+                                                </div>
+                                            </>}
+                                        </div>
+                                    </div>
+                                </PriceDisplay>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="level-item">
-                    <div>
-                        <PriceDisplay img={db_image}>
-                            <div className="flip-parent" key="db">
-                                <div className="tags has-addons">
-                                    <div className="tag is-info price-picker-tag">
-                                        <FontAwesomeIcon icon={faDollarSign} />
+                <div className="level">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div>
+                                <PriceDisplay img={db_image}>
+                                    <div className="flip-parent" key="db">
+                                        <div className="tags has-addons">
+                                            <div className="tag is-info price-picker-tag">
+                                                <FontAwesomeIcon icon={faDollarSign} />
+                                            </div>
+                                            <div className={"tag price-picker-tag price " + classes[0]}>
+                                                {sumdb}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className={"tag price-picker-tag price " + classes[0]}>
-                                        {sumdb}
-                                    </div>
-                                </div>
+                                </PriceDisplay>
                             </div>
-                        </PriceDisplay>
-                    </div>
-                </div>
-                <div className="level-item">
-                    <div>
-                        <PriceDisplay img={eurail_image}>
-                            <div className="flip-parent" key="eu">
-                              <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
-                                    <div className="tag is-info price-picker-tag">
-                                        <FontAwesomeIcon icon={faDollarSign} />
-                                    </div>
-                                  {showFullEuro ? <>
-                                      <div className={"tag price-picker-tag price " + classes[2]}>
-                                          {sumeu}
-                                      </div>
-                                      <div className="tag is-info price-picker-tag">
-                                          <FontAwesomeIcon icon={faTicket} />
-                                      </div>
-                                      <div className={"tag price-picker-tag price is-danger"}>
-                                          {euprice}
-                                      </div>
-                                  </> : <>
-                                      <div className={"tag price-picker-tag price " + classes[1]}>
-                                          {sumeu + euprice}
-                                      </div>
-                                  </>}
-                                </div>
-                            </div>
-                        </PriceDisplay>
+                        </div>
                     </div>
                 </div>
             </div>
