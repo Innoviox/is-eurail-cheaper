@@ -17,7 +17,7 @@ import boat from "./img/boat.png";
 import tram from "./img/tram.png";
 import colors from "./colors";
 
-const PRICE_API = (endpoint: string, origin: string, destination: string, date: string) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
+const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -45,7 +45,7 @@ function increaseDate(date: Date, weeks: number, hour: number) {
     newDate.setHours(hour);
     newDate.setMinutes(0);
     newDate.setSeconds(0);
-    return newDate;
+    return newDate.getTime();
 }
 
 export default function TripView({addCoords, weeks}:
@@ -132,7 +132,7 @@ export default function TripView({addCoords, weeks}:
 
             setSearchEnabled(false);
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
-                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), weeks, 8).toString()), {
+                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), weeks, 8)), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
