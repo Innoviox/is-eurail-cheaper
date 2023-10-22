@@ -5,6 +5,7 @@ import {Wrapper} from '@googlemaps/react-wrapper';
 
 import MapView from './mapview';
 import TripView from './tripview';
+import Settings from './Settings';
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
     let lat = 50, lng = 10;
     let [meaningless, setMeaningless] = useState(143);
+    let [visible, setVisible] = useState(false);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
@@ -48,7 +50,7 @@ export default function Home() {
                         <a className="navbar-item">
                             <FontAwesomeIcon icon={faQuestion} />
                         </a>
-                        <a className="navbar-item">
+                        <a className="navbar-item" onClick={() => setVisible(true)}>
                             <FontAwesomeIcon icon={faGear} />
                         </a>
                         <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
@@ -68,6 +70,7 @@ export default function Home() {
                   <TripView addCoords={addCoords} />
                 </div>
             </div>
+            <Settings visible={visible} setVisible={setVisible} />
         </main>
     )
 }

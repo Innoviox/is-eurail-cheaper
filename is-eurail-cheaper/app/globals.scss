@@ -41,24 +41,6 @@ body {
   height: 6vh;
 }
 
-//#main {
-//  //display: flex;
-//  //flex-direction: column;
-//  height: 100%;
-//}
-//
-//#container {
-//  display: flex;
-//  height: 50vh;
-//  overflow: none;
-//  //flex-grow: 1;
-//  //height: 90vh;
-//}
-//
-//#navbar {
-//  height: 50px;
-//}
-
 #map {
   flex: 7;
 }
@@ -66,7 +48,7 @@ body {
 #trip {
   flex: 3;
   box-shadow: -20px 6px 10px 5px rgba(0, 0, 0, 0.1215686275);
-  z-index: 100;
+  z-index: 3;
   position: relative;
 }
 
@@ -341,10 +323,18 @@ body {
 }
 
 .above {
-  z-index: 2000;
+  z-index: 2;
   position: relative;
 }
 
 #floating {
 
+}
+
+.modal {
+  z-index: 31; // navbar is 30 for some reason
+}
+
+.background-white {
+    background: white;
 }
