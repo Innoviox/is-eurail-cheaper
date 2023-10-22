@@ -7,38 +7,28 @@
 - [ ] backend
   - [ ] ability to set date: default 2 weeks ahead
   - [ ] create international-bahn scraper & scrape for a bunch (?) of stations (somehow)
-  - [ ] switch to dbv6
+  - [ ] switch to dbv6 https://v6.db.transport.rest/getting-started.html
   - [ ] return route
+  - [ ] look into stations returning weird results
+  - [ ] add endpoints
+    - [ ] add flixbus
+    - [ ] add ryanair?
+    - [ ] add hostelworld?
 - [ ] frontend
   - [ ] incorporate route to map
   - [x] fix station colors => set from palette?
   - [ ] add settings page with
     - [ ] currency
-    - [ ] how far ahead to calculate
+    - [x] how far ahead to calculate
+    - [ ] make look good
   - [ ] add arrow next to .upper
+  - [ ] make cities make more sense
+    - [ ] right click => edit?
+    - [ ] left click => info page? 
+      - [ ] w/ hostelworld info? w/ common outgoing trains info? w/ tripadvisor info?
   - [x] fix eurail price display
+    - [ ] make look nicer
   - [x] make navbar nicer
-
-## Roadmap
-
-- [ ] danUI
-  - [ ] search bar
-  - [ ] trip space
-  - [ ] add cities
-    - [ ] type in search bar => searches among train stations
-    - [ ] map zooms to fit them all
-  - [ ] eurail price setter
-- [ ] Backend
-  - [ ] access list of train stations
-  - [ ] access list
-
-- [ ] features
-  - [ ] currency conversion
-  - [ ] flixbus
-
-
-
-# Steps
 
 - [ ] Trip UI
   - [x] Make trips a dropdown
@@ -80,23 +70,3 @@
   - [ ] implement flixbus
   - [ ] make sure returned results make sense => make sure eurail timing is neutral (?)
   - [ ] deep future: link to sale page
-
-# API exploration
-
-- https://api.timetable.eurail.com/v2/timetable/
-- https://api.timetable.eurail.com/v2/locations/
-- https://github.com/juliuste/db-prices/blob/master/lib/index.js
-- https://github.com/TheRealMurmel/py-bahn-api 
-
-# Map Integration
-
-- search => retool to search from OSM?
-- then => search from eurail somehow? (need to get id)
-- need a way to convert eurail id <=> coordinates
-- https://www.eurail.com/bin/geolocation.autosuggest.json?keyword=muni&pagePath=%2Fcontent%2Feurail%2Fen
-
-
-
-https://react-leaflet.js.org/docs/example-svg-overlay/
-
-investigate this https://github.com/juliuste/bahn.guru to see how it works
