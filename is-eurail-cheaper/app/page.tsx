@@ -24,6 +24,7 @@ export default function Home() {
     let lat = 50, lng = 10;
     let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
+    let [weeks, setWeeks] = useState(2);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
@@ -67,10 +68,10 @@ export default function Home() {
                   </Wrapper>
                 </div>
                 <div id="trip">
-                  <TripView addCoords={addCoords} />
+                  <TripView addCoords={addCoords} weeks={weeks} />
                 </div>
             </div>
-            <Settings visible={visible} setVisible={setVisible} />
+            <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} />
         </main>
     )
 }

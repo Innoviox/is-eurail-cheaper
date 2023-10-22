@@ -48,8 +48,8 @@ function increaseDate(date: Date, weeks: number, hour: number) {
     return newDate;
 }
 
-export default function TripView({addCoords}:
-                                 {addCoords: (lat: number, lng: number) => void}) {
+export default function TripView({addCoords, weeks}:
+                                 {addCoords: (lat: number, lng: number) => void, weeks: number}) {
     const city = (idx: number) => cities[idx][0];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
@@ -132,7 +132,7 @@ export default function TripView({addCoords}:
 
             setSearchEnabled(false);
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
-                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), 2, 8).toString()), {
+                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), weeks, 8).toString()), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
