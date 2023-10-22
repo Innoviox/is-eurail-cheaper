@@ -39,6 +39,15 @@ let everAnimated = false;
 type Location = { longitude: number, latitude: number };
 type Endpoint = [[number, number][][], Dispatch<any>, StaticImageData]
 
+function increaseDate(date: Date, weeks: number, hour: number) {
+    let newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + weeks * 7);
+    newDate.setHours(hour);
+    newDate.setMinutes(0);
+    newDate.setSeconds(0);
+    return newDate;
+}
+
 export default function TripView({addCoords}:
                                  {addCoords: (lat: number, lng: number) => void}) {
     const city = (idx: number) => cities[idx][0];
@@ -124,6 +133,7 @@ export default function TripView({addCoords}:
             setSearchEnabled(false);
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
                 fetch(PRICE_API(key, fromCity, toCity), {
+                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), 2, 8).toString()), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
