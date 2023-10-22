@@ -132,7 +132,6 @@ export default function TripView({addCoords}:
 
             setSearchEnabled(false);
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
-                fetch(PRICE_API(key, fromCity, toCity), {
                 fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), 2, 8).toString()), {
                     method: 'GET'
                 }).then(async response => {
