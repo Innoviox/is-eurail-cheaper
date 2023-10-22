@@ -34,7 +34,7 @@ const client = createClient({
 }, userAgent)
 const profile = client.profile
 
-const fetchJourneys = async (from, to, opt = {}) => {
+const fetchJourneys = async (from, to, opt = {stopovers: true}) => {
 	from = profile.formatLocation(profile, from, 'from')
 	to = profile.formatLocation(profile, to, 'to')
 
@@ -49,7 +49,7 @@ const fetchJourneys = async (from, to, opt = {}) => {
 		bahncard: null,
 		class: 2,
 
-		stopovers: false, // return stations on the way?
+		stopovers: true, // return stations on the way?
 		transfers: -1, // maximum nr of transfers
 		transferTime: 0, // minimum time for a single transfer in minutes
 	}, opt)
@@ -63,7 +63,7 @@ const fetchJourneys = async (from, to, opt = {}) => {
 	]
 
 	const query = {
-		getPasslist: !!opt.stopovers,
+		getPasslist: true,
 		maxChg: opt.transfers,
 		minChgTime: opt.transferTime,
 		depLocL: [from],

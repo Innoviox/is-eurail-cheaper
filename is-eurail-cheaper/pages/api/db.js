@@ -7,6 +7,7 @@ function parseJourney(journey) {
     let price = journey.price.amount;
     let start = Date.parse(journey.legs[0].plannedDeparture);
     let end = Date.parse(journey.legs[journey.legs.length - 1].plannedArrival);
+    console.log(journey.legs[0]);
     return { "price": price, "length": (end - start) / 1000 };
 }
 

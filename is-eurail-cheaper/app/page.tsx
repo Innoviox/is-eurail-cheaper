@@ -8,6 +8,7 @@ import TripView from './tripview';
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./colors";
 
 import Image from 'next/image';
@@ -49,6 +50,9 @@ export default function Home() {
                         </a>
                         <a className="navbar-item">
                             <FontAwesomeIcon icon={faGear} />
+                        </a>
+                        <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
+                            <FontAwesomeIcon icon={faGithub} />
                         </a>
                     </div>
               </div>

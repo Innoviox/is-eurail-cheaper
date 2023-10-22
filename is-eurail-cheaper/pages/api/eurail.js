@@ -7,6 +7,7 @@
  * http://techblog.procurios.nl/k/news/view/33796/14863/calculate-iso-8601-week-and-year-in-javascript.html
  */
 import strftime from 'strftime';
+import _station from "./_station.js";
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 let url = (fromCityId, toCityId, timestamp) => `https://api.timetable.eurail.com/v2/timetable?origin=${fromCityId}&destination=${toCityId}&timestamp=${timestamp}&tripsNumber=5&currency=USD`
@@ -20,9 +21,7 @@ async function stationToId(station) {
 
 async function get_journeys(from_city, to_city, date) {
     // todo currency
-    // todo date
-    let now = new Date();
-    let timestamp = strftime(DT_FORMAT, now);
+    let timestamp = strftime(DT_FORMAT, date);
 
     let from_id = await stationToId(from_city);
     let to_id = await stationToId(to_city);
@@ -33,13 +32,15 @@ async function get_journeys(from_city, to_city, date) {
             let start = new Date(trip.departure);
             let end = new Date(trip.arrival);
             let length = (end - start) / 1000;
+            let legs = trip.legs.map(i => i.id);
             return {
                 price: trip.price ?? 0,
-                length: length
+                length: length,
+                legs: legs
             }
         }));
 }
 
 export default async function handler (req, res) {
-    res.status(200).json({ "journeys": await get_journeys(req.query.origin, req.query.destination, req.query.date) });
+    res.status(200).json({ "journeys": await get_journeys(req.query.origin, req.query.destination, Date.parse(req.query.date)) });
 }
