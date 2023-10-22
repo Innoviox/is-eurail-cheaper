@@ -6,9 +6,10 @@ export default function Settings({ visible, setVisible }:
 
     return (
         <div className={"modal " + (visible ? "is-active" : "")}>
-            <div className="modal-background"></div>
+            <div className="modal-background" onClick={() => setVisible(false)}></div>
             <div className="modal-content">
                 <div className="background-white">
+                    <label className="label">{weeks} Week{weeks === 1 ? "" : "s"}</label>
                     <input type="range" step={1} min={0} max={12} value={weeks}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setWeeks(parseInt(e.target.value))} />
                 </div>
