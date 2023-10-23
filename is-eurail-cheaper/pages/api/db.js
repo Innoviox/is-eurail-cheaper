@@ -3,11 +3,11 @@ import _station from './_station.js';
 const URL = (from, to, date) => `https://v6.db.transport.rest/journeys?from=${from}&to=${to}&departure=${date}&results=5&stopovers=true`;
 
 function parseJourney(journey) {
-    let price = journey.price.amount;
+    let price = journey.price === null ? NaN : journey.price.amount;
     let start = Date.parse(journey.legs[0].plannedDeparture);
     let end = Date.parse(journey.legs[journey.legs.length - 1].plannedArrival);
 
-    let legs = journey.legs.map(leg => leg.stopovers.map(stopover => stopover.stop));
+    let legs = journey.legs.map(leg => leg.stopovers === undefined ? [] : leg.stopovers.map(stopover => stopover.stop));
 
     return { "price": price, "length": (end - start) / 1000, "legs": legs };
 }
