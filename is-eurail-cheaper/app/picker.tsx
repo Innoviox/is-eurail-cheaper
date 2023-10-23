@@ -59,8 +59,13 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
         return (
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
                  key={tripN} ref={tripN === 0 ? topRef as LegacyRef<HTMLDivElement> : undefined} style={style}
-                 onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }
-                 onMouseEnter={() => setStops(tripN)}>
+                 onClick={() => {
+                     if (tripN !== 0 && startAnimation()) {
+                         setFirst(tripN);
+                         setStops(tripN);
+                     }
+                 }}
+                 onMouseEnter={() => open !== 1 && setStops(tripN)}>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
