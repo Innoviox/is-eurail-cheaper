@@ -319,7 +319,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                             <div>
                                 <PriceDisplay img={eurail_image}>
                                     <div className="flip-parent" key="eu">
-                                        <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
+                                        <div className="tags has-addons price-picker" onClick={() => setShowFullEuro(!showFullEuro)}>
                                             <div className="tag is-info price-picker-tag">
                                                 { currency.split(" ")[0] }
                                             </div>
