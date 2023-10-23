@@ -2,10 +2,9 @@ import React, {useState, ChangeEvent, FormEvent, MouseEvent, Dispatch, RefObject
 import { useOuterClick } from "./outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
+import { Location } from "./utilities.ts";
 
 const STATIONS_API = `${process.env.NEXT_PUBLIC_API_URL}/stations?query=`;
-
-type Location = { longitude: number, latitude: number };
 
 export default function SearchBar({onSearchSubmit, enabled}:
                                   {onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>, enabled: boolean}) {
@@ -55,7 +54,6 @@ export default function SearchBar({onSearchSubmit, enabled}:
 
         if (response.ok) {
             let data = await response.json();
-            console.log(data);
 
             let newStations: string[] = [];
             let newSIds = stationIds;

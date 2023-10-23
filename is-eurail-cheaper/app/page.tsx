@@ -7,6 +7,8 @@ import MapView from './mapview';
 import TripView from './tripview';
 import Settings from './Settings';
 
+import { LatLng } from "./utilities";
+
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -25,11 +27,25 @@ export default function Home() {
     let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
     let [weeks, setWeeks] = useState(2);
+    let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
         newCoords.push({'lat': lat, 'lng': lng});
         setCoords(newCoords);
+        setMeaningless(meaningless + 1);
+    }
+
+    function addStops(newStops: LatLng[][], set: number = -1) {
+        let newS = stops;
+
+        if (set === -1) {
+            newS.push(newStops);
+        } else {
+            newS[set] = newStops;
+        }
+
+        setStops(newS);
         setMeaningless(meaningless + 1);
     }
 
@@ -64,11 +80,11 @@ export default function Home() {
                 <div id="map">
                   <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} stops={stops} />
                   </Wrapper>
                 </div>
                 <div id="trip">
-                  <TripView addCoords={addCoords} weeks={weeks} />
+                  <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} />
                 </div>
             </div>
             <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} />

@@ -3,8 +3,8 @@ import React, {MutableRefObject, ReactElement} from "react";
 import { useEffect, useRef } from "react";
 import {createRoot, Root} from "react-dom/client";
 import colors from "./colors";
+import { LatLng } from "./utilities.ts";
 
-type LatLng = {lat: number, lng: number};
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }:
                 { map: google.maps.Map | null, position: LatLng, children: ReactElement, onClick: () => void}) {
@@ -40,7 +40,7 @@ function Marker({ map, position, children, onClick }:
     return <></>;
 }
 
-function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
+function Route({ map, path, color }: {map: google.maps.Map | null, path: LatLng[], color: string}) {
     const routeRef: MutableRefObject<google.maps.Polyline | null> = useRef(null);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
             routeRef.current = new google.maps.Polyline({
                 path: path,
                 // geodesic: true,
-                strokeColor: "#879799",
+                strokeColor: color,
                 strokeOpacity: 1.0,
                 strokeWeight: 2
             });
@@ -68,10 +68,11 @@ function Route({ map, path }: {map: google.maps.Map | null, path: LatLng[]}) {
     return <></>;
 }
 
-function MarkerWrapper({ map, coords }: {map: google.maps.Map | null, coords: LatLng[]}) {
+function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coords: LatLng[], stops: LatLng[][][]}) {
     let circles = [0]; //, 1, 2, 3];
     let previousPosition: LatLng;
     let path: LatLng[];
+    console.log("map got stops!", stops);
     return coords.map((position, idx) => {
         if (previousPosition !== null) {
             path = [previousPosition, position];
@@ -91,13 +92,17 @@ function MarkerWrapper({ map, coords }: {map: google.maps.Map | null, coords: La
                         )}): <></> }
                 </div>
             </Marker>
-            { path ? <Route key={`route-${idx}`} map={map} path={path} /> : <></> }
+            { (idx > 0 && stops.length > (idx - 1)) ?
+                stops[idx - 1].map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
+            : (path ? <Route key={`route-${idx}`} map={map} path={path} color={"#879799"} /> : <></>)}
             </div>
         );
     });
 }
 
-export default function MapView({latitude, longitude, coords, meaningless}: {latitude: number; longitude: number, coords: any, meaningless: number}) {
+export default function MapView({ latitude, longitude, coords, meaningless, stops }:
+                                { latitude: number; longitude: number,
+                                  coords: any, meaningless: number, stops: LatLng[][][] }) {
     const mapRef = useRef(null);
     const [map, setMap] = React.useState<google.maps.Map>();
 
@@ -122,7 +127,7 @@ export default function MapView({latitude, longitude, coords, meaningless}: {lat
     return (
         <div>
             <div style={{height: "94vh"}} ref={mapRef} />
-            <MarkerWrapper map={map ?? null} coords={coords} />
+            <MarkerWrapper map={map ?? null} coords={coords} stops={stops} />
         </div>
     );
 }

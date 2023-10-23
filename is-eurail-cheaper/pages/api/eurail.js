@@ -35,7 +35,7 @@ async function get_journeys(from_city, to_city, date) {
             return {
                 price: trip.price ?? 0,
                 length: length,
-                legs: legs
+                // legs: legs
             }
         }));
 }

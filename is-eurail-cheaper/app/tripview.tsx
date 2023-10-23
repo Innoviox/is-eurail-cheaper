@@ -16,6 +16,7 @@ import bus from "./img/bus.png";
 import boat from "./img/boat.png";
 import tram from "./img/tram.png";
 import colors from "./colors";
+import { LatLng, Location, Endpoint, increaseDate } from './utilities.ts';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
@@ -36,20 +37,10 @@ const sentinel = -100;
 
 let everAnimated = false;
 
-type Location = { longitude: number, latitude: number };
-type Endpoint = [[number, number][][], Dispatch<any>, StaticImageData]
 
-function increaseDate(date: Date, weeks: number, hour: number) {
-    let newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + weeks * 7);
-    newDate.setHours(hour);
-    newDate.setMinutes(0);
-    newDate.setSeconds(0);
-    return newDate.getTime();
-}
-
-export default function TripView({addCoords, weeks}:
-                                 {addCoords: (lat: number, lng: number) => void, weeks: number}) {
+export default function TripView({ addCoords, weeks, addStops }:
+                                 { addCoords: (lat: number, lng: number) => void, weeks: number,
+                                   addStops: (newStops: LatLng[][], set: number) => void }) {
     const city = (idx: number) => cities[idx][0];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
@@ -131,6 +122,7 @@ export default function TripView({addCoords, weeks}:
             add(choices, setChoices, "");
 
             setSearchEnabled(false);
+            let addedStops = false;
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
                 fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), weeks, 8)), {
                     method: 'GET'
@@ -140,6 +132,14 @@ export default function TripView({addCoords, weeks}:
                         let price = extractPrice(data.journeys);
                         console.log(data, price);
                         add(lst, setlst, price, startLength);
+
+                        if (!addedStops && data.journeys[0].legs !== undefined) {
+                            console.log("adding stops!");
+                            let stops = data.journeys[0].legs.map((leg: {location: Location}[]) => leg.map(stop =>
+                                { return { lat: stop.location.latitude, lng: stop.location.longitude }; }));
+                            addStops(stops, -1);
+                            addedStops = true;
+                        }
                     } else {
                         console.log(`response not ok - price ${key}`);
                     }
