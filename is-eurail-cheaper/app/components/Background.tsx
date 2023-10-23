@@ -1,4 +1,4 @@
-import {MutableRefObject, useRef, useEffect, ReactElement, memo} from "react";
+import { MutableRefObject, useRef, useEffect, ReactElement, memo } from "react";
 
 const TO_RADIANS = Math.PI/180;
 const IMG_SIZE = 50;
@@ -9,7 +9,7 @@ const COLLISIONS = false;
 
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 // https://stackoverflow.com/questions/3793397/html5-canvas-drawimage-with-at-an-angle
-const Background = memo(function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
+const Background = memo(function Background({ children: images, ending}: {children: ReactElement[], ending: boolean }) {
     const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
     let imgObjs = images.map((img) => {

@@ -1,9 +1,10 @@
-import React, {useState, useRef, Dispatch, LegacyRef, useContext} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faDollarSign, faCaretUp, faCaretDown} from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useRef, Dispatch, LegacyRef, useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faDollarSign, faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
 import { LatLng, Result } from '../util/types.ts';
 import { CurrencyContext } from './Settings.tsx';
+import { fromUSD } from "@/app/util/utilities.ts";
 
 export default function Picker({ data, parentOpen, setFirst, setStops } :
                                { data: Result[], parentOpen: boolean, setFirst: (n: number) => void, setStops: (n: number) => void }) {
@@ -73,7 +74,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     { currency.split(" ")[0] }
                 </div>
                 <div className={"tag price-picker-tag price " + tagClasses[tripN][0]}>
-                    {data[tripN].price}
+                    { fromUSD(data[tripN].price, currency) }
                 </div>
 
                 <div className="tag is-info price-picker-tag">

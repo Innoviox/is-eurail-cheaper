@@ -34,6 +34,7 @@ async function get_journeys(from_city, to_city, date) {
             let legs = trip.legs.map(i => i.id);
             return {
                 price: trip.price ?? 0,
+                currency: "USD",
                 length: length,
                 // legs: legs
             }

@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, createContext } from "react";
-
+import { currencies } from '../util/utilities.ts';
 export const CurrencyContext = createContext("$ (USD)");
 
 export default function Settings({ visible, setVisible, setWeeksGlobal, setCurrencyGlobal }:
@@ -9,7 +9,6 @@ export default function Settings({ visible, setVisible, setWeeksGlobal, setCurre
                                    setCurrencyGlobal: (currency: string) => void }) {
     let [weeks, setWeeksInternal] = useState(2);
     let [currency, setCurrencyInternal] = useState("$ (USD)");
-    let currencies = ["$ (USD)", "€ (EUR)", "£ (GBP)", "¥ (JPY)", "₩ (KRW)", "₹ (INR)", "₽ (RUB)", "฿ (THB)"];
 
     function close() { // update global settings & make modal disappear
         setVisible(false);

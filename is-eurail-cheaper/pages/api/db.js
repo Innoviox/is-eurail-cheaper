@@ -9,7 +9,7 @@ function parseJourney(journey) {
 
     let legs = journey.legs.map(leg => leg.stopovers === undefined ? [] : leg.stopovers.map(stopover => stopover.stop));
 
-    return { "price": price, "length": (end - start) / 1000, "legs": legs };
+    return { "price": price, "currency": "EUR", "length": (end - start) / 1000, "legs": legs };
 }
 
 export default async function handler (req, res) {

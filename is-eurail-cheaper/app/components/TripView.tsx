@@ -16,8 +16,8 @@ import bus from "../img/bus.png";
 import boat from "../img/boat.png";
 import tram from "../img/tram.png";
 import colors from "../util/colors.ts";
-import { LatLng, Location, Result, Endpoint } from '../util/types.ts';
-import { increaseDate } from '../util/utilities.ts';
+import { LatLng, Location, Result, Endpoint, EndpointResult } from '../util/types.ts';
+import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
 import { CurrencyContext } from './Settings.tsx';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
@@ -66,10 +66,10 @@ export default function TripView({ addCoords, weeks, addStops }:
     }
 
     // todo Stop type
-    function extractPrice(trips: Array<{ price: string, length: string, legs: { location: Location }[][] }>) {
+    function extractPrice(trips: EndpointResult[]) {
         return sortPrices(trips.map(i => {
             return {
-                price: parseInt(i.price),
+                price: toUSD(parseInt(i.price), i.currency),
                 length: parseInt(i.length),
                 legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
                                                                     { return { lat: stop.location.latitude, lng: stop.location.longitude }; }))
@@ -80,7 +80,7 @@ export default function TripView({ addCoords, weeks, addStops }:
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
             if (days >= cities.length) {
-                return price;
+                return fromUSD(price, currency);
             }
         }
         return 0; // todo ??
