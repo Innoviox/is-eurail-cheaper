@@ -1,12 +1,15 @@
 import _station from './_station.js';
 
-const URL = (from, to, date) => `https://v6.db.transport.rest/journeys?from=${from}&to=${to}&departure=${date}&results=5`;
+const URL = (from, to, date) => `https://v6.db.transport.rest/journeys?from=${from}&to=${to}&departure=${date}&results=5&stopovers=true`;
 
 function parseJourney(journey) {
     let price = journey.price.amount;
     let start = Date.parse(journey.legs[0].plannedDeparture);
     let end = Date.parse(journey.legs[journey.legs.length - 1].plannedArrival);
-    return { "price": price, "length": (end - start) / 1000 };
+
+    let legs = journey.legs.map(leg => leg.stopovers.map(stopover => stopover.stop));
+
+    return { "price": price, "length": (end - start) / 1000, "legs": legs };
 }
 
 export default async function handler (req, res) {
