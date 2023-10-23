@@ -10,7 +10,7 @@ import Settings from './Settings';
 import { LatLng } from "./utilities";
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
-import { faGear, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./colors";
 
@@ -70,6 +70,9 @@ export default function Home() {
                         </a>
                         <a className="navbar-item" onClick={() => setVisible(true)}>
                             <FontAwesomeIcon icon={faGear} />
+                        </a>
+                        <a className="navbar-item">
+                            <FontAwesomeIcon icon={faCircleInfo} />
                         </a>
                         <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
                             <FontAwesomeIcon icon={faGithub} />
