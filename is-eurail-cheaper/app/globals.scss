@@ -338,3 +338,18 @@ body {
 .background-white {
     background: white;
 }
+
+@keyframes fade-in-settings {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+
+.settings-background {
+  background-color: #bbbbbb;
+  opacity: 0.4;
+  animation: fade-in-settings 0.2s;
+}

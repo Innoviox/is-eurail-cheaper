@@ -13,8 +13,8 @@ export default function Settings({ visible, setVisible, setWeeksGlobal }:
 
     return (
         <div className={"modal " + (visible ? "is-active" : "")}>
-            <div className="modal-background" onClick={close}></div>
-            <div className="modal-content">
+            <div className="modal-background settings-background" onClick={close}></div>
+            <div className="modal-content" id="settings">
                 <div className="background-white">
                     <label className="label">{weeks} week{weeks === 1 ? "" : "s"}</label>
                     <input type="range" step={1} min={0} max={12} value={weeks}

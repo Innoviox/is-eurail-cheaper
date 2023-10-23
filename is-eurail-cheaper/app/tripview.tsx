@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
-import Image, {StaticImageData} from 'next/image';
+import Image from 'next/image';
 import eurail_image from "./img/eurail.png";
 import db_image from "./img/db.png";
 import SearchBar from './searchbar';
@@ -155,8 +155,8 @@ export default function TripView({ addCoords, weeks, addStops }:
         }
     }
 
-    function sumArr(arr: Array<any>) {
-        return arr.length === 0 ? 0 : arr.map(i => i.length === 0 || i[0][0] === sentinel ? 0 : i[0][0]).reduce((a, b) => a + b, 0);
+    function sumArr(arr: Result[][]) {
+        return arr.length === 0 ? 0 : arr.map(i => (i.length === 0 || i[0].price === sentinel) ? 0 : i[0].price).reduce((a, b) => a + b, 0);
     }
 
     function toggleOpen(idx: number) {
