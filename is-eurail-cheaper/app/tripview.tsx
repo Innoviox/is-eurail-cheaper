@@ -16,7 +16,7 @@ import bus from "./img/bus.png";
 import boat from "./img/boat.png";
 import tram from "./img/tram.png";
 import colors from "./colors";
-import { LatLng, Location, Endpoint, increaseDate } from './utilities.ts';
+import { LatLng, Location, Result, Endpoint, increaseDate } from './utilities.ts';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
@@ -45,8 +45,8 @@ export default function TripView({ addCoords, weeks, addStops }:
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
     let [cities, setCities]: [[string, string][], Dispatch<any>] = useState([]);
-    let [db, setDb] : [[number, number][][], Dispatch<any>] = useState([]);
-    let [eurail, setEurail] : [[number, number][][], Dispatch<any>] = useState([]);
+    let [db, setDb] : [Result[][], Dispatch<any>] = useState([]);
+    let [eurail, setEurail] : [Result[][], Dispatch<any>] = useState([]);
     let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
     let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
 
@@ -57,12 +57,20 @@ export default function TripView({ addCoords, weeks, addStops }:
 
     const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
-    function sortPrices(n: number[][]) {
-        return n.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+    function sortPrices(n: Result[]) {
+        return n.sort((a, b) => a.price === b.price ? a.length - b.length : a.price - b.price);
     }
 
-    function extractPrice(trips: Array<{ price: string, length: string }>) {
-        return sortPrices(trips.map(i => [parseInt(i.price), parseInt(i.length)]).slice(0, 5));
+    // todo Stop type
+    function extractPrice(trips: Array<{ price: string, length: string, legs: { location: Location }[][] }>) {
+        return sortPrices(trips.map(i => {
+            return {
+                price: parseInt(i.price),
+                length: parseInt(i.length),
+                legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
+                                                                    { return { lat: stop.location.latitude, lng: stop.location.longitude }; }))
+            };
+        }).slice(0, 5));
     }
 
     function calculateEurailPrice() {
@@ -116,8 +124,8 @@ export default function TripView({ addCoords, weeks, addStops }:
         if (fromCity !== undefined) {
             let startLength = db.length; // update this idx when it's done
 
-            add(db, setDb, [[sentinel, sentinel]]); // start loading wheels
-            add(eurail, setEurail, [[sentinel, sentinel]]);
+            add(db, setDb, [{ price: sentinel, length: sentinel }]); // start loading wheels
+            add(eurail, setEurail, [{ price: sentinel, length: sentinel }]);
             add(open, setOpen, true);
             add(choices, setChoices, "");
 
@@ -130,14 +138,11 @@ export default function TripView({ addCoords, weeks, addStops }:
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
-                        console.log(data, price);
                         add(lst, setlst, price, startLength);
 
-                        if (!addedStops && data.journeys[0].legs !== undefined) {
+                        if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
-                            let stops = data.journeys[0].legs.map((leg: {location: Location}[]) => leg.map(stop =>
-                                { return { lat: stop.location.latitude, lng: stop.location.longitude }; }));
-                            addStops(stops, -1);
+                            addStops(price[0].legs, -1);
                             addedStops = true;
                         }
                     } else {
@@ -185,9 +190,16 @@ export default function TripView({ addCoords, weeks, addStops }:
                                                 <div>
                                                     {/*// todo do i need choices? onClick={() => setChoice(idx, key)}*/}
                                                     <PriceDisplay img={img}>
-                                                        {lst[idx].length === 0 || lst[idx][0][0] === sentinel ?
+                                                        {lst[idx].length === 0 || lst[idx][0].price === sentinel ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={lst[idx]} parentOpen={open[idx]} setFirst={(n) => setFirst(lst, setlst, idx, n)}/>
+                                                            <Picker data={lst[idx]} parentOpen={open[idx]}
+                                                                    setFirst={(n) => setFirst(lst, setlst, idx, n)}
+                                                                    setStops={(n) => {
+                                                                        let l = lst[idx][n].legs;
+                                                                        if (l !== undefined) {
+                                                                            addStops(l, idx);
+                                                                        }
+                                                                    }}/>
                                                         }
                                                     </PriceDisplay>
                                                 </div>
@@ -253,19 +265,6 @@ export default function TripView({ addCoords, weeks, addStops }:
                             <City name={city(idx + 1)} color={colors[idx + 1]} />
                         </div>
                     </div>
-                </div>
-
-                <div className="level-right">
-                    {choices[idx] !== "" ?
-                        <div>
-                            <div>
-                                <div className="field is-grouped price-grouping">
-                                    <Image src={db_image} className="logo" alt="DB" />
-                                    {db[idx]}
-                                </div>
-                            </div>
-                        </div>
-                    : <></>}
                 </div>
             </div>
         );

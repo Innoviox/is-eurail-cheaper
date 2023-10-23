@@ -4,7 +4,8 @@ import {StaticImageData} from "next/image";
 // LatLng is a google maps type, Location is a eurail type
 export type LatLng = {lat: number, lng: number};
 export type Location = { longitude: number, latitude: number };
-export type Endpoint = [[number, number][][], Dispatch<any>, StaticImageData]
+export type Result = { price: number, length: number, legs: LatLng[][] | undefined }
+export type Endpoint = [Result[][], Dispatch<any>, StaticImageData]
 
 export function increaseDate(date: Date, weeks: number, hour: number) {
     let newDate = new Date(date);

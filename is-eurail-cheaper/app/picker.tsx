@@ -2,7 +2,10 @@ import React, {useState, useRef, Dispatch, LegacyRef} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign, faCaretUp, faCaretDown} from "@fortawesome/free-solid-svg-icons";
 
-export default function Picker({data, parentOpen, setFirst} : {data: [number, number][], parentOpen: boolean, setFirst: (n: number) => void}) {
+import { LatLng, Result } from './utilities.ts';
+
+export default function Picker({ data, parentOpen, setFirst, setStops } :
+                               { data: Result[], parentOpen: boolean, setFirst: (n: number) => void, setStops: (n: number) => void }) {
     let topRef = useRef<HTMLElement>(null);
 
     let [classes, setClasses]: [string[][], Dispatch<any>] = useState(data.map(_ => []));
@@ -12,14 +15,14 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
     let tagClasses = calculateTagClasses();
 
     function calculateTagClasses() {
-        let minprice = Math.min(...data.map(i => i[0]));
-        let maxprice = Math.max(...data.map(i => i[0]));
-        let mintime = Math.min(...data.map(i => i[1]));
-        let maxtime = Math.max(...data.map(i => i[1]));
+        let minprice = Math.min(...data.map(i => i.price));
+        let maxprice = Math.max(...data.map(i => i.price));
+        let mintime = Math.min(...data.map(i => i.length));
+        let maxtime = Math.max(...data.map(i => i.length));
 
         return data.map(i => {
-            let price = i[0];
-            let time = i[1];
+            let price = i.price;
+            let time = i.length;
 
             let priceClass = "is-warning";
             if (price <= minprice * 1.2) {
@@ -56,19 +59,20 @@ export default function Picker({data, parentOpen, setFirst} : {data: [number, nu
         return (
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
                  key={tripN} ref={tripN === 0 ? topRef as LegacyRef<HTMLDivElement> : undefined} style={style}
-                 onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }>
+                 onClick={() => tripN !== 0 && startAnimation() && setFirst(tripN) }
+                 onMouseEnter={() => setStops(tripN)}>
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faDollarSign} />
                 </div>
                 <div className={"tag price-picker-tag price " + tagClasses[tripN][0]}>
-                    {data[tripN][0]}
+                    {data[tripN].price}
                 </div>
 
                 <div className="tag is-info price-picker-tag">
                     <FontAwesomeIcon icon={faClock} />
                 </div>
                 <div className={"tag price-picker-tag length " + tagClasses[tripN][1]}>
-                    {formatTime(data[tripN][1])}
+                    {formatTime(data[tripN].length)}
                 </div>
 
                 {
