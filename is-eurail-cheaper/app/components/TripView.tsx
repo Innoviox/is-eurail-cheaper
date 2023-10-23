@@ -1,7 +1,7 @@
 import React, {Dispatch} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
+import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute, faToggleOn, faToggleOff} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
@@ -333,9 +333,15 @@ export default function TripView({ addCoords, weeks, addStops }:
                                                 <div className={"tag price-picker-tag price"}>
                                                     {euprice}
                                                 </div>
+                                                <div className={"tag price-picker-tag price is-warning "}>
+                                                    <FontAwesomeIcon icon={faToggleOn} />
+                                                </div>
                                             </> : <>
                                                 <div className={"tag price-picker-tag price "}>
                                                     {sumeu + euprice}
+                                                </div>
+                                                <div className={"tag price-picker-tag price is-warning "}>
+                                                    <FontAwesomeIcon icon={faToggleOff} />
                                                 </div>
                                             </>}
                                         </div>
