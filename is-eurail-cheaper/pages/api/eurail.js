@@ -1,11 +1,3 @@
-/* Port of _strftime() by T. H. Doan (https://thdoan.github.io/strftime/)
- *
- * Day of year (%j) code based on Joe Orost's answer:
- * http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
- *
- * Week number (%V) code based on Taco van den Broek's prototype:
- * http://techblog.procurios.nl/k/news/view/33796/14863/calculate-iso-8601-week-and-year-in-javascript.html
- */
 import strftime from 'strftime';
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"

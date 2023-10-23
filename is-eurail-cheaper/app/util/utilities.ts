@@ -12,10 +12,10 @@ export const exchangeRates = new Map(Object.entries({ // from USD
     "(USD)": 1,
     "(EUR)": 0.94,
     "(GBP)": 0.82,
-    "(JPY)": 149.85,
-    "(KRW)": 1349.18,
-    "(INR)": 83.18,
-    "(THB)": 36.46
+    // "(JPY)": 149.85, // todo make larger currencies stretch the tags somehow
+    // "(KRW)": 1349.18,
+    // "(INR)": 83.18,
+    // "(THB)": 36.46
 }));
 
 // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
