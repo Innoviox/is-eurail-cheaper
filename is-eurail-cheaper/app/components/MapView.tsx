@@ -2,8 +2,8 @@
 import React, {MutableRefObject, ReactElement} from "react";
 import { useEffect, useRef } from "react";
 import {createRoot, Root} from "react-dom/client";
-import colors from "./colors";
-import { LatLng } from "./utilities.ts";
+import colors from "../util/colors.ts";
+import { LatLng } from "../util/types.ts";
 
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }:

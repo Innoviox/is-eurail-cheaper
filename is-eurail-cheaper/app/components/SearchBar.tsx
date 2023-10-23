@@ -1,8 +1,8 @@
 import React, {useState, ChangeEvent, FormEvent, MouseEvent, Dispatch, RefObject} from "react";
-import { useOuterClick } from "./outerclick.ts";
+import { useOuterClick } from "../util/outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
-import { Location } from "./utilities.ts";
+import { Location } from "../util/types.ts";
 
 const STATIONS_API = `${process.env.NEXT_PUBLIC_API_URL}/stations?query=`;
 

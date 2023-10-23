@@ -2,7 +2,7 @@ import React, {useState, useRef, Dispatch, LegacyRef} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock, faDollarSign, faCaretUp, faCaretDown} from "@fortawesome/free-solid-svg-icons";
 
-import { LatLng, Result } from './utilities.ts';
+import { LatLng, Result } from '../util/types.ts';
 
 export default function Picker({ data, parentOpen, setFirst, setStops } :
                                { data: Result[], parentOpen: boolean, setFirst: (n: number) => void, setStops: (n: number) => void }) {

@@ -3,16 +3,16 @@ import {Dispatch, useState} from "react";
 
 import {Wrapper} from '@googlemaps/react-wrapper';
 
-import MapView from './mapview';
-import TripView from './tripview';
-import Settings from './Settings';
+import MapView from './components/MapView.tsx';
+import TripView from './components/TripView.tsx';
+import Settings from './components/Settings.tsx';
 
-import { LatLng } from "./utilities";
+import { LatLng } from "./util/utilities.ts";
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { initialize } from "./colors";
+import { initialize } from "./util/colors.ts";
 
 import Image from 'next/image';
 import scale from "./img/scale.png";
