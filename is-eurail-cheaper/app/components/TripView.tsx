@@ -18,7 +18,7 @@ import tram from "../img/tram.png";
 import colors from "../util/colors.ts";
 import { LatLng, Location, Result, Endpoint, EndpointResult } from '../util/types.ts';
 import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
-import { CurrencyContext } from './Settings.tsx';
+import { CurrencyContext } from './modal/Settings.tsx';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 

@@ -5,8 +5,9 @@ import {Wrapper} from '@googlemaps/react-wrapper';
 
 import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
-import Settings, { CurrencyContext } from './components/Settings.tsx';
-import About from './components/About.tsx';
+import Settings, { CurrencyContext } from './components/modal/Settings.tsx';
+import About from '@/app/components/modal/About.tsx';
+import Guide from './components/modal/Guide.tsx';
 
 import { LatLng } from "./util/types.ts";
 
@@ -28,6 +29,7 @@ export default function Home() {
     let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
     let [visible2, setVisible2] = useState(false);
+    let [visible3, setVisible3] = useState(false);
 
     let [weeks, setWeeks] = useState(2);
     let [currency, setCurrency] = useState("$ (USD)");
@@ -70,7 +72,7 @@ export default function Home() {
                         </span>
                     </div>
                     <div className="navbar-end">
-                        <a className="navbar-item">
+                        <a className="navbar-item" onClick={() => setVisible3(true)}>
                             <FontAwesomeIcon icon={faQuestion} />
                         </a>
                         <a className="navbar-item" onClick={() => setVisible(true)}>
@@ -100,6 +102,7 @@ export default function Home() {
             </div>
             <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
             <About visible={visible2} setVisible={setVisible2} />
+            <Guide visible={visible3} setVisible={setVisible3} />
         </main>
     )
 }

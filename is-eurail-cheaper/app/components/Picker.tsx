@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faDollarSign, faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
 import { LatLng, Result } from '../util/types.ts';
-import { CurrencyContext } from './Settings.tsx';
+import { CurrencyContext } from './modal/Settings.tsx';
 import { fromUSD } from "@/app/util/utilities.ts";
 
 export default function Picker({ data, parentOpen, setFirst, setStops } :
@@ -81,7 +81,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     <FontAwesomeIcon icon={faClock} />
                 </div>
                 <div className={"tag price-picker-tag length " + tagClasses[tripN][1]}>
-                    {formatTime(data[tripN].length)}
+                    { formatTime(data[tripN].length) }
                 </div>
 
                 {

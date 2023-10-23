@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, createContext } from "react";
-import { currencies } from '../util/utilities.ts';
+import { currencies } from '../../util/utilities.ts';
 export const CurrencyContext = createContext("$ (USD)");
 
 export default function Settings({ visible, setVisible, setWeeksGlobal, setCurrencyGlobal }:
@@ -19,7 +19,7 @@ export default function Settings({ visible, setVisible, setWeeksGlobal, setCurre
     return (
         <div className={"modal " + (visible ? "is-active" : "")}>
             <div className="modal-background settings-background" onClick={close}></div>
-            <div className="modal-content" id="settings">
+            <div className="modal-content settings">
                 <div className="background-white settings-content">
                     <div className="content">
                         <h2>Settings</h2>
