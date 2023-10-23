@@ -6,6 +6,7 @@ import {Wrapper} from '@googlemaps/react-wrapper';
 import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
 import Settings, { CurrencyContext } from './components/Settings.tsx';
+import About from './components/About.tsx';
 
 import { LatLng } from "./util/types.ts";
 
@@ -19,7 +20,6 @@ import scale from "./img/scale.png";
 
 initialize();
 
-// scale: <a href="https://www.flaticon.com/free-icons/scale" title="scale icons">Scale icons created by Freepik - Flaticon</a>
 
 export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
@@ -27,6 +27,7 @@ export default function Home() {
 
     let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
+    let [visible2, setVisible2] = useState(false);
 
     let [weeks, setWeeks] = useState(2);
     let [currency, setCurrency] = useState("$ (USD)");
@@ -75,7 +76,7 @@ export default function Home() {
                         <a className="navbar-item" onClick={() => setVisible(true)}>
                             <FontAwesomeIcon icon={faGear} />
                         </a>
-                        <a className="navbar-item">
+                        <a className="navbar-item" onClick={() => setVisible2(true)}>
                             <FontAwesomeIcon icon={faCircleInfo} />
                         </a>
                         <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
@@ -98,6 +99,7 @@ export default function Home() {
                 </div>
             </div>
             <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
+            <About visible={visible2} setVisible={setVisible2} />
         </main>
     )
 }

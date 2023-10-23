@@ -7,16 +7,8 @@ const WOBBLE = 10;
 const MAX_TRAIL = 500;
 const COLLISIONS = false;
 
-// not a canvas master so I used these sources:
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 // https://stackoverflow.com/questions/3793397/html5-canvas-drawimage-with-at-an-angle
-
-// images
-// plane => <a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Plane icons created by Darius Dan - Flaticon</a>
-// train => <a href="https://www.flaticon.com/free-icons/train" title="train icons">Train icons created by Freepik - Flaticon</a>
-// bus => <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Freepik - Flaticon</a>
-// boat => <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">Boat icons created by smalllikeart - Flaticon</a>
-// tram => <a href="https://www.flaticon.com/free-icons/tram" title="tram icons">Tram icons created by Freepik - Flaticon</a>
 const Background = memo(function Background({children: images, ending}: {children: ReactElement[], ending: boolean}) {
     const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
