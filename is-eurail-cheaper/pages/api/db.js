@@ -20,7 +20,6 @@ export default async function handler (req, res) {
     ])
 
     let d = new Date(parseInt(req.query.date)).toDateString();
-    console.log("got date", d);
 
     let data = await fetch(URL(origin.id, destination.id, d), {
         method: 'GET'

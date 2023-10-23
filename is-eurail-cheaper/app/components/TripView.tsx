@@ -136,8 +136,9 @@ export default function TripView({ addCoords, weeks, addStops }:
 
             setSearchEnabled(false);
             let addedStops = false;
+            let d = increaseDate(new Date(), weeks, 8);
             for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
-                fetch(PRICE_API(key, fromCity, toCity, increaseDate(new Date(), weeks, 8)), {
+                fetch(PRICE_API(key, fromCity, toCity, d), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
