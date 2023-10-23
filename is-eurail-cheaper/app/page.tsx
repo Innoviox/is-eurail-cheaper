@@ -7,7 +7,7 @@ import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
 import Settings from './components/Settings.tsx';
 
-import { LatLng } from "./util/utilities.ts";
+import { LatLng } from "./util/types.ts";
 
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
