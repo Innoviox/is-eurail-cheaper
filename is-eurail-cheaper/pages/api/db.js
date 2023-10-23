@@ -9,7 +9,7 @@ function parseJourney(journey) {
 
     let legs = journey.legs.map(leg => leg.stopovers === undefined ? [] : leg.stopovers.map(stopover => stopover.stop));
 
-    return { "price": price, "currency": "EUR", "length": (end - start) / 1000, "legs": legs };
+    return { "price": price, "currency": "EUR", "length": (end - start) / 1000, "legs": legs, "departure": start };
 }
 
 export default async function handler (req, res) {
@@ -20,6 +20,7 @@ export default async function handler (req, res) {
     ])
 
     let d = new Date(parseInt(req.query.date)).toDateString();
+    console.log("got date", d);
 
     let data = await fetch(URL(origin.id, destination.id, d), {
         method: 'GET'

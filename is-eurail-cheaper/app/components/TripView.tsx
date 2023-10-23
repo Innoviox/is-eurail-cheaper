@@ -72,7 +72,8 @@ export default function TripView({ addCoords, weeks, addStops }:
                 price: toUSD(parseInt(i.price), i.currency),
                 length: parseInt(i.length),
                 legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
-                                                                    { return { lat: stop.location.latitude, lng: stop.location.longitude }; }))
+                                                                    { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
+                departure: new Date(i.departure)
             };
         }).slice(0, 5));
     }

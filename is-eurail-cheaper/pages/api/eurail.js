@@ -28,6 +28,7 @@ async function get_journeys(from_city, to_city, date) {
                 price: trip.price ?? 0,
                 currency: "USD",
                 length: length,
+                departure: start
                 // legs: legs
             }
         }));

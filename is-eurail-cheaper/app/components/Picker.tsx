@@ -1,10 +1,12 @@
 import React, { useState, useRef, Dispatch, LegacyRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faDollarSign, faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faDollarSign, faCaretUp, faCaretDown, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 
 import { LatLng, Result } from '../util/types.ts';
 import { CurrencyContext } from './modal/Settings.tsx';
 import { fromUSD } from "@/app/util/utilities.ts";
+
+const hours_minutes = (d: Date) => `${d.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}:${d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}`
 
 export default function Picker({ data, parentOpen, setFirst, setStops } :
                                { data: Result[], parentOpen: boolean, setFirst: (n: number) => void, setStops: (n: number) => void }) {
@@ -78,11 +80,18 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                 </div>
 
                 <div className="tag is-info price-picker-tag">
-                    <FontAwesomeIcon icon={faClock} />
+                    <FontAwesomeIcon icon={faHourglassStart} />
                 </div>
                 <div className={"tag price-picker-tag length " + tagClasses[tripN][1]}>
                     { formatTime(data[tripN].length) }
                 </div>
+
+                {/*<div className="tag is-info price-picker-tag">*/}
+                {/*    <FontAwesomeIcon icon={faClock} />*/}
+                {/*</div>*/}
+                {/*<div className="tag price-picker-tag is-primary">*/}
+                {/*    { hours_minutes(data[tripN].departure) }*/}
+                {/*</div>*/}
 
                 {
                     tripN === 0 ?
