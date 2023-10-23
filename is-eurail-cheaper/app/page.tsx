@@ -28,6 +28,7 @@ export default function Home() {
     let [visible, setVisible] = useState(false);
     let [weeks, setWeeks] = useState(2);
     let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
+    let [meaningless2, setMeaningless2] = useState(0);
 
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
@@ -46,7 +47,7 @@ export default function Home() {
         }
 
         setStops(newS);
-        setMeaningless(meaningless + 1);
+        setMeaningless2(meaningless2 + 1);
     }
 
     return (
@@ -80,7 +81,7 @@ export default function Home() {
                 <div id="map">
                   <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} stops={stops} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} stops={stops} meaningless2={meaningless2} />
                   </Wrapper>
                 </div>
                 <div id="trip">

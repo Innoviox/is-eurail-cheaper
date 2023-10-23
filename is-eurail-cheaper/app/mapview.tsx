@@ -100,9 +100,9 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
     });
 }
 
-export default function MapView({ latitude, longitude, coords, meaningless, stops }:
+export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2 }:
                                 { latitude: number; longitude: number,
-                                  coords: any, meaningless: number, stops: LatLng[][][] }) {
+                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number }) {
     const mapRef = useRef(null);
     const [map, setMap] = React.useState<google.maps.Map>();
 
