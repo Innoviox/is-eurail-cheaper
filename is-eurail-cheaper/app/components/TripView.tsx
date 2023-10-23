@@ -1,5 +1,5 @@
 import React, {Dispatch} from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
@@ -18,6 +18,7 @@ import tram from "../img/tram.png";
 import colors from "../util/colors.ts";
 import { LatLng, Location, Result, Endpoint } from '../util/types.ts';
 import { increaseDate } from '../util/utilities.ts';
+import { CurrencyContext } from './Settings.tsx';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
@@ -42,6 +43,8 @@ let everAnimated = false;
 export default function TripView({ addCoords, weeks, addStops }:
                                  { addCoords: (lat: number, lng: number) => void, weeks: number,
                                    addStops: (newStops: LatLng[][], set: number) => void }) {
+    const currency = useContext(CurrencyContext);
+
     const city = (idx: number) => cities[idx][0];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
@@ -298,7 +301,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                                     <div className="flip-parent" key="db">
                                         <div className="tags has-addons">
                                             <div className="tag is-info price-picker-tag">
-                                                <FontAwesomeIcon icon={faDollarSign} />
+                                                { currency.split(" ")[0] }
                                             </div>
                                             <div className={"tag price-picker-tag price "}>
                                                 {sumdb}
@@ -318,7 +321,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                                     <div className="flip-parent" key="eu">
                                         <div className="tags has-addons" onClick={() => setShowFullEuro(!showFullEuro)}>
                                             <div className="tag is-info price-picker-tag">
-                                                <FontAwesomeIcon icon={faDollarSign} />
+                                                { currency.split(" ")[0] }
                                             </div>
                                             {showFullEuro ? <>
                                                 <div className={"tag price-picker-tag price "}>

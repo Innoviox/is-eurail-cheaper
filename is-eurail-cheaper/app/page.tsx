@@ -5,7 +5,7 @@ import {Wrapper} from '@googlemaps/react-wrapper';
 
 import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
-import Settings from './components/Settings.tsx';
+import Settings, { CurrencyContext } from './components/Settings.tsx';
 
 import { LatLng } from "./util/types.ts";
 
@@ -24,9 +24,13 @@ initialize();
 export default function Home() {
     let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
     let lat = 50, lng = 10;
+
     let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
+
     let [weeks, setWeeks] = useState(2);
+    let [currency, setCurrency] = useState("$ (USD)");
+
     let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
     let [meaningless2, setMeaningless2] = useState(0);
 
@@ -88,10 +92,12 @@ export default function Home() {
                   </Wrapper>
                 </div>
                 <div id="trip">
-                  <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} />
+                    <CurrencyContext.Provider value={currency}>
+                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} />
+                    </CurrencyContext.Provider>
                 </div>
             </div>
-            <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} />
+            <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
         </main>
     )
 }
