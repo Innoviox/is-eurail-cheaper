@@ -52,9 +52,10 @@ const sentinel = -100;
 let everAnimated = false;
 
 
-export default function TripView({ addCoords, weeks, addStops }:
+export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                                  { addCoords: (lat: number, lng: number) => void, weeks: number,
-                                   addStops: (newStops: LatLng[][], set: number) => void }) {
+                                   addStops: (newStops: LatLng[][], set: number) => void,
+                                   setZoomTo: (n: number) => void}) {
     const currency = useContext(CurrencyContext);
 
     const city = (idx: number) => cities[idx][0];
@@ -261,7 +262,7 @@ export default function TripView({ addCoords, weeks, addStops }:
 
     function renderUpper(idx: number) {
         return  (
-            <div className="upper level" onClick={() => toggleOpen(idx)}>
+            <div className="upper level"> {/* onClick={() => toggleOpen(idx)}> */}
                 <div className="level-left">
                     <div className="level-item">
                         <div>
@@ -289,7 +290,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                         <div className="tag action-tag is-danger">
                             <FontAwesomeIcon icon={faTrashCan} />
                         </div>
-                        <div className="tag action-tag is-link">
+                        <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
                             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>
                     </div>

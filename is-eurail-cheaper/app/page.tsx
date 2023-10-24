@@ -37,6 +37,8 @@ export default function Home() {
     let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
     let [meaningless2, setMeaningless2] = useState(0);
 
+    let [zoomTo, setZoomTo] = useState(-1);
+
     function addCoords(lat: number, lng: number) {
         let newCoords = coords;
         newCoords.push({'lat': lat, 'lng': lng});
@@ -91,12 +93,13 @@ export default function Home() {
                 <div id="map">
                   <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} stops={stops} meaningless2={meaningless2} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
+                             stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
                   </Wrapper>
                 </div>
                 <div id="trip">
                     <CurrencyContext.Provider value={currency}>
-                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} />
+                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} />
                     </CurrencyContext.Provider>
                 </div>
             </div>
