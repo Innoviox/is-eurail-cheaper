@@ -1,7 +1,19 @@
 import React, {Dispatch} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute, faToggleOn, faToggleOff, faCaretLeft, faCaretRight} from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowRightLong,
+    faCity,
+    faDollarSign,
+    faTicket,
+    faRoute,
+    faToggleOn,
+    faToggleOff,
+    faCaretLeft,
+    faCaretRight,
+    faTrashCan,
+    faMagnifyingGlassPlus, faPlus
+} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
@@ -215,12 +227,30 @@ export default function TripView({ addCoords, weeks, addStops }:
                                 ))}
                             </div>
                         </div>
+                        <div className="prices-actions-box">
+                            {/*<div className="tags has-addons">*/}
+                            {/*    <div className="tag is-info price-picker-tag">*/}
+                            {/*        <FontAwesomeIcon icon={faCaretRight} />*/}
+                            {/*    </div>*/}
+                            {/*    <div className="tag is-info price-picker-tag">*/}
+                            {/*        <FontAwesomeIcon icon={faTrashCan} />*/}
+                            {/*    </div>*/}
+                            {/*    <div className="tag is-info price-picker-tag">*/}
+                            {/*        <FontAwesomeIcon icon={faMagnifyingGlassPlus} />*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+                            <div className="tags has-addons">
+                                <div className="tag price-picker-tag is-white">
+                                    <FontAwesomeIcon icon={faPlus} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
         } else if (idx === cities.length - 1) {
             return (
-                <div className="level">
+                <div className="level prices-container">
                     <div className="level-left">
                         <div className="level-item">
                             <div>

@@ -362,3 +362,14 @@ body {
 .content a {
   color: hsl(229, 53%, 53%) !important;
 }
+
+.prices-container {
+  padding-left: 10px;
+  position: relative;
+}
+
+.prices-actions-box {
+  position: absolute;
+  left: -20px;
+  top: 0px;
+}
