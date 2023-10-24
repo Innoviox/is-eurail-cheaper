@@ -162,20 +162,6 @@ body {
   margin-bottom: 10px;
 }
 
-.dot {
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  margin-right: 4px;
-}
-
-.city {
-  border-radius: 25px;
-  padding: 0 5px;
-  //border: 1px solid red;
-}
-
 .upper.level {
   //padding: 10px 0 10px 0;
 }
@@ -363,19 +349,39 @@ body {
   color: hsl(229, 53%, 53%) !important;
 }
 
-//.prices-container {
-//  padding-left: 25px;
-//  position: relative;
-//}
-//
-//.prices-actions-box {
-//  position: absolute;
-//  left: -8px;
-//  top: 2px;
-//  display: flex;
-//  flex-direction: column;
-//}
-//
-//.padding-bottom {
-//  margin-bottom: 5px;
-//}
+.dot {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.city {
+  border-radius: 25px;
+  padding: 0 5px;
+  border: 1px solid lightgray;
+  //transition: all 0.1s;
+  //border: 1px solid red;
+}
+
+.city:hover {
+  border: 1px solid black;
+  //transition: all 0.1s;
+}
+
+.edit {
+  width: 18px;
+  height: 18px;
+  padding-left: 4px;
+  padding-top: 4px;
+  display: inline-block;
+  //filter: brightness(85%);
+  opacity: 0.2;
+  //transition: all 0.2s;
+}
+
+.bright {
+  opacity: 1 !important;
+  //transition: all 0.1s;
+}
