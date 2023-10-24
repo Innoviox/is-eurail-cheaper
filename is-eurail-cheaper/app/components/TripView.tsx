@@ -227,24 +227,6 @@ export default function TripView({ addCoords, weeks, addStops }:
                                 ))}
                             </div>
                         </div>
-                        <div className="prices-actions-box">
-                            {/*<div className="tags has-addons">*/}
-                            {/*    <div className="tag is-info price-picker-tag">*/}
-                            {/*        <FontAwesomeIcon icon={faCaretRight} />*/}
-                            {/*    </div>*/}
-                            {/*    <div className="tag is-info price-picker-tag">*/}
-                            {/*        <FontAwesomeIcon icon={faTrashCan} />*/}
-                            {/*    </div>*/}
-                            {/*    <div className="tag is-info price-picker-tag">*/}
-                            {/*        <FontAwesomeIcon icon={faMagnifyingGlassPlus} />*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                            <div className="tags has-addons">
-                                <div className="tag price-picker-tag is-white">
-                                    <FontAwesomeIcon icon={faPlus} />
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             );
@@ -300,6 +282,22 @@ export default function TripView({ addCoords, weeks, addStops }:
                         <div>
                             <City name={city(idx + 1)} color={colors[idx + 1]} />
                         </div>
+                    </div>
+                </div>
+                <div className="level-right">
+                    <div className="field is-grouped">
+                        <p className="control">
+                            <button className="button is-danger">
+                                <FontAwesomeIcon icon={faTrashCan} />
+                                {/*<span>Delete</span>*/}
+                            </button>
+                        </p>
+                        <p className="control">
+                            <button className="button is-link">
+                                <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+                                {/*<span>Zoom</span>*/}
+                            </button>
+                        </p>
                     </div>
                 </div>
             </div>

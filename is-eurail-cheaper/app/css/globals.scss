@@ -110,7 +110,7 @@ body {
 
 .upper:hover {
   //filter: brightness(85%);
-  background: #c7d3dd;
+  //background: #c7d3dd;
   //background: #edf0da;
 }
 
@@ -363,13 +363,19 @@ body {
   color: hsl(229, 53%, 53%) !important;
 }
 
-.prices-container {
-  padding-left: 10px;
-  position: relative;
-}
-
-.prices-actions-box {
-  position: absolute;
-  left: -20px;
-  top: 0px;
-}
+//.prices-container {
+//  padding-left: 25px;
+//  position: relative;
+//}
+//
+//.prices-actions-box {
+//  position: absolute;
+//  left: -8px;
+//  top: 2px;
+//  display: flex;
+//  flex-direction: column;
+//}
+//
+//.padding-bottom {
+//  margin-bottom: 5px;
+//}
