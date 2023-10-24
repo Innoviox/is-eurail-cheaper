@@ -285,19 +285,13 @@ export default function TripView({ addCoords, weeks, addStops }:
                     </div>
                 </div>
                 <div className="level-right">
-                    <div className="field is-grouped">
-                        <p className="control">
-                            <button className="button is-danger">
-                                <FontAwesomeIcon icon={faTrashCan} />
-                                {/*<span>Delete</span>*/}
-                            </button>
-                        </p>
-                        <p className="control">
-                            <button className="button is-link">
-                                <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
-                                {/*<span>Zoom</span>*/}
-                            </button>
-                        </p>
+                    <div className="tags">
+                        <div className="tag action-tag is-danger">
+                            <FontAwesomeIcon icon={faTrashCan} />
+                        </div>
+                        <div className="tag action-tag is-link">
+                            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+                        </div>
                     </div>
                 </div>
             </div>

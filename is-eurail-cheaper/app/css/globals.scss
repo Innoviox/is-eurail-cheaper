@@ -385,3 +385,7 @@ body {
   opacity: 1 !important;
   //transition: all 0.1s;
 }
+
+.action-tag:hover {
+  filter: brightness(85%);
+}
