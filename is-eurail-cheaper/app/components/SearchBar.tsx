@@ -10,10 +10,9 @@ export default function SearchBar({onSearchSubmit, enabled}:
     const innerRef: RefObject<HTMLDivElement> = useOuterClick(closeDropdown);
     const dropdownRef = useRef<DropdownHandle>();
 
-    let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
-    let [stationIds, setStationIds] = useState(new Map<string, [string, Location]>());
     let [showDropdown, setShowDropdown] = useState(false);
     let [inputVal, setInputVal] = useState("");
+
     function closeDropdown() {
         setShowDropdown(false);
     }

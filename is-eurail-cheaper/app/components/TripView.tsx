@@ -242,7 +242,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} color={colors[idx]} />
+                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => console.log(f, l)}/>
                             </div>
                         </div>
                     </div>
@@ -271,7 +271,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} color={colors[idx]} />
+                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => console.log(f, l)} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -281,7 +281,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} color={colors[idx + 1]} />
+                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => console.log(f, l)} />
                         </div>
                     </div>
                 </div>
