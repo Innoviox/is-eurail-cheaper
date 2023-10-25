@@ -39,17 +39,21 @@ export default function Home() {
 
     let [zoomTo, setZoomTo] = useState(-1);
 
-    function addCoords(lat: number, lng: number) {
+    function addCoords(lat: number, lng: number, idx: number | undefined = undefined) {
         let newCoords = coords;
-        newCoords.push({'lat': lat, 'lng': lng});
+        if (idx === undefined) {
+            newCoords.push({'lat': lat, 'lng': lng});
+        } else {
+            newCoords[idx] = {'lat': lat, 'lng': lng};
+        }
         setCoords(newCoords);
         setMeaningless(meaningless + 1);
     }
 
-    function addStops(newStops: LatLng[][], set: number = -1) {
+    function addStops(newStops: LatLng[][], set: number | undefined = undefined) {
         let newS = stops;
 
-        if (set === -1) {
+        if (set === undefined) {
             newS.push(newStops);
         } else {
             newS[set] = newStops;

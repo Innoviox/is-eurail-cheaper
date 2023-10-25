@@ -6,12 +6,20 @@ import SearchBarDropDown, {DropdownHandle} from "@/app/components/SearchBarDropD
 import {Location} from "@/app/util/types.ts";
 
 export default function City({name, color, onSearchSubmit}: {name: string, color: string, onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>}) {
+    // search bar drop down boilerplate
     const innerRef: RefObject<HTMLDivElement> = useOuterClick(closeDropdown);
     const dropdownRef = useRef<DropdownHandle>();
     let [showDropdown, setShowDropdown] = useState(false);
     let [inputVal, setInputVal] = useState("");
     function closeDropdown() {
         setShowDropdown(false);
+        setEditing(false);
+        setInputVal("");
+    }
+
+    async function onSearchSubmitWrapper(formData: FormData, loc: Location) {
+        setEditing(false);
+        await onSearchSubmit(formData, loc);
     }
 
     let [hovering, setHovering] = useState(false);
@@ -20,15 +28,15 @@ export default function City({name, color, onSearchSubmit}: {name: string, color
     let nameRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div>
+        <div ref={innerRef}>
             <div className="city" onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
                 <span className="dot inline-block" style={{"backgroundColor": color}} />
 
                 <div ref={nameRef} className="inline-block">
                     {editing ?
                         <input type="text" className="input city-name-input is-static" placeholder="New city..."
-                           defaultValue={""} autoFocus={true} style={{width: nameRef.current ? nameRef.current.clientWidth : 100,
-                                                                      height: nameRef.current ? nameRef.current.clientHeight : 24}}
+                           autoFocus={true} style={{width: nameRef.current ? nameRef.current.clientWidth : 100,
+                                                    height: nameRef.current ? nameRef.current.clientHeight : 24}}
                            onChange={(e) => dropdownRef.current && dropdownRef.current.handleChange(e)}
                            value={inputVal} />
                         : <span className="city-name">{name}</span>
@@ -40,7 +48,7 @@ export default function City({name, color, onSearchSubmit}: {name: string, color
                     <Image src={edit} alt="edit" className={"edit " + (hovering ? "bright": "")} />
                 </div>
             </div>
-            {editing ? <SearchBarDropDown ref={dropdownRef} showDropdown={showDropdown} setShowDropdown={setShowDropdown} onSearchSubmit={onSearchSubmit} setInputVal={setInputVal} />
+            {editing ? <SearchBarDropDown ref={dropdownRef} showDropdown={showDropdown} setShowDropdown={setShowDropdown} onSearchSubmit={onSearchSubmitWrapper} setInputVal={setInputVal} />
                 : <></>}
         </div>
 

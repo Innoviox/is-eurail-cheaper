@@ -53,8 +53,9 @@ let everAnimated = false;
 
 
 export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
-                                 { addCoords: (lat: number, lng: number) => void, weeks: number,
-                                   addStops: (newStops: LatLng[][], set: number) => void,
+                                 { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
+                                   weeks: number,
+                                   addStops: (newStops: LatLng[][], set: number | undefined) => void,
                                    setZoomTo: (n: number) => void}) {
     const currency = useContext(CurrencyContext);
 
@@ -116,10 +117,16 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         setlst(n);
     }
 
-    async function onSearchSubmit(formData: FormData, location: Location) {
+    async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
-        let fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
-        let fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
+        let fromCity, fromCityId;
+        if (idx === undefined) {
+            fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
+            fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
+        } else {
+            fromCity = cities.length <= idx ? undefined : cities[idx - 1][0];
+            fromCityId = cities.length <= idx ? undefined : cities[idx - 1][1];
+        }
         let toCity = formData.get("toCity") as string;
         let toCityId = formData.get("toCityId") as string;
 
@@ -135,17 +142,16 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             everAnimated = true;
         }
 
-        addCoords(location.latitude, location.longitude);
-
-        add(cities, setCities, [toCity, toCityId]);
+        addCoords(location.latitude, location.longitude, idx);
+        add(cities, setCities, [toCity, toCityId], idx);
 
         if (fromCity !== undefined) {
-            let startLength = db.length; // update this idx when it's done
+            let startLength = idx === undefined ? db.length : idx; // update this idx when it's done
 
-            add(db, setDb, [{ price: sentinel, length: sentinel }]); // start loading wheels
-            add(eurail, setEurail, [{ price: sentinel, length: sentinel }]);
-            add(open, setOpen, true);
-            add(choices, setChoices, "");
+            add(db, setDb, [{ price: sentinel, length: sentinel }], idx); // start loading wheels
+            add(eurail, setEurail, [{ price: sentinel, length: sentinel }], idx);
+            add(open, setOpen, true, idx);
+            add(choices, setChoices, "", idx);
 
             setSearchEnabled(false);
             let addedStops = false;
@@ -161,7 +167,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
                         if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
-                            addStops(price[0].legs, -1);
+                            addStops(price[0].legs, idx);
                             addedStops = true;
                         }
                     } else {
@@ -242,7 +248,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => console.log(f, l)}/>
+                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)}/>
                             </div>
                         </div>
                     </div>
@@ -271,7 +277,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => console.log(f, l)} />
+                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -281,7 +287,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => console.log(f, l)} />
+                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + 1)} />
                         </div>
                     </div>
                 </div>
