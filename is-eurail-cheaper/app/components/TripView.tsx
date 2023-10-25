@@ -51,9 +51,6 @@ const sentinel = -100;
 
 let everAnimated = false;
 
-var defaultDict = (d: any) => new Proxy({}, {
-    get: (target, name) => name in target ? target[name] : d
-});
 
 export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                                  { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
@@ -155,9 +152,9 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
         if (fromCity !== undefined) {
             if (idx === undefined) {
-                await calculate([idx], fromCity, toCity);
+                await calculate([idx], [fromCity], [toCity]);
             } else {
-                await calculate([idx, idx + 1], fromCity, toCity);
+                await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
                 // if (idx < cities.length - 1) {
                 //     setTimeout(() => calculate(idx + 1, toCity, cities[idx + 1][0]), 1000);
                 // }
@@ -165,7 +162,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         }
     }
 
-    async function calculate(idxs: number[] | undefined[], fromCity: string, toCity: string) {
+    async function calculate(idxs: number[] | undefined[], fromCity: string[], toCity: string[]) {
         console.log("CALCULATING", idxs, fromCity, toCity);
 
         let sub1 = idxs[0] === undefined ? undefined : idxs.map(i => i! - 1);
@@ -184,48 +181,38 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         let endpoint_adds: Map<string, Result[][]> = new Map();
         let stop_adds: LatLng[][][] = [];
 
+        setSearchEnabled(false);
         for (let i = 0; i < idxs.length; i++) {
             let idx = idxs[i];
             // let startLength = idx === undefined ? db.length : idx - 1; // update this idx when it's done
             // let sub1 = idx === undefined ? idx : idx - 1;
-
-            setSearchEnabled(false);
             let addedStops = false;
             let d = increaseDate(new Date(), weeks, 8);
             let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-                await fetch(PRICE_API(key, fromCity, toCity, d), {
+                await fetch(PRICE_API(key, fromCity[i], toCity[i], d), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
                         let data = await response.json();
-                        console.log("GOT DATA FOR", key, i);
                         let price = extractPrice(data.journeys);
-                        // add(lst, setlst, price, startLength);
-                        // endpoint_adds[endpoint_num].push(price);
-                        // endpoint_adds[key].push(price);
+                        console.log("GOT DATA FOR", key, i, price);
+
                         let n = endpoint_adds.get(key) ?? [];
                         n.push(price);
                         endpoint_adds.set(key, n);
 
                         if (!addedStops && price[0].legs !== undefined) {
-                            console.log("adding stops!");
-                            // let l = price[0].legs; // typescript is dumb
-                            // addStops(price[0].legs, sub1);
-                            // stop_adds[endpoint_num] = price[0].legs;
                             stop_adds[i] = price[0].legs;
-                            // setTimeout(() => addStops(l, sub1), 1000);
                             addedStops = true;
                         }
                     } else {
                         console.log(`response not ok - price ${key}`);
                     }
-                    setSearchEnabled(true); // probably fine? todo
                 });
             }));
             console.log("PROMISE.ALL RESOLVED");
-
-            setSearchEnabled(true);
         }
+        setSearchEnabled(true);
 
         console.log(endpoint_adds, stop_adds);
 
