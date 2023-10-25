@@ -51,6 +51,9 @@ const sentinel = -100;
 
 let everAnimated = false;
 
+var defaultDict = (d: any) => new Proxy({}, {
+    get: (target, name) => name in target ? target[name] : d
+});
 
 export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                                  { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
@@ -114,7 +117,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         } else if (set === undefined) {
             n.push(price);
         } else if (Array.isArray(set)) { // https://stackoverflow.com/questions/23130292/test-for-array-of-string-type-in-typescript
-            set.forEach(i => n[i] = price[i]);
+            set.forEach((i, idx) => n[i] = price[idx]);
         } else {
             n[set] = price;
         }
@@ -176,8 +179,10 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             addStops(m([]), sub1);
         }
 
-        let endpoint_adds: Result[][][] = Object.entries(endpoints).map(_ => []);
-        let stop_adds: LatLng[][][] = idxs.map(_ => []);
+        // let endpoint_adds: Result[][][] = Object.entries(endpoints).map(_ => []);
+        // let stop_adds: LatLng[][][] = idxs.map(_ => []);
+        let endpoint_adds: Map<string, Result[][]> = new Map();
+        let stop_adds: LatLng[][][] = [];
 
         for (let i = 0; i < idxs.length; i++) {
             let idx = idxs[i];
@@ -196,12 +201,17 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                         console.log("GOT DATA FOR", key, i);
                         let price = extractPrice(data.journeys);
                         // add(lst, setlst, price, startLength);
-                        endpoint_adds[endpoint_num].push(price);
+                        // endpoint_adds[endpoint_num].push(price);
+                        // endpoint_adds[key].push(price);
+                        let n = endpoint_adds.get(key) ?? [];
+                        n.push(price);
+                        endpoint_adds.set(key, n);
 
                         if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
                             // let l = price[0].legs; // typescript is dumb
                             // addStops(price[0].legs, sub1);
+                            // stop_adds[endpoint_num] = price[0].legs;
                             stop_adds[i] = price[0].legs;
                             // setTimeout(() => addStops(l, sub1), 1000);
                             addedStops = true;
@@ -221,10 +231,11 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
         // todo this is a mess
         Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-            console.log("adding various things!", endpoint_adds[endpoint_num].length, sub1, startLength);
-            add(lst, setlst, endpoint_adds[endpoint_num], startLength);
-            addStops(stop_adds, startLength);
+            console.log("adding various things!", endpoint_adds.get(key), sub1, startLength);
+            add(lst, setlst, endpoint_adds.get(key), startLength);
         });
+        console.log("adding STOPS", stop_adds);
+        addStops(stop_adds, startLength);
     }
 
     function sumArr(arr: Result[][]) {

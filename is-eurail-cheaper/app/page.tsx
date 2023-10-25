@@ -56,8 +56,8 @@ export default function Home() {
         if (set === undefined) {
             newS.push(newStops[0]);
         } else if (Array.isArray(set)) {
-            set.forEach((s) => {
-                newS[s] = newStops[s];
+            set.forEach((s, idx) => {
+                newS[s] = newStops[idx];
             });
         } else {
             newS[set] = newStops[0];

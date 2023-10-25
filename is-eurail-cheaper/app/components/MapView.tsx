@@ -94,6 +94,8 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
     let previousPosition: LatLng;
     let path: LatLng[];
 
+    console.log("GOT STOPS", stops);
+
     return coords.map((position, idx) => {
         if (previousPosition !== null) {
             path = [previousPosition, position];
@@ -113,7 +115,7 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
                         )}): <></> }
                 </div>
             </Marker>
-            { (idx > 0 && stops.length > (idx - 1)) && stops[idx - 1].length > 0 ?
+            { (idx > 0 && stops.length > (idx - 1) && stops[idx - 1].length > 0) ?
                 stops[idx - 1].map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
             : (path ? <Route key={`route-${idx}`} map={map} path={path} color={"#879799"} /> : <></>)}
             </div>
