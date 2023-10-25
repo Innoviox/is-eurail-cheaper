@@ -1,4 +1,4 @@
-import React, {Dispatch} from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,7 +18,7 @@ import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
 import SearchBar from './SearchBar.tsx';
-import City from './City.tsx';
+import City, { ImposedCityContext } from './City.tsx';
 import Picker from './Picker.tsx';
 import PriceDisplay from "./PriceDisplay.tsx";
 import Background from './Background.tsx';
@@ -59,6 +59,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                                    setZoomTo: (n: number) => void
                                    removeStops: (n: number) => void }) {
     const currency = useContext(CurrencyContext);
+    const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
     const city = (idx: number) => cities[idx][0];
 
@@ -298,7 +299,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)}/>
+                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} setImposedCity={setImposedCity} />
                             </div>
                         </div>
                     </div>
@@ -342,7 +343,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} />
+                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} setImposedCity={setImposedCity} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -352,7 +353,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + 1)} />
+                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + 1)} setImposedCity={setImposedCity} />
                         </div>
                     </div>
                 </div>
@@ -452,38 +453,40 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
     }
 
     return (
-        <div id="trip-view">
-            <Background ending={ending}>
-                <Image src={airplane} alt="plane" />
-                <Image src={train} alt="train" />
-                <Image src={bus} alt="bus" />
-                <Image src={boat} alt="boat" />
-                <Image src={tram} alt="tram" />
-            </Background>
-            {!animatingSearch && cities.length > 0 ?
-                <div className="above">
-                    <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
-                    <div className="divider"></div>
-                    <div className="fade-in">
-                        <div id="trips-box">
-                            {renderTrip()}
-                        </div>
+        <ImposedCityContext.Provider value={imposedCity}>
+            <div id="trip-view">
+                <Background ending={ending}>
+                    <Image src={airplane} alt="plane" />
+                    <Image src={train} alt="train" />
+                    <Image src={bus} alt="bus" />
+                    <Image src={boat} alt="boat" />
+                    <Image src={tram} alt="tram" />
+                </Background>
+                {!animatingSearch && cities.length > 0 ?
+                    <div className="above">
+                        <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                         <div className="divider"></div>
-                        <div id="price-totals">
-                            {renderTotals()}
+                        <div className="fade-in">
+                            <div id="trips-box">
+                                {renderTrip()}
+                            </div>
+                            <div className="divider"></div>
+                            <div id="price-totals">
+                                {renderTotals()}
+                            </div>
                         </div>
                     </div>
-                </div>
-                :
-                <div className="floating">
-                    <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
-                        <h1>Explore Your World</h1>
+                    :
+                    <div className="floating">
+                        <div id="alone-text" className={"content " + (animatingSearch ? "fade-out" : "")}>
+                            <h1>Explore Your World</h1>
+                        </div>
+                        <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
+                            <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
+                        </div>
                     </div>
-                    <div id="alone-searchbar" className={animatingSearch ? "animating-search-bar" : ""}>
-                        <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled}/>
-                    </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        </ImposedCityContext.Provider>
     )
 }
