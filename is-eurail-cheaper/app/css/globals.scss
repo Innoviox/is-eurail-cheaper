@@ -110,7 +110,7 @@ body {
 
 .upper:hover {
   //filter: brightness(85%);
-  background: #c7d3dd;
+  //background: #c7d3dd;
   //background: #edf0da;
 }
 
@@ -160,20 +160,6 @@ body {
   border-bottom: 1px solid #bbb;
   padding: 10px;
   margin-bottom: 10px;
-}
-
-.dot {
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  margin-right: 4px;
-}
-
-.city {
-  border-radius: 25px;
-  padding: 0 5px;
-  //border: 1px solid red;
 }
 
 .upper.level {
@@ -361,4 +347,73 @@ body {
 
 .content a {
   color: hsl(229, 53%, 53%) !important;
+}
+
+.dot {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.city {
+  border-radius: 25px;
+  padding-left: 5px;
+  border: 1px solid lightgray;
+  overflow: hidden;
+  //transition: all 0.1s;
+  //border: 1px solid red;
+}
+
+.city:hover {
+  border: 1px solid black;
+  //transition: all 0.1s;
+}
+
+.dot, .city-name {
+  //padding-bottom: 5px;
+}
+
+.edit {
+  width: 22px;
+  height: 18px;
+  //filter: brightness(85%);
+  padding-left: 1px;
+  margin-top: 3px;
+  opacity: 0.2;
+  //transition: all 0.2s;
+}
+
+.bright {
+  opacity: 1 !important;
+  //filter: invert(1);
+  //transition: all 0.1s;
+}
+
+.action-tag:hover {
+  filter: brightness(85%);
+}
+
+.edit-container {
+  margin-left: 4px;
+  //padding-top: 4px;
+  width: 24px;
+  display: inline-block;
+}
+
+.edit-container:hover {
+  background: #293045;
+}
+
+.edit-container:hover .edit {
+  filter: invert(1);
+}
+
+.city-name-input {
+  display: inline-block;
 }

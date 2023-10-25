@@ -37,24 +37,46 @@ export default function Home() {
     let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
     let [meaningless2, setMeaningless2] = useState(0);
 
-    function addCoords(lat: number, lng: number) {
+    let [zoomTo, setZoomTo] = useState(-1);
+
+    function addCoords(lat: number, lng: number, idx: number | undefined = undefined) {
         let newCoords = coords;
-        newCoords.push({'lat': lat, 'lng': lng});
+        if (idx === undefined) {
+            newCoords.push({'lat': lat, 'lng': lng});
+        } else {
+            newCoords[idx] = {'lat': lat, 'lng': lng};
+        }
         setCoords(newCoords);
         setMeaningless(meaningless + 1);
     }
 
-    function addStops(newStops: LatLng[][], set: number = -1) {
+    function addStops(newStops: LatLng[][][], set: number | number[] | undefined = undefined) {
         let newS = stops;
 
-        if (set === -1) {
-            newS.push(newStops);
+        if (set === undefined) {
+            newS.push(newStops[0]);
+        } else if (Array.isArray(set)) {
+            set.forEach((s, idx) => {
+                newS[s] = newStops[idx];
+            });
         } else {
-            newS[set] = newStops;
+            newS[set] = newStops[0];
         }
 
         setStops(newS);
         setMeaningless2(meaningless2 + 1);
+    }
+
+    function removeStops(idx: number) {
+        let newS = stops;
+        newS.splice(idx, 1);
+        setStops(newS);
+        setMeaningless2(meaningless2 + 1);
+
+        let newC = coords;
+        newC.splice(idx, 1);
+        setCoords(newC);
+        setMeaningless(meaningless + 1);
     }
 
     return (
@@ -91,12 +113,13 @@ export default function Home() {
                 <div id="map">
                   <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                   {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless} stops={stops} meaningless2={meaningless2} />
+                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
+                             stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
                   </Wrapper>
                 </div>
                 <div id="trip">
                     <CurrencyContext.Provider value={currency}>
-                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} />
+                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} removeStops={removeStops} />
                     </CurrencyContext.Provider>
                 </div>
             </div>

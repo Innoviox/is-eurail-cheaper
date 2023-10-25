@@ -5,6 +5,27 @@ import {createRoot, Root} from "react-dom/client";
 import colors from "../util/colors.ts";
 import { LatLng } from "../util/types.ts";
 
+function pathToBounds(path: LatLng[]): google.maps.LatLngBounds {
+    let sw = {lat: path[0].lat, lng: path[0].lng};
+    let ne = {lat: path[0].lat, lng: path[0].lng};
+
+    for (let i = 1; i < path.length; i++) {
+        let lat = path[i].lat;
+        let lng = path[i].lng;
+
+        sw.lat = Math.min(sw.lat, lat);
+        sw.lng = Math.min(sw.lng, lng);
+        ne.lat = Math.max(ne.lat, lat);
+        ne.lng = Math.max(ne.lng, lng);
+    }
+
+    let b = new google.maps.LatLngBounds(sw, ne);
+
+    console.log(b);
+
+    return b;
+}
+
 // absolute god https://github.com/leighhalliday/google-maps-threejs/blob/main/pages/markers.js
 function Marker({ map, position, children, onClick }:
                 { map: google.maps.Map | null, position: LatLng, children: ReactElement, onClick: () => void}) {
@@ -72,7 +93,9 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
     let circles = [0]; //, 1, 2, 3];
     let previousPosition: LatLng;
     let path: LatLng[];
-    console.log("map got stops!", stops);
+
+    console.log("GOT STOPS", stops);
+
     return coords.map((position, idx) => {
         if (previousPosition !== null) {
             path = [previousPosition, position];
@@ -92,7 +115,7 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
                         )}): <></> }
                 </div>
             </Marker>
-            { (idx > 0 && stops.length > (idx - 1)) ?
+            { (idx > 0 && stops.length > (idx - 1) && stops[idx - 1].length > 0) ?
                 stops[idx - 1].map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
             : (path ? <Route key={`route-${idx}`} map={map} path={path} color={"#879799"} /> : <></>)}
             </div>
@@ -100,9 +123,23 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
     });
 }
 
-export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2 }:
+function Zoomer({ map, stops, zoomTo, setZoomTo }: {map: google.maps.Map | null, stops: LatLng[][][], zoomTo: number, setZoomTo: (n: number) => void  }) {
+    if (map !== null) {
+        if (zoomTo !== -1) {
+            map.fitBounds(pathToBounds(stops[zoomTo].flat()), 10);
+        }
+
+        map.addListener("zoom_changed", () => {
+            setZoomTo(-1);
+        });
+    }
+
+    return <></>;
+}
+
+export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2, zoomTo, setZoomTo }:
                                 { latitude: number; longitude: number,
-                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number }) {
+                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number, zoomTo: number, setZoomTo: (n: number) => void }) {
     const mapRef = useRef(null);
     const [map, setMap] = React.useState<google.maps.Map>();
 
@@ -128,6 +165,7 @@ export default function MapView({ latitude, longitude, coords, meaningless, stop
         <div>
             <div style={{height: "94vh"}} ref={mapRef} />
             <MarkerWrapper map={map ?? null} coords={coords} stops={stops} />
+            <Zoomer map={map ?? null} stops={stops} zoomTo={zoomTo} setZoomTo={setZoomTo} />
         </div>
     );
 }

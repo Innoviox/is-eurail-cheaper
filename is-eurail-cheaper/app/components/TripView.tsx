@@ -1,7 +1,19 @@
 import React, {Dispatch} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faArrowRightLong, faCity, faDollarSign, faTicket, faRoute, faToggleOn, faToggleOff, faCaretLeft, faCaretRight} from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowRightLong,
+    faCity,
+    faDollarSign,
+    faTicket,
+    faRoute,
+    faToggleOn,
+    faToggleOff,
+    faCaretLeft,
+    faCaretRight,
+    faTrashCan,
+    faMagnifyingGlassPlus, faPlus
+} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
@@ -40,9 +52,12 @@ const sentinel = -100;
 let everAnimated = false;
 
 
-export default function TripView({ addCoords, weeks, addStops }:
-                                 { addCoords: (lat: number, lng: number) => void, weeks: number,
-                                   addStops: (newStops: LatLng[][], set: number) => void }) {
+export default function TripView({ addCoords, weeks, addStops, setZoomTo, removeStops }:
+                                 { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
+                                   weeks: number,
+                                   addStops: (newStops: LatLng[][][], set: number | number[] | undefined) => void,
+                                   setZoomTo: (n: number) => void
+                                   removeStops: (n: number) => void }) {
     const currency = useContext(CurrencyContext);
 
     const city = (idx: number) => cities[idx][0];
@@ -89,13 +104,18 @@ export default function TripView({ addCoords, weeks, addStops }:
 
     // todo do this better
     // set = -1 => set list to price
-    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined = undefined) {
+    // set is list => set each index in set to its corresponding index in price
+    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined | number[] = undefined) {
         let n = [...lst];
+
+        console.log("ADDING", set, price);
 
         if (set === -1) {
             n = price;
         } else if (set === undefined) {
             n.push(price);
+        } else if (Array.isArray(set)) { // https://stackoverflow.com/questions/23130292/test-for-array-of-string-type-in-typescript
+            set.forEach((i, idx) => n[i] = price[idx]);
         } else {
             n[set] = price;
         }
@@ -103,12 +123,30 @@ export default function TripView({ addCoords, weeks, addStops }:
         setlst(n);
     }
 
-    async function onSearchSubmit(formData: FormData, location: Location) {
+    async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
-        let fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
-        let fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
-        let toCity = formData.get("toCity") as string;
-        let toCityId = formData.get("toCityId") as string;
+        let fromCity, fromCityId, toCity, toCityId;
+        toCity = formData.get("toCity") as string;
+        toCityId = formData.get("toCityId") as string;
+        let calc1 = false;
+        if (idx === undefined) {
+            fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
+            fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
+        } else if (idx === 0) {
+            fromCity = formData.get("toCity") as string;
+            fromCityId = formData.get("toCityId") as string;
+            toCity = cities.length === 0 ? undefined : cities[1][0];
+            toCityId = cities.length === 0 ? undefined : cities[1][1];
+            calc1 = true;
+        } else {
+            if (idx === cities.length - 1) {
+                calc1 = true;
+            }
+            fromCity = cities[idx - 1][0];
+            fromCityId =  cities[idx - 1][1];
+        }
+
+        console.log(idx, fromCity, toCity, calc1);
 
         if (toCityId === fromCityId) { // todo give message
             console.log("returning at check");
@@ -122,43 +160,74 @@ export default function TripView({ addCoords, weeks, addStops }:
             everAnimated = true;
         }
 
-        addCoords(location.latitude, location.longitude);
+        addCoords(location.latitude, location.longitude, idx);
+        if (idx === 0) {
+            add(cities, setCities, [fromCity, fromCityId], idx);
+        } else {
+            add(cities, setCities, [toCity, toCityId], idx);
+        }
 
-        add(cities, setCities, [toCity, toCityId]);
+        if (fromCity !== undefined && toCity !== undefined) {
+            if (idx === undefined) {
+                await calculate([idx], [fromCity], [toCity]);
+            } else if (calc1) {
+                await calculate([idx === 0 ? 1 : idx], [fromCity], [toCity]);
+            } else {
+                await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
+            }
+        }
+    }
 
-        if (fromCity !== undefined) {
-            let startLength = db.length; // update this idx when it's done
+    // todo this is a mess
+    async function calculate(idxs: number[] | undefined[], fromCity: string[], toCity: string[]) {
+        console.log("CALCULATING", idxs, fromCity, toCity);
 
-            add(db, setDb, [{ price: sentinel, length: sentinel }]); // start loading wheels
-            add(eurail, setEurail, [{ price: sentinel, length: sentinel }]);
-            add(open, setOpen, true);
-            add(choices, setChoices, "");
+        let sub1 = idxs[0] === undefined ? undefined : idxs.map(i => i! - 1);
+        let startLength = idxs[0] === undefined ? [db.length] : idxs.map(i => i! - 1);
+        let m = (a: any) => idxs[0] === undefined ? a : idxs.map(_ => a); // todo rename
+        add(db, setDb, m([{ price: sentinel, length: sentinel }]), sub1); // start loading wheels
+        add(eurail, setEurail, m([{ price: sentinel, length: sentinel }]), sub1);
+        add(open, setOpen, m(true), sub1);
+        add(choices, setChoices, m(""), sub1);
+        if (sub1 !== undefined) {
+            addStops(m([]), sub1);
+        }
 
-            setSearchEnabled(false);
+        let endpoint_adds: Map<string, Result[][]> = new Map();
+        let stop_adds: LatLng[][][] = [];
+
+        setSearchEnabled(false);
+        for (let i = 0; i < idxs.length; i++) {
             let addedStops = false;
             let d = increaseDate(new Date(), weeks, 8);
-            for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
-                fetch(PRICE_API(key, fromCity, toCity, d), {
+            let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
+                await fetch(PRICE_API(key, fromCity[i], toCity[i], d), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
-                        add(lst, setlst, price, startLength);
+
+                        let n = endpoint_adds.get(key) ?? [];
+                        n.push(price);
+                        endpoint_adds.set(key, n);
 
                         if (!addedStops && price[0].legs !== undefined) {
-                            console.log("adding stops!");
-                            addStops(price[0].legs, -1);
+                            stop_adds[i] = price[0].legs;
                             addedStops = true;
                         }
                     } else {
                         console.log(`response not ok - price ${key}`);
                     }
-                    setSearchEnabled(true); // probably fine? todo
                 });
-            }
-            setSearchEnabled(true);
+            }));
         }
+        setSearchEnabled(true);
+
+        Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
+            add(lst, setlst, endpoint_adds.get(key), startLength);
+        });
+        addStops(stop_adds, startLength);
     }
 
     function sumArr(arr: Result[][]) {
@@ -203,7 +272,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                                                                     setStops={(n) => {
                                                                         let l = lst[idx][n].legs;
                                                                         if (l !== undefined) {
-                                                                            addStops(l, idx);
+                                                                            addStops([l], idx);
                                                                         }
                                                                     }}/>
                                                         }
@@ -220,7 +289,7 @@ export default function TripView({ addCoords, weeks, addStops }:
             );
         } else if (idx === cities.length - 1) {
             return (
-                <div className="level">
+                <div className="level prices-container">
                     <div className="level-left">
                         <div className="level-item">
                             <div>
@@ -229,13 +298,28 @@ export default function TripView({ addCoords, weeks, addStops }:
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} color={colors[idx]} />
+                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)}/>
                             </div>
                         </div>
                     </div>
                 </div>
             )
         }
+    }
+
+    function deleteRow(idx: number) {
+        [
+            {lst: cities, setlst: setCities},
+            {lst: db, setlst: setDb},
+            {lst: eurail, setlst: setEurail},
+            {lst: open, setlst: setOpen},
+            {lst: choices, setlst: setChoices}
+        ].forEach((i: {lst: any[], setlst: Dispatch<any>}) => {
+            let newlst = i.lst.filter((_, i) => i !== idx);
+            i.setlst(newlst);
+        });
+
+        removeStops(idx);
     }
 
     function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
@@ -249,7 +333,7 @@ export default function TripView({ addCoords, weeks, addStops }:
 
     function renderUpper(idx: number) {
         return  (
-            <div className="upper level" onClick={() => toggleOpen(idx)}>
+            <div className="upper level"> {/* onClick={() => toggleOpen(idx)}> */}
                 <div className="level-left">
                     <div className="level-item">
                         <div>
@@ -258,7 +342,7 @@ export default function TripView({ addCoords, weeks, addStops }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} color={colors[idx]} />
+                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} />
                         </div>
                     </div>
                     <div className="level-item">
@@ -268,7 +352,17 @@ export default function TripView({ addCoords, weeks, addStops }:
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} color={colors[idx + 1]} />
+                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + 1)} />
+                        </div>
+                    </div>
+                </div>
+                <div className="level-right">
+                    <div className="tags">
+                        {/*<div className="tag action-tag is-danger" onClick={() => deleteRow(idx)}>*/}
+                        {/*    <FontAwesomeIcon icon={faTrashCan} />*/}
+                        {/*</div>*/}
+                        <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
+                            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>
                     </div>
                 </div>
