@@ -135,8 +135,8 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
         } else if (idx === 0) {
             fromCity = formData.get("toCity") as string;
             fromCityId = formData.get("toCityId") as string;
-            toCity = cities.length === 0 ? undefined : cities[1][0];
-            toCityId = cities.length === 0 ? undefined : cities[1][1];
+            toCity = cities.length === 1 ? undefined : cities[1][0];
+            toCityId = cities.length === 1 ? undefined : cities[1][1];
             calc1 = true;
         } else {
             if (idx === cities.length - 1) {
