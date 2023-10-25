@@ -174,7 +174,9 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
                         if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
+                            // let l = price[0].legs; // typescript is dumb
                             addStops(price[0].legs, sub1);
+                            // setTimeout(() => addStops(l, sub1), 1000);
                             addedStops = true;
                         }
                     } else {
