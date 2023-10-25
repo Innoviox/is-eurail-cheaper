@@ -1,6 +1,15 @@
 @import '../../node_modules/bulma/bulma';
 
-@import 'animation';
+@import 'background';
+@import 'city';
+@import 'mapview';
+@import 'modal';
+@import 'page';
+@import 'picker';
+@import 'pricedisplay';
+@import 'searchbar';
+@import 'searchbardropdown';
+@import 'tripview';
 
 //@import '../node_modules/@fortawesome/fontawesome-svg-core/styles.css';
 
@@ -30,240 +39,16 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  //height: 100%;
-  //margin: 0;
 }
 
-#navbar {
-  height: 6vh;
-}
-
-#map {
-  flex: 7;
-}
-
-#trip {
-  flex: 3;
-  box-shadow: -20px 6px 10px 5px rgba(0, 0, 0, 0.1215686275);
-  z-index: 3;
-  position: relative;
-}
-
-#container {
-  display: flex;
-}
-
-.search-block {
-  display: block;
-  vertical-align: middle;
-}
-
-.closed-trip {
-  border-radius: 25px;
-  border: 2px solid #73AD21;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-#trips-box {
-  //height: 80%;
-  //border: 2px solid #7321AD;
-  padding: 10px;
-  border-radius: 25px;
-}
-
-#trip-view {
-  background: white;
-  height: 100%;
-  //padding: 10px;
-  position: relative
-}
-
-.above {
-  padding: 10px;
-}
-
-.floating {
-  padding: 10px;
-}
-
-.open-trip {
-  border-radius: 25px;
-  border: 1px solid #8F1136;
-  height: 100%;
-  padding: 10px;
-}
-
-.trip-title-breadcrumb {
-  margin-bottom: 0 !important;
-}
-
-.logo {
-  width: 30px;
-  height: 30px;
-}
-
-.upper {
-  //background: #e8eef2;
-  padding: 1px;
-}
-
-.upper:hover {
-  //filter: brightness(85%);
-  //background: #c7d3dd;
-  //background: #edf0da;
-}
-
-.upper:hover + .lower {
-  //filter: brightness(95%);
-  //background: #ddeef0;
-  //background: #edf0da;
-}
-
-.upper::before {
-
-}
-
-.lower .level, .upper.level, #total .level, #total .content {
-  margin-bottom: 0 !important;
-}
-
-
-
-.lower-inner {
-  border-left: 2px solid gray;
-  margin-left: 10px;
-  padding-left: 10px;
-}
-
-.lower-closed {
-  max-height: 0;
-}
-
-.lower {
-  overflow: hidden;
-  height: auto;
-}
 
 .first {
   position: relative;
 }
 
-.vl {
-  border-left: 2px solid gray;
-  //height: 100%;
-  height: 40px;
-  margin-left: 10px;
-}
-
-.divider {
-  border-bottom: 1px solid #bbb;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.upper.level {
-  //padding: 10px 0 10px 0;
-}
-
-//.price-grouping {
-//  border-radius: 10px;
-//  padding: 3px;
-//}
-//
-//.price-grouping:hover {
-//  border: 1px solid dodgerblue;
-//}
-
-#canvas {
-  //z-index: -1;
-  //width: 450px;
-  //height: 700px;
-  width: 100%;
-  height: 100%;
-  //object-fit: fill;
-  position: absolute;
-  //top: 5%;
-  //left: 50%;
-}
-
-// https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
-#alone-text {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 1;
-  width: 295px;
-}
-
-#alone-searchbar {
-  position: absolute;
-  top: 30%;
-  //left: 23%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 1;
-  width: 295px;
-}
-
-#search-form {
-  width: 100%;
-}
-
-//#search-form {
-//  width: 80%;
-//}
-
-.price-picker:hover {
-  filter: brightness(85%);
-}
-
-.on-top {
-  z-index: 1;
-}
-
-.price {
-  width: 41px;
-}
 
 .length {
   width: 51px;
-}
-
-.is-loading {
-  z-index: 0;
-}
-
-// https://www.coding-dude.com/wp/css/css-star/#:~:text=To%20make%20this%204%20points,and%20the%20other%20rotates%20%2D45deg%20.
-.cheapest:before{
-  content: "";
-  position: absolute;
-  background: white;
-  width: 5px;
-  height: 5px;
-  transform: rotate(-45deg)  skewX(22.5deg) skewY(22.5deg);
-  top: 4px;
-  left: 30px;
-}
-
-.cheapest:after{
-  content: "";
-  position: absolute;
-  background: white;
-  width: 5px;
-  height: 5px;
-  transform: rotate(45deg) skewX(22.5deg) skewY(22.5deg);
-  top: 4px;
-  left: 30px;
-}
-
-.cheapest-time:before {
-  left: 101px !important;
-}
-
-.cheapest-time:after {
-  left: 101px !important;
 }
 
 // based on https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_bottom
@@ -303,117 +88,4 @@ body {
 
 .has-tooltip-bottom:hover .tooltip {
   visibility: visible;
-}
-
-.above {
-  z-index: 2;
-  position: relative;
-}
-
-#floating {
-
-}
-
-.modal {
-  z-index: 31; // navbar is 30 for some reason
-}
-
-.background-white {
-    background: white;
-}
-
-@keyframes fade-in-settings {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.4;
-  }
-}
-
-.settings-background {
-  background-color: #bbbbbb;
-  opacity: 0.4;
-  animation: fade-in-settings 0.2s;
-}
-
-.settings-content {
-  padding: 10px;
-}
-
-#weeks {
-  margin-top: 10px;
-}
-
-.content a {
-  color: hsl(229, 53%, 53%) !important;
-}
-
-.dot {
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  margin-right: 4px;
-}
-
-.inline-block {
-  display: inline-block;
-}
-
-.city {
-  border-radius: 25px;
-  padding-left: 5px;
-  border: 1px solid lightgray;
-  overflow: hidden;
-  //transition: all 0.1s;
-  //border: 1px solid red;
-}
-
-.city:hover {
-  border: 1px solid black;
-  //transition: all 0.1s;
-}
-
-.dot, .city-name {
-  //padding-bottom: 5px;
-}
-
-.edit {
-  width: 22px;
-  height: 18px;
-  //filter: brightness(85%);
-  padding-left: 1px;
-  margin-top: 3px;
-  opacity: 0.2;
-  //transition: all 0.2s;
-}
-
-.bright {
-  opacity: 1 !important;
-  //filter: invert(1);
-  //transition: all 0.1s;
-}
-
-.action-tag:hover {
-  filter: brightness(85%);
-}
-
-.edit-container {
-  margin-left: 4px;
-  //padding-top: 4px;
-  width: 24px;
-  display: inline-block;
-}
-
-.edit-container:hover {
-  background: #293045;
-}
-
-.edit-container:hover .edit {
-  filter: invert(1);
-}
-
-.city-name-input {
-  display: inline-block;
 }

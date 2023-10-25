@@ -1,0 +1,120 @@
+.price-picker:hover {
+  filter: brightness(85%);
+}
+
+.on-top {
+  z-index: 1;
+}
+
+.price {
+  width: 41px;
+}
+
+// https://www.coding-dude.com/wp/css/css-star/#:~:text=To%20make%20this%204%20points,and%20the%20other%20rotates%20%2D45deg%20.
+.cheapest:before{
+  content: "";
+  position: absolute;
+  background: white;
+  width: 5px;
+  height: 5px;
+  transform: rotate(-45deg)  skewX(22.5deg) skewY(22.5deg);
+  top: 4px;
+  left: 30px;
+}
+
+.cheapest:after{
+  content: "";
+  position: absolute;
+  background: white;
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg) skewX(22.5deg) skewY(22.5deg);
+  top: 4px;
+  left: 30px;
+}
+
+.cheapest-time:before {
+  left: 101px !important;
+}
+
+.cheapest-time:after {
+  left: 101px !important;
+}
+
+@keyframes hinge-from-front {
+  from {
+    transform: rotateX(90deg);
+    animation-timing-function: linear;
+  }
+
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes hinge-from-front-last {
+  from {
+    transform: rotateX(90deg);
+    animation-timing-function: ease-in;
+  }
+
+  60% {
+    transform: rotateX(-90deg);
+    animation-timing-function: ease-out;
+  }
+
+  80% {
+    transform: rotateX(40deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+.hinge-from-front {
+  animation-name: hinge-from-front;
+}
+
+.hinge-from-front-last {
+  animation-name: hinge-from-front-last;
+  animation-duration: 1s !important;
+}
+
+.flip {
+  backface-visibility: visible !important;
+  transform-origin: top;
+  animation-direction: normal;
+}
+
+.backwards {
+  animation-direction: reverse;
+}
+
+.animated {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+
+.flip-parent {
+  line-height: 0;
+  //display: flex;
+  //flex-direction: column;
+  height: 24px;
+  overflow: hidden;
+}
+
+.tags.price-picker, .tag.price-picker-tag {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.price-picker {
+  //width: 150px;
+  position: absolute;
+}
+
+.none {
+  display: none;
+}
