@@ -52,11 +52,12 @@ const sentinel = -100;
 let everAnimated = false;
 
 
-export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
+export default function TripView({ addCoords, weeks, addStops, setZoomTo, removeStops }:
                                  { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
                                    weeks: number,
                                    addStops: (newStops: LatLng[][][], set: number | number[] | undefined) => void,
-                                   setZoomTo: (n: number) => void}) {
+                                   setZoomTo: (n: number) => void
+                                   removeStops: (n: number) => void }) {
     const currency = useContext(CurrencyContext);
 
     const city = (idx: number) => cities[idx][0];
@@ -124,16 +125,28 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
     async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
-        let fromCity, fromCityId;
+        let fromCity, fromCityId, toCity, toCityId;
+        toCity = formData.get("toCity") as string;
+        toCityId = formData.get("toCityId") as string;
+        let calc1 = false;
         if (idx === undefined) {
             fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
             fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
+        } else if (idx === 0) {
+            fromCity = formData.get("toCity") as string;
+            fromCityId = formData.get("toCityId") as string;
+            toCity = cities.length === 0 ? undefined : cities[1][0];
+            toCityId = cities.length === 0 ? undefined : cities[1][1];
+            calc1 = true;
         } else {
-            fromCity = idx === 0 ? undefined : cities[idx - 1][0];
-            fromCityId = idx === 0 ? undefined : cities[idx - 1][1];
+            if (idx === cities.length - 1) {
+                calc1 = true;
+            }
+            fromCity = cities[idx - 1][0];
+            fromCityId =  cities[idx - 1][1];
         }
-        let toCity = formData.get("toCity") as string;
-        let toCityId = formData.get("toCityId") as string;
+
+        console.log(idx, fromCity, toCity, calc1);
 
         if (toCityId === fromCityId) { // todo give message
             console.log("returning at check");
@@ -148,10 +161,19 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         }
 
         addCoords(location.latitude, location.longitude, idx);
-        add(cities, setCities, [toCity, toCityId], idx);
+        if (idx === 0) {
+            add(cities, setCities, [fromCity, fromCityId], idx);
+        } else {
+            add(cities, setCities, [toCity, toCityId], idx);
+        }
 
-        if (fromCity !== undefined) {
+        // todo clean
+        if (fromCity !== undefined && toCity !== undefined) {
             if (idx === undefined) {
+                await calculate([idx], [fromCity], [toCity]);
+            } else if (calc1 && idx === 0) {
+                await calculate([idx + 1], [fromCity], [toCity]);
+            } else if (calc1) {
                 await calculate([idx], [fromCity], [toCity]);
             } else {
                 await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
@@ -288,6 +310,21 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         }
     }
 
+    function deleteRow(idx: number) {
+        [
+            {lst: cities, setlst: setCities},
+            {lst: db, setlst: setDb},
+            {lst: eurail, setlst: setEurail},
+            {lst: open, setlst: setOpen},
+            {lst: choices, setlst: setChoices}
+        ].forEach((i: {lst: any[], setlst: Dispatch<any>}) => {
+            let newlst = i.lst.filter((_, i) => i !== idx);
+            i.setlst(newlst);
+        });
+
+        removeStops(idx);
+    }
+
     function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
         let lst = [...data[idx]];
         let temp = lst[n]; // store target
@@ -324,9 +361,9 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                 </div>
                 <div className="level-right">
                     <div className="tags">
-                        <div className="tag action-tag is-danger">
-                            <FontAwesomeIcon icon={faTrashCan} />
-                        </div>
+                        {/*<div className="tag action-tag is-danger" onClick={() => deleteRow(idx)}>*/}
+                        {/*    <FontAwesomeIcon icon={faTrashCan} />*/}
+                        {/*</div>*/}
                         <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
                             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>

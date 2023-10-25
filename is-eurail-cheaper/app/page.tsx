@@ -67,6 +67,18 @@ export default function Home() {
         setMeaningless2(meaningless2 + 1);
     }
 
+    function removeStops(idx: number) {
+        let newS = stops;
+        newS.splice(idx, 1);
+        setStops(newS);
+        setMeaningless2(meaningless2 + 1);
+
+        let newC = coords;
+        newC.splice(idx, 1);
+        setCoords(newC);
+        setMeaningless(meaningless + 1);
+    }
+
     return (
         <main id="main">
             <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
@@ -107,7 +119,7 @@ export default function Home() {
                 </div>
                 <div id="trip">
                     <CurrencyContext.Provider value={currency}>
-                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} />
+                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} removeStops={removeStops} />
                     </CurrencyContext.Provider>
                 </div>
             </div>
