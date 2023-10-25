@@ -107,6 +107,8 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
     function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined | number[] = undefined) {
         let n = [...lst];
 
+        console.log("ADDING", set, price);
+
         if (set === -1) {
             n = price;
         } else if (set === undefined) {
@@ -164,14 +166,14 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         console.log("CALCULATING", idxs, fromCity, toCity);
 
         let sub1 = idxs[0] === undefined ? undefined : idxs.map(i => i! - 1);
-        let startLength = idxs[0] === undefined ? db.length : idxs.map(i => i! - 1);
-        let sen = idxs.map(_ => [{ price: sentinel, length: sentinel }])
-        add(db, setDb, sen, sub1); // start loading wheels
-        add(eurail, setEurail, sen, sub1);
-        add(open, setOpen, idxs.map(_ => true), sub1);
-        add(choices, setChoices, idxs.map(_ => ""), sub1);
+        let startLength = idxs[0] === undefined ? [db.length] : idxs.map(i => i! - 1);
+        let m = (a: any) => idxs[0] === undefined ? a : idxs.map(_ => a); // todo rename
+        add(db, setDb, m([{ price: sentinel, length: sentinel }]), sub1); // start loading wheels
+        add(eurail, setEurail, m([{ price: sentinel, length: sentinel }]), sub1);
+        add(open, setOpen, m(true), sub1);
+        add(choices, setChoices, m(""), sub1);
         if (sub1 !== undefined) {
-            addStops(idxs.map(_ => []), sub1);
+            addStops(m([]), sub1);
         }
 
         let endpoint_adds: Result[][][] = Object.entries(endpoints).map(_ => []);
@@ -186,7 +188,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             let addedStops = false;
             let d = increaseDate(new Date(), weeks, 8);
             let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-                fetch(PRICE_API(key, fromCity, toCity, d), {
+                await fetch(PRICE_API(key, fromCity, toCity, d), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
