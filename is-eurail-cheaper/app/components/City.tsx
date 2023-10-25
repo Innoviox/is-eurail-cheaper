@@ -90,11 +90,11 @@ export default function City({ name, color, onSearchSubmit, setImposedCity, dele
                     {renderName()}
                 </div>
 
-                <div className="edit-container" onClick={startEditing}>
-                    <Image src={edit} alt="edit" className={"edit " + (hovering ? "bright": "")} />
+                <div className="action-container edit-container" onClick={startEditing}>
+                    <Image src={edit} alt="edit" className={"action-icon edit " + (hovering ? "bright": "")} />
                 </div>
-                <div className="trash-container" onClick={deleteCity}>
-                    <FontAwesomeIcon className={"trash " + (hovering ? "bright": "")} icon={faTrashCan} />
+                <div className="action-container trash-container" onClick={deleteCity}>
+                    <FontAwesomeIcon className={"action-icon trash " + (hovering ? "bright": "")} icon={faTrashCan} />
                 </div>
             </div>
             {editing ? <SearchBarDropDown ref={dropdownRef} showDropdown={showDropdown} setShowDropdown={setShowDropdown} onSearchSubmit={onSearchSubmitWrapper} setInputVal={setInputVal} />
