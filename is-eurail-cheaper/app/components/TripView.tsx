@@ -155,13 +155,11 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                 await calculate([idx], [fromCity], [toCity]);
             } else {
                 await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
-                // if (idx < cities.length - 1) {
-                //     setTimeout(() => calculate(idx + 1, toCity, cities[idx + 1][0]), 1000);
-                // }
             }
         }
     }
 
+    // todo this is a mess
     async function calculate(idxs: number[] | undefined[], fromCity: string[], toCity: string[]) {
         console.log("CALCULATING", idxs, fromCity, toCity);
 
@@ -176,16 +174,11 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             addStops(m([]), sub1);
         }
 
-        // let endpoint_adds: Result[][][] = Object.entries(endpoints).map(_ => []);
-        // let stop_adds: LatLng[][][] = idxs.map(_ => []);
         let endpoint_adds: Map<string, Result[][]> = new Map();
         let stop_adds: LatLng[][][] = [];
 
         setSearchEnabled(false);
         for (let i = 0; i < idxs.length; i++) {
-            let idx = idxs[i];
-            // let startLength = idx === undefined ? db.length : idx - 1; // update this idx when it's done
-            // let sub1 = idx === undefined ? idx : idx - 1;
             let addedStops = false;
             let d = increaseDate(new Date(), weeks, 8);
             let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
@@ -195,7 +188,6 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     if (response.ok) {
                         let data = await response.json();
                         let price = extractPrice(data.journeys);
-                        console.log("GOT DATA FOR", key, i, price);
 
                         let n = endpoint_adds.get(key) ?? [];
                         n.push(price);
@@ -210,18 +202,12 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     }
                 });
             }));
-            console.log("PROMISE.ALL RESOLVED");
         }
         setSearchEnabled(true);
 
-        console.log(endpoint_adds, stop_adds);
-
-        // todo this is a mess
         Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-            console.log("adding various things!", endpoint_adds.get(key), sub1, startLength);
             add(lst, setlst, endpoint_adds.get(key), startLength);
         });
-        console.log("adding STOPS", stop_adds);
         addStops(stop_adds, startLength);
     }
 
