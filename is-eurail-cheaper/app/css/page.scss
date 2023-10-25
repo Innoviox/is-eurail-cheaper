@@ -1,0 +1,18 @@
+#navbar {
+  height: 6vh;
+}
+
+#map {
+  flex: 7;
+}
+
+#trip {
+  flex: 3;
+  box-shadow: -20px 6px 10px 5px rgba(0, 0, 0, 0.1215686275);
+  z-index: 3;
+  position: relative;
+}
+
+#container {
+  display: flex;
+}

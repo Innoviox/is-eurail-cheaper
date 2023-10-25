@@ -1,0 +1,38 @@
+.modal {
+  z-index: 31; // navbar is 30 for some reason
+}
+
+.background-white {
+  background: white;
+}
+
+@keyframes fade-in-settings {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+
+.settings-background {
+  background-color: #bbbbbb;
+  opacity: 0.4;
+  animation: fade-in-settings 0.2s;
+}
+
+.settings-content {
+  padding: 10px;
+}
+
+#weeks {
+  margin-top: 10px;
+}
+
+.content a {
+  color: hsl(229, 53%, 53%) !important;
+}
+
+.settings {
+  animation: fade-in 0.2s;
+}

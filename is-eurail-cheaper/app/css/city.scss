@@ -1,0 +1,54 @@
+.dot {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.city {
+  border-radius: 25px;
+  padding-left: 5px;
+  border: 1px solid lightgray;
+  overflow: hidden;
+  //transition: all 0.1s;
+  //border: 1px solid red;
+}
+
+.city:hover {
+  border: 1px solid black;
+}
+
+.edit {
+  width: 22px;
+  height: 18px;
+  padding-left: 1px;
+  margin-top: 3px;
+  opacity: 0.2;
+}
+
+.bright {
+  opacity: 1 !important;
+}
+
+.edit-container {
+  margin-left: 4px;
+  width: 24px;
+  display: inline-block;
+}
+
+.edit-container:hover {
+  background: #293045;
+}
+
+.edit-container:hover .edit {
+  filter: invert(1);
+}
+
+.city-name-input {
+  display: inline-block;
+}

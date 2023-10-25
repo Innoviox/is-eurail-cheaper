@@ -1,0 +1,123 @@
+#trips-box {
+  padding: 10px;
+  border-radius: 25px;
+}
+
+#trip-view {
+  background: white;
+  height: 100%;
+  position: relative
+}
+
+.above {
+  padding: 10px;
+  z-index: 2;
+  position: relative;
+}
+
+.floating {
+  padding: 10px;
+}
+
+.upper {
+  padding: 1px;
+}
+
+.lower .level, .upper.level, #total .level, #total .content {
+  margin-bottom: 0 !important;
+}
+
+.lower-inner {
+  border-left: 2px solid gray;
+  margin-left: 10px;
+  padding-left: 10px;
+}
+
+.lower-closed {
+  max-height: 0;
+}
+
+.lower {
+  overflow: hidden;
+  height: auto;
+}
+
+.divider {
+  border-bottom: 1px solid #bbb;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+// https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
+#alone-text {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+  width: 295px;
+}
+
+#alone-searchbar {
+  position: absolute;
+  top: 30%;
+  //left: 23%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+  width: 295px;
+}
+
+.action-tag:hover {
+  filter: brightness(85%);
+}
+
+.is-loading {
+  z-index: 0;
+}
+
+@keyframes lower-open {
+  from {
+    max-height: 0;
+  }
+
+  to {
+    max-height: 100px !important;
+  }
+}
+
+.lower {
+  transition: max-height 0.3s;
+}
+
+.lower-open {
+  animation: lower-open 0.3s;
+  max-height: 100px;
+}
+
+.animating-search-bar {
+  position: absolute;
+  top: 10px !important; // todo variable
+  left: 10px !important;
+  width: 520px !important; // todo ???
+  transform: none !important;
+  transition: all 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.5s;
+}
+
+.fade-out {
+  opacity: 0;
+  animation: fade-in reverse 0.2s;
+}
