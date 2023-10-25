@@ -114,6 +114,8 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             n[set] = price;
         }
 
+        console.log(n);
+
         setlst(n);
     }
 
@@ -146,12 +148,17 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         add(cities, setCities, [toCity, toCityId], idx);
 
         if (fromCity !== undefined) {
-            let startLength = idx === undefined ? db.length : idx; // update this idx when it's done
+            let startLength = idx === undefined ? db.length : idx - 1; // update this idx when it's done
+            let sub1 = idx === undefined ? idx : idx - 1;
 
-            add(db, setDb, [{ price: sentinel, length: sentinel }], idx); // start loading wheels
-            add(eurail, setEurail, [{ price: sentinel, length: sentinel }], idx);
-            add(open, setOpen, true, idx);
-            add(choices, setChoices, "", idx);
+            add(db, setDb, [{ price: sentinel, length: sentinel }], sub1); // start loading wheels
+            add(eurail, setEurail, [{ price: sentinel, length: sentinel }], sub1);
+            add(open, setOpen, true, sub1);
+            add(choices, setChoices, "", sub1);
+
+            if (idx !== undefined) {
+                addStops([], sub1);
+            }
 
             setSearchEnabled(false);
             let addedStops = false;
@@ -167,7 +174,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
                         if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
-                            addStops(price[0].legs, idx);
+                            addStops(price[0].legs, sub1);
                             addedStops = true;
                         }
                     } else {
