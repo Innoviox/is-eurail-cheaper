@@ -124,6 +124,11 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
         setlst(n);
     }
 
+    function remove(lst: any[], setlst: Dispatch<any>, remove: number) {
+        let newlst = lst.filter((_: any, i: number) => i !== remove);
+        setlst(newlst);
+    }
+
     async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
         let fromCity, fromCityId, toCity, toCityId;
@@ -299,7 +304,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                         </div>
                         <div className="level-item">
                             <div>
-                                <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} setImposedCity={setImposedCity} />
+                                {makeCity(idx)}
                             </div>
                         </div>
                     </div>
@@ -308,19 +313,37 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
         }
     }
 
-    function deleteRow(idx: number) {
-        [
-            {lst: cities, setlst: setCities},
-            {lst: db, setlst: setDb},
-            {lst: eurail, setlst: setEurail},
-            {lst: open, setlst: setOpen},
-            {lst: choices, setlst: setChoices}
-        ].forEach((i: {lst: any[], setlst: Dispatch<any>}) => {
-            let newlst = i.lst.filter((_, i) => i !== idx);
-            i.setlst(newlst);
-        });
+    function makeCity(idx: number) {
+        return <City name={city(idx)} color={colors[idx]}
+                     onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)}
+                     setImposedCity={setImposedCity}
+                     deleteCity={() => deleteRow(idx)} />
+    }
 
-        removeStops(idx);
+    async function deleteRow(idx: number) {
+        console.log("DELETING", idx);
+        // todo popup
+        function doRemove(citiesIdx: number, otherIdx: number) {
+            remove(cities, setCities, citiesIdx);
+            remove(db, setDb, otherIdx);
+            remove(eurail, setEurail, otherIdx);
+            remove(open, setOpen, otherIdx);
+            remove(choices, setChoices, otherIdx);
+            remove(stops, setStops, otherIdx);
+            remove(coords, setCoords, citiesIdx);
+        }
+
+        if (idx === 0) {
+            doRemove(0, 0);
+        } else {
+            // calculate before remove (since cities.length may or may not change after the set() call)
+            let isLast = idx === cities.length - 1;
+            doRemove(idx, idx - 1);
+
+            if (!isLast) {
+                await calculate([idx - 1], [cities[idx - 1][0]], [cities[idx][0]]);
+            }
+        }
     }
 
     function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
@@ -343,7 +366,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx)} color={colors[idx]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)} setImposedCity={setImposedCity} />
+                            {makeCity(idx)}
                         </div>
                     </div>
                     <div className="level-item">
@@ -353,7 +376,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
                     </div>
                     <div className="level-item">
                         <div>
-                            <City name={city(idx + 1)} color={colors[idx + 1]} onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + 1)} setImposedCity={setImposedCity} />
+                            {makeCity(idx + 1)}
                         </div>
                     </div>
                 </div>
