@@ -167,14 +167,11 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
             add(cities, setCities, [toCity, toCityId], idx);
         }
 
-        // todo clean
         if (fromCity !== undefined && toCity !== undefined) {
             if (idx === undefined) {
                 await calculate([idx], [fromCity], [toCity]);
-            } else if (calc1 && idx === 0) {
-                await calculate([idx + 1], [fromCity], [toCity]);
             } else if (calc1) {
-                await calculate([idx], [fromCity], [toCity]);
+                await calculate([idx === 0 ? 1 : idx], [fromCity], [toCity]);
             } else {
                 await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
             }
