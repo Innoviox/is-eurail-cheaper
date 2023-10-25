@@ -50,13 +50,17 @@ export default function Home() {
         setMeaningless(meaningless + 1);
     }
 
-    function addStops(newStops: LatLng[][], set: number | undefined = undefined) {
+    function addStops(newStops: LatLng[][][], set: number | number[] | undefined = undefined) {
         let newS = stops;
 
         if (set === undefined) {
-            newS.push(newStops);
+            newS.push(newStops[0]);
+        } else if (Array.isArray(set)) {
+            set.forEach((s) => {
+                newS[s] = newStops[s];
+            });
         } else {
-            newS[set] = newStops;
+            newS[set] = newStops[0];
         }
 
         setStops(newS);

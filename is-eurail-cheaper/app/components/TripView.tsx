@@ -55,7 +55,7 @@ let everAnimated = false;
 export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                                  { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
                                    weeks: number,
-                                   addStops: (newStops: LatLng[][], set: number | undefined) => void,
+                                   addStops: (newStops: LatLng[][][], set: number | number[] | undefined) => void,
                                    setZoomTo: (n: number) => void}) {
     const currency = useContext(CurrencyContext);
 
@@ -103,18 +103,19 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
 
     // todo do this better
     // set = -1 => set list to price
-    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined = undefined) {
+    // set is list => set each index in set to its corresponding index in price
+    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined | number[] = undefined) {
         let n = [...lst];
 
         if (set === -1) {
             n = price;
         } else if (set === undefined) {
             n.push(price);
+        } else if (Array.isArray(set)) { // https://stackoverflow.com/questions/23130292/test-for-array-of-string-type-in-typescript
+            set.forEach(i => n[i] = price[i]);
         } else {
             n[set] = price;
         }
-
-        console.log(n);
 
         setlst(n);
     }
@@ -148,34 +149,58 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
         add(cities, setCities, [toCity, toCityId], idx);
 
         if (fromCity !== undefined) {
-            let startLength = idx === undefined ? db.length : idx - 1; // update this idx when it's done
-            let sub1 = idx === undefined ? idx : idx - 1;
-
-            add(db, setDb, [{ price: sentinel, length: sentinel }], sub1); // start loading wheels
-            add(eurail, setEurail, [{ price: sentinel, length: sentinel }], sub1);
-            add(open, setOpen, true, sub1);
-            add(choices, setChoices, "", sub1);
-
-            if (idx !== undefined) {
-                addStops([], sub1);
+            if (idx === undefined) {
+                await calculate([idx], fromCity, toCity);
+            } else {
+                await calculate([idx, idx + 1], fromCity, toCity);
+                // if (idx < cities.length - 1) {
+                //     setTimeout(() => calculate(idx + 1, toCity, cities[idx + 1][0]), 1000);
+                // }
             }
+        }
+    }
+
+    async function calculate(idxs: number[] | undefined[], fromCity: string, toCity: string) {
+        console.log("CALCULATING", idxs, fromCity, toCity);
+
+        let sub1 = idxs[0] === undefined ? undefined : idxs.map(i => i! - 1);
+        let startLength = idxs[0] === undefined ? db.length : idxs.map(i => i! - 1);
+        let sen = idxs.map(_ => [{ price: sentinel, length: sentinel }])
+        add(db, setDb, sen, sub1); // start loading wheels
+        add(eurail, setEurail, sen, sub1);
+        add(open, setOpen, idxs.map(_ => true), sub1);
+        add(choices, setChoices, idxs.map(_ => ""), sub1);
+        if (sub1 !== undefined) {
+            addStops(idxs.map(_ => []), sub1);
+        }
+
+        let endpoint_adds: Result[][][] = Object.entries(endpoints).map(_ => []);
+        let stop_adds: LatLng[][][] = idxs.map(_ => []);
+
+        for (let i = 0; i < idxs.length; i++) {
+            let idx = idxs[i];
+            // let startLength = idx === undefined ? db.length : idx - 1; // update this idx when it's done
+            // let sub1 = idx === undefined ? idx : idx - 1;
 
             setSearchEnabled(false);
             let addedStops = false;
             let d = increaseDate(new Date(), weeks, 8);
-            for (const [key, [lst, setlst, _img]] of Object.entries(endpoints)) {
+            let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
                 fetch(PRICE_API(key, fromCity, toCity, d), {
                     method: 'GET'
                 }).then(async response => {
                     if (response.ok) {
                         let data = await response.json();
+                        console.log("GOT DATA FOR", key, i);
                         let price = extractPrice(data.journeys);
-                        add(lst, setlst, price, startLength);
+                        // add(lst, setlst, price, startLength);
+                        endpoint_adds[endpoint_num].push(price);
 
                         if (!addedStops && price[0].legs !== undefined) {
                             console.log("adding stops!");
                             // let l = price[0].legs; // typescript is dumb
-                            addStops(price[0].legs, sub1);
+                            // addStops(price[0].legs, sub1);
+                            stop_adds[i] = price[0].legs;
                             // setTimeout(() => addStops(l, sub1), 1000);
                             addedStops = true;
                         }
@@ -184,9 +209,20 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                     }
                     setSearchEnabled(true); // probably fine? todo
                 });
-            }
+            }));
+            console.log("PROMISE.ALL RESOLVED");
+
             setSearchEnabled(true);
         }
+
+        console.log(endpoint_adds, stop_adds);
+
+        // todo this is a mess
+        Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
+            console.log("adding various things!", endpoint_adds[endpoint_num].length, sub1, startLength);
+            add(lst, setlst, endpoint_adds[endpoint_num], startLength);
+            addStops(stop_adds, startLength);
+        });
     }
 
     function sumArr(arr: Result[][]) {
@@ -231,7 +267,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
                                                                     setStops={(n) => {
                                                                         let l = lst[idx][n].legs;
                                                                         if (l !== undefined) {
-                                                                            addStops(l, idx);
+                                                                            addStops([l], idx);
                                                                         }
                                                                     }}/>
                                                         }
