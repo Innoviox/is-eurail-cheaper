@@ -14,13 +14,15 @@ import edit from "../img/edit.png";
 import {useOuterClick} from "@/app/util/outerclick.ts";
 import SearchBarDropDown, {DropdownHandle} from "./SearchBarDropDown.tsx";
 import {Location} from "@/app/util/types.ts";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 
 export const ImposedCityContext = createContext<string[]>([]);
 
-export default function City({ name, color, onSearchSubmit, setImposedCity }:
+export default function City({ name, color, onSearchSubmit, setImposedCity, deleteCity }:
                              { name: string, color: string,
                                onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>,
-                               setImposedCity: Dispatch<SetStateAction<string[]>> }) {
+                               setImposedCity: Dispatch<SetStateAction<string[]>>, deleteCity: () => void }) {
     const imposedCity = useContext(ImposedCityContext);
 
     // search bar drop down boilerplate
@@ -90,6 +92,9 @@ export default function City({ name, color, onSearchSubmit, setImposedCity }:
 
                 <div className="edit-container" onClick={startEditing}>
                     <Image src={edit} alt="edit" className={"edit " + (hovering ? "bright": "")} />
+                </div>
+                <div className="trash-container" onClick={deleteCity}>
+                    <FontAwesomeIcon className={"trash " + (hovering ? "bright": "")} icon={faTrashCan} />
                 </div>
             </div>
             {editing ? <SearchBarDropDown ref={dropdownRef} showDropdown={showDropdown} setShowDropdown={setShowDropdown} onSearchSubmit={onSearchSubmitWrapper} setInputVal={setInputVal} />
