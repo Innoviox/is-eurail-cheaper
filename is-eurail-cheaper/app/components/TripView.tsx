@@ -124,8 +124,8 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo }:
             fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
             fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
         } else {
-            fromCity = cities.length <= idx ? undefined : cities[idx - 1][0];
-            fromCityId = cities.length <= idx ? undefined : cities[idx - 1][1];
+            fromCity = idx === 0 ? undefined : cities[idx - 1][0];
+            fromCityId = idx === 0 ? undefined : cities[idx - 1][1];
         }
         let toCity = formData.get("toCity") as string;
         let toCityId = formData.get("toCityId") as string;
