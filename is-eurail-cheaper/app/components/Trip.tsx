@@ -2,20 +2,35 @@ import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/typ
 import {increaseDate, toUSD} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
-import React, {Dispatch, useState} from "react";
+import React, {Dispatch, useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute} from "@fortawesome/free-solid-svg-icons";
 import PriceDisplay from "@/app/components/PriceDisplay.tsx";
 import Picker from "@/app/components/Picker.tsx";
 import City from "@/app/components/City.tsx";
 import colors from "@/app/util/colors.ts";
+import { MapContext } from "../util/contexts.ts";
+import { MarkerWrapper, Zoomer } from "./MapView.tsx";
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, setZoomTo }: { fromCity: string, toCity: string | undefined, weeks: number, setSearchEnabled: Dispatch<any>, setImposedCity: Dispatch<any>, onSearchSubmit: (f: FormData, l: Location, i: number) => void, idx: number, deleteCity: (n: number) => void, setZoomTo: (n: number) => void }) {
+export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, coords }: {
+    fromCity: string,
+    toCity: string | undefined,
+    weeks: number,
+    setSearchEnabled: Dispatch<any>,
+    setImposedCity: Dispatch<any>,
+    onSearchSubmit: (f: FormData, l: Location, i: number) => void,
+    idx: number,
+    deleteCity: (n: number) => void,
+    coords: LatLng[] }) {
+    let map = useContext(MapContext);
+
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
     let [eurail, setEurail]: [Result[], Dispatch<any>] = useState([]);
+    let [stops, setStops]: [LatLng[][], Dispatch<any>] = useState([]);
+    let [zoom, setZoom] = useState(false);
 
     const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -45,12 +60,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
 
         setDb([{ price: sentinel, length: sentinel }]);
         setEurail([{ price: sentinel, length: sentinel }]);
-
-        if (sub1 !== undefined) {
-            addStops(m([]), sub1);
-        }
-
-        let stop_adds: LatLng[][][] = [];
+        setStops([]);
 
         setSearchEnabled(false);
         let addedStops = false;
@@ -66,7 +76,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                     setlst(price);
 
                     if (!addedStops && price[0].legs !== undefined) {
-                        stop_adds[i] = price[0].legs;
+                        setStops(price[0].legs);
                         addedStops = true;
                     }
                 } else {
@@ -75,8 +85,6 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
             });
         }));
         setSearchEnabled(true);
-
-        addStops(stop_adds, startLength);
     }
 
     function setFirst(data: any[], setlst: Dispatch<any>, n: number) {
@@ -123,7 +131,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                 </div>
                 <div className="level-right">
                     <div className="tags">
-                        <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
+                        <div className="tag action-tag is-link" onClick={() => setZoom(true)}>
                             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>
                     </div>
@@ -153,7 +161,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                                                                     setStops={(n) => {
                                                                         let l = lst[n].legs;
                                                                         if (l !== undefined) {
-                                                                            addStops([l], idx);
+                                                                            setStops(l);
                                                                         }
                                                                     }}/>
                                                         }
@@ -188,5 +196,16 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
         }
     }
 
-    return renderPrices();
+    useEffect(() => {
+        const calc = async () => calculate();
+        calc().then(() => console.log("calculated!"));
+    }, [calculate, fromCity, toCity]);
+
+    return (
+        <div>
+            {renderPrices()}
+            <MarkerWrapper map={map ?? null} from={coords[0]} to={coords[1]} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
+            { zoom ? <Zoomer map={map ?? null} stops={stops}  /> : <></> }
+        </div>
+    )
 }

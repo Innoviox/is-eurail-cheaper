@@ -47,6 +47,7 @@ const eurailprices = new Map<number, number>([
     [31, 576]
 ]);
 
+const sentinel = -100; // todo do this differently (classic)
 let everAnimated = false;
 
 
@@ -159,16 +160,6 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         } else {
             add(cities, setCities, [toCity, toCityId], idx);
         }
-        //
-        // if (fromCity !== undefined && toCity !== undefined) {
-        //     if (idx === undefined) {
-        //         await calculate([idx], [fromCity], [toCity]);
-        //     } else if (calc1) {
-        //         await calculate([idx === 0 ? 1 : idx], [fromCity], [toCity]);
-        //     } else {
-        //         await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
-        //     }
-        // }
     }
 
     function sumArr(arr: Result[][]) {
@@ -183,42 +174,15 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         return (
             <div>
                 {cities.map((fromCity: [string, string], idx: number) => (
-                    <Trip key={idx} fromCity={fromCity[0]} toCity={city(idx + 1)} />
+                    <Trip key={idx} fromCity={fromCity[0]} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity}/>
                 ))}
             </div>
         )
     }
 
-
-
-
-    async function deleteRow(idx: number) {
+    async function deleteCity(idx: number) {
         console.log("DELETING", idx);
-        // todo popup
-        function doRemove(citiesIdx: number, otherIdx: number) {
-            console.log("DOING REMOVE", citiesIdx, otherIdx);
-            remove(cities, setCities, citiesIdx);
-            remove(coords, setCoords, citiesIdx);
-
-            remove(db, setDb, otherIdx);
-            remove(eurail, setEurail, otherIdx);
-            remove(open, setOpen, otherIdx);
-            remove(choices, setChoices, otherIdx);
-            remove(stops, setStops, otherIdx);
-        }
-
-        if (idx === 0) {
-            doRemove(0, 0);
-        } else if (idx === cities.length - 1) {
-            doRemove(idx, idx - 1);
-        } else {
-            // calculate before remove (since cities.length may or may not change after the set() call)
-            let calc: [number[], string[], string[]] = [[idx], [cities[idx - 1][0]], [cities[idx + 1][0]]];
-            console.log(calc);
-
-            doRemove(idx, idx - 1);
-            await calculate(...calc);
-        }
+        remove(cities, setCities, idx);
     }
 
     function renderTotals() {

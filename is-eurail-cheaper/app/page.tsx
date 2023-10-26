@@ -1,5 +1,5 @@
 'use client'
-import {createContext, Dispatch, useState} from "react";
+import React, {createContext, Dispatch, useState} from "react";
 
 import {Wrapper} from '@googlemaps/react-wrapper';
 
@@ -15,7 +15,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./util/colors.ts";
-import { CoordsContext, StopsContext, CurrencyContext } from "./util/contexts.ts";
+import { CoordsContext, StopsContext, CurrencyContext, MapContext } from "./util/contexts.ts";
 
 import Image from 'next/image';
 import scale from "./img/scale.png";
@@ -40,6 +40,8 @@ export default function Home() {
     let [meaningless2, setMeaningless2] = useState(0);
 
     let [zoomTo, setZoomTo] = useState(-1);
+
+    let [map, setMap] = useState<google.maps.Map | null>(null);
 
     function addCoords(lat: number, lng: number, idx: number | undefined = undefined) {
         let newCoords = coords;
@@ -72,7 +74,8 @@ export default function Home() {
     return (
         <CoordsContext.Provider value={coords}>
             <StopsContext.Provider value={stops}>
-                <main id="main">
+                <MapContext.Provider value={map}>
+                    <main id="main">
                     <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
                         <div className="navbar-brand">
                             <div className="navbar-item">
@@ -106,7 +109,8 @@ export default function Home() {
                             <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                                 {/*<Wrapper apiKey="dead">*/}
                                 <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
-                                         stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
+                                         stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo}
+                                         setMap={setMap} />
                             </Wrapper>
                         </div>
                         <div id="trip">
@@ -120,6 +124,7 @@ export default function Home() {
                     <About visible={visible2} setVisible={setVisible2} />
                     <Guide visible={visible3} setVisible={setVisible3} />
                 </main>
+                </MapContext.Provider>
             </StopsContext.Provider>
         </CoordsContext.Provider>
     )

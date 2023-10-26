@@ -1,9 +1,10 @@
 'use client'
-import React, {MutableRefObject, ReactElement} from "react";
+import React, {Dispatch, MutableRefObject, ReactElement, useContext} from "react";
 import { useEffect, useRef } from "react";
 import {createRoot, Root} from "react-dom/client";
 import colors from "../util/colors.ts";
 import { LatLng } from "../util/types.ts";
+import {MapContext} from "@/app/util/contexts.ts";
 
 function pathToBounds(path: LatLng[]): google.maps.LatLngBounds {
     let sw = {lat: path[0].lat, lng: path[0].lng};
@@ -89,59 +90,52 @@ function Route({ map, path, color }: {map: google.maps.Map | null, path: LatLng[
     return <></>;
 }
 
-function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coords: LatLng[], stops: LatLng[][][]}) {
+export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.maps.Map | null, from: LatLng, to: LatLng, stops: LatLng[][], colors: string[]}) {
     let circles = [0]; //, 1, 2, 3];
     let previousPosition: LatLng;
     let path: LatLng[];
 
     // console.log("GOT STOPS", stops);
 
-    return coords.map((position, idx) => {
-        if (previousPosition !== null) {
-            path = [previousPosition, position];
-        }
-        previousPosition = position;
-        return (
-            <div key={idx}>
-            <Marker key={`marker-${idx}`} map={map} position={position} onClick={() => console.log("clicked")}>
-                {/*<FontAwesomeIcon icon={faMapPin} />*/}
-                <div id="circle-container">
-                    <div className="item" style={{backgroundColor: colors[idx]}}></div>
-                    {/* add circles on last element*/}
-                    { idx === coords.length - 1 ? circles.map(i => {
-                        return (
-                            <div key={i} className="circle" style={{"animationDelay": `${i}s`,
-                                                                    "border": `1px solid ${colors[idx]}`}} />
-                        )}): <></> }
-                </div>
-            </Marker>
-            { (idx > 0 && stops.length > (idx - 1) && stops[idx - 1].length > 0) ?
-                stops[idx - 1].map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
-            : (path ? <Route key={`route-${idx}`} map={map} path={path} color={"#879799"} /> : <></>)}
-            </div>
-        );
-    });
+    return (
+        <div>
+            {[from, to].map((pos) =>
+                <Marker map={map} position={pos} onClick={() => console.log("clicked")}>
+                    {/*<FontAwesomeIcon icon={faMapPin} />*/}
+                    <div id="circle-container">
+                        <div className="item" style={{backgroundColor: colors[1]}}></div>
+                        {/* add circles on last element*/}
+                        { circles.map(i => {
+                            return (
+                                <div key={i} className="circle" style={{"animationDelay": `${i}s`,
+                                    "border": `1px solid ${colors[1]}`}} />
+                            )}) }
+                    </div>
+                </Marker>
+            )}
+
+            { stops.length > 0 ?
+                stops.map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
+            : <Route map={map} path={[from, to]} color={"#879799"} />}
+        </div>
+    );
 }
 
-function Zoomer({ map, stops, zoomTo, setZoomTo }: {map: google.maps.Map | null, stops: LatLng[][][], zoomTo: number, setZoomTo: (n: number) => void  }) {
+export function Zoomer({ map, stops }: {map: google.maps.Map | null, stops: LatLng[][] }) {
     if (map !== null) {
-        if (zoomTo !== -1) {
-            map.fitBounds(pathToBounds(stops[zoomTo].flat()), 10);
-        }
-
-        map.addListener("zoom_changed", () => {
-            setZoomTo(-1);
-        });
+        map.fitBounds(pathToBounds(stops.flat()), 10);
     }
 
     return <></>;
 }
 
-export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2, zoomTo, setZoomTo }:
+export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2, zoomTo, setZoomTo, setMap }:
                                 { latitude: number; longitude: number,
-                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number, zoomTo: number, setZoomTo: (n: number) => void }) {
+                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number, zoomTo: number,
+                                  setZoomTo: (n: number) => void, setMap: Dispatch<any> }) {
     const mapRef = useRef(null);
-    const [map, setMap] = React.useState<google.maps.Map>();
+    const map = useContext(MapContext);
+    // const [map, setMap] = React.useState<google.maps.Map>();
 
     useEffect(() => {
         if (mapRef.current === null) {
@@ -164,8 +158,6 @@ export default function MapView({ latitude, longitude, coords, meaningless, stop
     return (
         <div>
             <div style={{height: "94vh"}} ref={mapRef} />
-            <MarkerWrapper map={map ?? null} coords={coords} stops={stops} />
-            <Zoomer map={map ?? null} stops={stops} zoomTo={zoomTo} setZoomTo={setZoomTo} />
         </div>
     );
 }

@@ -6,7 +6,7 @@ import { Location } from "../util/types.ts";
 import SearchBarDropDown, { DropdownHandle } from "./SearchBarDropDown.tsx";
 
 export default function SearchBar({onSearchSubmit, enabled}:
-                                  {onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>, enabled: boolean}) {
+                                  {onSearchSubmit: (formData: FormData, loc: Location) => void, enabled: boolean}) {
     const innerRef: RefObject<HTMLDivElement> = useOuterClick(closeDropdown);
     const dropdownRef = useRef<DropdownHandle>();
 
