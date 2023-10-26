@@ -5,6 +5,9 @@ import {
     faTicket,
     faCaretLeft,
     faCaretRight,
+    faPowerOff,
+    faRotateLeft,
+    faRotateRight
 } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
@@ -236,6 +239,22 @@ export default function TripView({ weeks }:
                         <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                         <div className="divider"></div>
                         <div className="fade-in">
+                            {/*<div className="level">*/}
+                            {/*    <div className="level-right">*/}
+                            {/*        <div className="level-item">*/}
+                            {/*            <div>*/}
+                            {/*                <div className="tags has-addons price-picker-tags">*/}
+                            {/*                    <div className="tag is-success">*/}
+                            {/*                        <FontAwesomeIcon icon={faRotateLeft} />*/}
+                            {/*                    </div>*/}
+                            {/*                    <div className="tag is-warning">*/}
+                            {/*                        <FontAwesomeIcon icon={faRotateRight} />*/}
+                            {/*                    </div>*/}
+                            {/*                </div>*/}
+                            {/*            </div>*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                             <div id="trips-box">
                                 {renderTrip()}
                             </div>
