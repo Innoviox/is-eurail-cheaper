@@ -94,7 +94,7 @@ function MarkerWrapper({ map, coords, stops }: {map: google.maps.Map | null, coo
     let previousPosition: LatLng;
     let path: LatLng[];
 
-    console.log("GOT STOPS", stops);
+    // console.log("GOT STOPS", stops);
 
     return coords.map((position, idx) => {
         if (previousPosition !== null) {

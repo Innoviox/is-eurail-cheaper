@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction} from "react";
+import React, {Dispatch, SetStateAction, useEffect} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -126,11 +126,14 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         }
 
         setlst(n);
+        return n;
     }
 
     function remove(lst: any[], setlst: Dispatch<any>, remove: number) {
         let newlst = lst.filter((_: any, i: number) => i !== remove);
+        console.log(lst, newlst, remove);
         setlst(newlst);
+        return newlst;
     }
 
     async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
@@ -328,6 +331,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         console.log("DELETING", idx);
         // todo popup
         function doRemove(citiesIdx: number, otherIdx: number) {
+            console.log("DOING REMOVE", citiesIdx, otherIdx);
             remove(cities, setCities, citiesIdx);
             remove(coords, setCoords, citiesIdx);
 
@@ -340,17 +344,15 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
 
         if (idx === 0) {
             doRemove(0, 0);
+        } else if (idx === cities.length - 1) {
+            doRemove(idx, idx - 1);
         } else {
             // calculate before remove (since cities.length may or may not change after the set() call)
-            let isLast = idx === cities.length - 1;
-            let calc: [number[], string[], string[]] = [[idx - 1], [cities[idx - 2][0]], [cities[idx - 1][0]]];
+            let calc: [number[], string[], string[]] = [[idx], [cities[idx - 1][0]], [cities[idx + 1][0]]];
             console.log(calc);
-            doRemove(idx, idx - 1);
 
-            if (!isLast) {
-                setTimeout(async () => await calculate(...calc),
-                    1000);
-            }
+            doRemove(idx, idx - 1);
+            await calculate(...calc);
         }
     }
 
