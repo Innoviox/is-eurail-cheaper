@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect} from "react";
+import React, {createRef, Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useRef} from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,8 +18,6 @@ import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
 import SearchBar from './SearchBar.tsx';
-import City from './City.tsx';
-import Picker from './Picker.tsx';
 import PriceDisplay from "./PriceDisplay.tsx";
 import Background from './Background.tsx';
 import Trip from './Trip.tsx';
@@ -28,11 +26,10 @@ import train from "../img/train.png";
 import bus from "../img/bus.png";
 import boat from "../img/boat.png";
 import tram from "../img/tram.png";
-import colors from "../util/colors.ts";
-import { LatLng, Location, Result, Endpoint, EndpointResult, ICity } from '../util/types.ts';
+import { Location, Result, ICity } from '../util/types.ts';
 import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
 import { CurrencyContext, ImposedCityContext, StopsContext, CoordsContext } from '../util/contexts.ts';
-
+import useMultiRefs from "../util/useMultiRefs.ts";
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -56,6 +53,9 @@ export default function TripView({ weeks }:
                                  ) {
     const currency = useContext(CurrencyContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
+
+    let [data, setData] = useState(new Map<string, number[]>);
+    let addData = (key: string, value: number[]) => setData(new Map(data).set(key, value));
 
     const city = (idx: number) => idx >= cities.length ? undefined : cities[idx];
 
@@ -129,10 +129,11 @@ export default function TripView({ weeks }:
     }
 
     function renderTrip(): React.JSX.Element {
+        // data = Array(1000).map(_ => [0, 0]);
         return (
             <div>
                 {cities.map((fromCity: ICity, idx: number) => (
-                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity}/>
+                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity} addData={addData}  />
                 ))}
             </div>
         )
@@ -144,9 +145,29 @@ export default function TripView({ weeks }:
     }
 
     function renderTotals() {
+        let sumdb = 0;
+        let sumeu = 0;
+
+        cities.forEach((fromCity: ICity, idx: number) => {
+            if (idx === cities.length - 1) {
+                return;
+            }
+
+            let toCity = city(idx + 1)!;
+            let key = fromCity.name + toCity.name;
+            let price = data.get(key);
+            if (price === undefined) {
+                return;
+            }
+            sumdb += price[0] === sentinel ? 0 : price[0];
+            sumeu += price[1] === sentinel ? 0 : price[1];
+        });
+
+
         // let classes: string[];
-        let sumdb = sumArr(db);
-        let sumeu = sumArr(eurail);
+        // console.log(data);
+        // let sumdb = data.map(i => i.length === 0 ? 0 : i[0]).reduce((a, b) => a + b, 0);
+        // let sumeu = data.map(i => i.length === 0 ? 0 : i[1]).reduce((a, b) => a + b, 0);
         let euprice = calculateEurailPrice();
         // if (sumdb < sumeu + euprice) {
         //     classes = ["is-success", "is-danger"];
@@ -244,7 +265,7 @@ export default function TripView({ weeks }:
                             </div>
                             <div className="divider"></div>
                             <div id="price-totals">
-                                {/*{renderTotals()}*/}
+                                {renderTotals()}
                             </div>
                         </div>
                     </div>

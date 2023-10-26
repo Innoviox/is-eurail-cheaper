@@ -2,7 +2,16 @@ import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/typ
 import {increaseDate, toUSD} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
-import React, {Dispatch, useContext, useEffect, useState} from "react";
+import React, {
+    Dispatch,
+    MutableRefObject,
+    RefObject,
+    useContext,
+    useEffect,
+    useState,
+    forwardRef,
+    useImperativeHandle
+} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute} from "@fortawesome/free-solid-svg-icons";
 import PriceDisplay from "@/app/components/PriceDisplay.tsx";
@@ -16,7 +25,7 @@ import { ICity } from "../util/types.ts";
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity }: {
+const Trip = forwardRef(function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, addData }: {
     fromCity: ICity,
     toCity: ICity | undefined,
     weeks: number,
@@ -24,13 +33,14 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
     setImposedCity: Dispatch<any>,
     onSearchSubmit: (f: FormData, l: Location, i: number) => void,
     idx: number,
-    deleteCity: (n: number) => void }) {
+    deleteCity: (n: number) => void,
+    addData: (key: string, value: number[]) => void
+}, ref) {
     let map = useContext(MapContext);
 
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
     let [eurail, setEurail]: [Result[], Dispatch<any>] = useState([]);
     let [stops, setStops]: [LatLng[][], Dispatch<any>] = useState([]);
-    let [zoom, setZoom] = useState(false);
 
     const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -93,7 +103,6 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
         lst.splice(n, 1); // remove target number
         lst = sortPrices(lst); // sort
         lst.unshift(temp); // put target at front
-        // add(data, setlst, lst, idx);
         setlst(lst);
     }
 
@@ -198,8 +207,20 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
 
     useEffect(() => {
         const calc = async () => calculate();
-        calc().then(() => console.log("calculated!"));
+        calc().then(() => []);
     }, [fromCity, toCity]);
+
+    useEffect(() => {
+        if (db.length > 0 && eurail.length > 0) {
+            addData(fromCity.name + toCity!.name, [db[0].price, eurail[0].price])
+        }
+    }, [db, eurail])
+
+    // useImperativeHandle(ref, () => ({
+    //     getPrices() {
+    //         return [db[0].price, eurail[0].price];
+    //     }
+    // }));
 
     return (
         <div>
@@ -207,4 +228,6 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
             <MarkerWrapper map={map ?? null} from={fromCity.location} to={toCity === undefined ? undefined : toCity!.location} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
         </div>
     )
-}
+});
+
+export default Trip;

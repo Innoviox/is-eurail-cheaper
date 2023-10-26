@@ -1,4 +1,4 @@
-import {Dispatch} from "react";
+import {Dispatch, RefObject} from "react";
 import {StaticImageData} from "next/image";
 
 // LatLng is a google maps type, Location is a eurail type
