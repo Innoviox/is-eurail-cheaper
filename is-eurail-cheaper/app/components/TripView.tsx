@@ -1,18 +1,10 @@
-import React, {createRef, Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useRef} from "react";
+import React, { Dispatch } from "react";
 import { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faArrowRightLong,
-    faCity,
-    faDollarSign,
     faTicket,
-    faRoute,
-    faToggleOn,
-    faToggleOff,
     faCaretLeft,
     faCaretRight,
-    faTrashCan,
-    faMagnifyingGlassPlus, faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
@@ -27,9 +19,8 @@ import bus from "../img/bus.png";
 import boat from "../img/boat.png";
 import tram from "../img/tram.png";
 import { Location, Result, ICity } from '../util/types.ts';
-import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
-import { CurrencyContext, ImposedCityContext, StopsContext, CoordsContext } from '../util/contexts.ts';
-import useMultiRefs from "../util/useMultiRefs.ts";
+import { fromUSD } from '../util/utilities.ts';
+import { CurrencyContext, ImposedCityContext } from '../util/contexts.ts';
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -124,10 +115,6 @@ export default function TripView({ weeks }:
         add(cities, setCities, city, idx);
     }
 
-    function sumArr(arr: Result[][]) {
-        return arr.length === 0 ? 0 : arr.map(i => (i.length === 0 || i[0].price === sentinel) ? 0 : i[0].price).reduce((a, b) => a + b, 0);
-    }
-
     function renderTrip(): React.JSX.Element {
         // data = Array(1000).map(_ => [0, 0]);
         return (
@@ -163,18 +150,7 @@ export default function TripView({ weeks }:
             sumeu += price[1] === sentinel ? 0 : price[1];
         });
 
-
-        // let classes: string[];
-        // console.log(data);
-        // let sumdb = data.map(i => i.length === 0 ? 0 : i[0]).reduce((a, b) => a + b, 0);
-        // let sumeu = data.map(i => i.length === 0 ? 0 : i[1]).reduce((a, b) => a + b, 0);
         let euprice = calculateEurailPrice();
-        // if (sumdb < sumeu + euprice) {
-        //     classes = ["is-success", "is-danger"];
-        // } else {
-        //     classes = ["is-danger", "is-success"];
-        // }
-        // classes.push(sumeu <= sumdb ? "is-success" : "is-danger");
 
         return (
             <div id="total">
@@ -255,7 +231,7 @@ export default function TripView({ weeks }:
                     <Image src={boat} alt="boat" />
                     <Image src={tram} alt="tram" />
                 </Background>
-                {!animatingSearch && cities.length > 0 ?
+                {!animatingSearch && (everAnimated || cities.length > 0) ?
                     <div className="above">
                         <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                         <div className="divider"></div>
