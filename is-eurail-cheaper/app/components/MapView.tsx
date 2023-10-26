@@ -117,9 +117,9 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
                 </Marker>
             })}
 
-            { (to !== undefined && stops.length > 0) ?
+            { to !== undefined && (stops.length > 0 ?
                 stops.map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
-            : <Route map={map} path={[from, to]} color={"#879799"} />}
+            : <Route map={map} path={[from, to]} color={"#879799"} />)}
         </div>
     );
 }
