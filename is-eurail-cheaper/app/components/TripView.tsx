@@ -51,13 +51,8 @@ const sentinel = -100; // todo do this differently (classic)
 let everAnimated = false;
 
 
-export default function TripView({ addCoords, weeks, addStops, setZoomTo, setStops, setCoords }:
-                                 { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
-                                   weeks: number,
-                                   addStops: (newStops: LatLng[][][], set: number | number[] | undefined) => void,
-                                   setZoomTo: (n: number) => void
-                                   setStops: Dispatch<any>,
-                                   setCoords: Dispatch<any> }
+export default function TripView({ weeks }:
+                                 { weeks: number }
                                  ) {
     const currency = useContext(CurrencyContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
@@ -131,10 +126,6 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
 
     function sumArr(arr: Result[][]) {
         return arr.length === 0 ? 0 : arr.map(i => (i.length === 0 || i[0].price === sentinel) ? 0 : i[0].price).reduce((a, b) => a + b, 0);
-    }
-
-    function toggleOpen(idx: number) {
-        add(open, setOpen, !open[idx], idx);
     }
 
     function renderTrip(): React.JSX.Element {

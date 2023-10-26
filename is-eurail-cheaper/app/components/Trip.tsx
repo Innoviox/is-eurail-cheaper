@@ -10,7 +10,7 @@ import Picker from "@/app/components/Picker.tsx";
 import City from "@/app/components/City.tsx";
 import colors from "@/app/util/colors.ts";
 import { MapContext } from "../util/contexts.ts";
-import { MarkerWrapper, Zoomer } from "./MapView.tsx";
+import { MarkerWrapper, pathToBounds } from "./MapView.tsx";
 import { ICity } from "../util/types.ts";
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
@@ -131,7 +131,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                 </div>
                 <div className="level-right">
                     <div className="tags">
-                        <div className="tag action-tag is-link" onClick={() => setZoom(true)}>
+                        <div className="tag action-tag is-link" onClick={() => map && map.fitBounds(pathToBounds(stops.flat()), 10)}>
                             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>
                     </div>
@@ -205,7 +205,6 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
         <div>
             {renderPrices()}
             <MarkerWrapper map={map ?? null} from={fromCity.location} to={toCity === undefined ? undefined : toCity!.location} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
-            { zoom ? <Zoomer map={map ?? null} stops={stops}  /> : <></> }
         </div>
     )
 }

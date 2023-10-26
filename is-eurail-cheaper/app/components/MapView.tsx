@@ -6,7 +6,7 @@ import colors from "../util/colors.ts";
 import { LatLng } from "../util/types.ts";
 import {MapContext} from "@/app/util/contexts.ts";
 
-function pathToBounds(path: LatLng[]): google.maps.LatLngBounds {
+export function pathToBounds(path: LatLng[]): google.maps.LatLngBounds {
     let sw = {lat: path[0].lat, lng: path[0].lng};
     let ne = {lat: path[0].lat, lng: path[0].lng};
 
@@ -122,14 +122,6 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
             : <Route map={map} path={[from, to]} color={"#879799"} />}
         </div>
     );
-}
-
-export function Zoomer({ map, stops }: {map: google.maps.Map | null, stops: LatLng[][] }) {
-    if (map !== null && stops.length === 0) {
-        map.fitBounds(pathToBounds(stops.flat()), 10);
-    }
-
-    return <></>;
 }
 
 export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2, zoomTo, setZoomTo, setMap }:
