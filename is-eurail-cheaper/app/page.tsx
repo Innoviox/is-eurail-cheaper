@@ -1,11 +1,11 @@
 'use client'
-import {Dispatch, useState} from "react";
+import {createContext, Dispatch, useState} from "react";
 
 import {Wrapper} from '@googlemaps/react-wrapper';
 
 import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
-import Settings, { CurrencyContext } from './components/modal/Settings.tsx';
+import Settings from './components/modal/Settings.tsx';
 import About from '@/app/components/modal/About.tsx';
 import Guide from './components/modal/Guide.tsx';
 
@@ -15,6 +15,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./util/colors.ts";
+import { CoordsContext, StopsContext, CurrencyContext } from "./util/contexts.ts";
 
 import Image from 'next/image';
 import scale from "./img/scale.png";
@@ -22,8 +23,9 @@ import scale from "./img/scale.png";
 initialize();
 
 
+
 export default function Home() {
-    let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
+    let [coords, setCoords] : [LatLng[], Dispatch<any>] = useState([]);
     let lat = 50, lng = 10;
 
     let [meaningless, setMeaningless] = useState(143);
@@ -68,52 +70,57 @@ export default function Home() {
     }
 
     return (
-        <main id="main">
-            <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
-                <div className="navbar-brand">
-                    <div className="navbar-item">
-                        <Image src={scale} alt="scale" className="logo" />
-                    </div>
-                </div>
-                <div className="navbar-menu">
-                    <div className="navbar-start">
+        <CoordsContext.Provider value={coords}>
+            <StopsContext.Provider value={stops}>
+                <main id="main">
+                    <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
+                        <div className="navbar-brand">
+                            <div className="navbar-item">
+                                <Image src={scale} alt="scale" className="logo" />
+                            </div>
+                        </div>
+                        <div className="navbar-menu">
+                            <div className="navbar-start">
                         <span className="navbar-item">
                           Is Eurail Cheaper?
                         </span>
+                            </div>
+                            <div className="navbar-end">
+                                <a className="navbar-item" onClick={() => setVisible3(true)}>
+                                    <FontAwesomeIcon icon={faQuestion} />
+                                </a>
+                                <a className="navbar-item" onClick={() => setVisible(true)}>
+                                    <FontAwesomeIcon icon={faGear} />
+                                </a>
+                                <a className="navbar-item" onClick={() => setVisible2(true)}>
+                                    <FontAwesomeIcon icon={faCircleInfo} />
+                                </a>
+                                <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
+                                    <FontAwesomeIcon icon={faGithub} />
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                    <div id="container">
+                        <div id="map">
+                            <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
+                                {/*<Wrapper apiKey="dead">*/}
+                                <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
+                                         stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
+                            </Wrapper>
+                        </div>
+                        <div id="trip">
+                            <CurrencyContext.Provider value={currency}>
+                                <TripView addCoords={addCoords} weeks={weeks} addStops={addStops}
+                                          setZoomTo={setZoomTo} setStops={setStops} setCoords={setCoords} />
+                            </CurrencyContext.Provider>
+                        </div>
                     </div>
-                    <div className="navbar-end">
-                        <a className="navbar-item" onClick={() => setVisible3(true)}>
-                            <FontAwesomeIcon icon={faQuestion} />
-                        </a>
-                        <a className="navbar-item" onClick={() => setVisible(true)}>
-                            <FontAwesomeIcon icon={faGear} />
-                        </a>
-                        <a className="navbar-item" onClick={() => setVisible2(true)}>
-                            <FontAwesomeIcon icon={faCircleInfo} />
-                        </a>
-                        <a className="navbar-item" href="https://github.com/Innoviox/is-eurail-cheaper">
-                            <FontAwesomeIcon icon={faGithub} />
-                        </a>
-                    </div>
-              </div>
-            </nav>
-            <div id="container">
-                <div id="map">
-                  <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
-                  {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
-                             stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
-                  </Wrapper>
-                </div>
-                <div id="trip">
-                    <CurrencyContext.Provider value={currency}>
-                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} removeStops={removeStops} />
-                    </CurrencyContext.Provider>
-                </div>
-            </div>
-            <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
-            <About visible={visible2} setVisible={setVisible2} />
-            <Guide visible={visible3} setVisible={setVisible3} />
-        </main>
+                    <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
+                    <About visible={visible2} setVisible={setVisible2} />
+                    <Guide visible={visible3} setVisible={setVisible3} />
+                </main>
+            </StopsContext.Provider>
+        </CoordsContext.Provider>
     )
 }

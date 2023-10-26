@@ -16,8 +16,7 @@ import SearchBarDropDown, {DropdownHandle} from "./SearchBarDropDown.tsx";
 import {Location} from "@/app/util/types.ts";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
-
-export const ImposedCityContext = createContext<string[]>([]);
+import { ImposedCityContext } from "../util/contexts.ts";
 
 export default function City({ name, color, onSearchSubmit, setImposedCity, deleteCity }:
                              { name: string, color: string,

@@ -18,7 +18,7 @@ import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
 import SearchBar from './SearchBar.tsx';
-import City, { ImposedCityContext } from './City.tsx';
+import City from './City.tsx';
 import Picker from './Picker.tsx';
 import PriceDisplay from "./PriceDisplay.tsx";
 import Background from './Background.tsx';
@@ -30,7 +30,7 @@ import tram from "../img/tram.png";
 import colors from "../util/colors.ts";
 import { LatLng, Location, Result, Endpoint, EndpointResult } from '../util/types.ts';
 import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
-import { CurrencyContext } from './modal/Settings.tsx';
+import { CurrencyContext, ImposedCityContext, StopsContext, CoordsContext } from '../util/contexts.ts';
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
@@ -52,13 +52,17 @@ const sentinel = -100;
 let everAnimated = false;
 
 
-export default function TripView({ addCoords, weeks, addStops, setZoomTo, removeStops }:
+export default function TripView({ addCoords, weeks, addStops, setZoomTo, setStops, setCoords }:
                                  { addCoords: (lat: number, lng: number, idx: number | undefined) => void,
                                    weeks: number,
                                    addStops: (newStops: LatLng[][][], set: number | number[] | undefined) => void,
                                    setZoomTo: (n: number) => void
-                                   removeStops: (n: number) => void }) {
+                                   setStops: Dispatch<any>,
+                                   setCoords: Dispatch<any> }
+                                 ) {
     const currency = useContext(CurrencyContext);
+    const stops = useContext(StopsContext);
+    const coords = useContext(CoordsContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
     const city = (idx: number) => cities[idx][0];
@@ -325,12 +329,13 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
         // todo popup
         function doRemove(citiesIdx: number, otherIdx: number) {
             remove(cities, setCities, citiesIdx);
+            remove(coords, setCoords, citiesIdx);
+
             remove(db, setDb, otherIdx);
             remove(eurail, setEurail, otherIdx);
             remove(open, setOpen, otherIdx);
             remove(choices, setChoices, otherIdx);
             remove(stops, setStops, otherIdx);
-            remove(coords, setCoords, citiesIdx);
         }
 
         if (idx === 0) {
@@ -338,10 +343,13 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, remove
         } else {
             // calculate before remove (since cities.length may or may not change after the set() call)
             let isLast = idx === cities.length - 1;
+            let calc: [number[], string[], string[]] = [[idx - 1], [cities[idx - 2][0]], [cities[idx - 1][0]]];
+            console.log(calc);
             doRemove(idx, idx - 1);
 
             if (!isLast) {
-                await calculate([idx - 1], [cities[idx - 1][0]], [cities[idx][0]]);
+                setTimeout(async () => await calculate(...calc),
+                    1000);
             }
         }
     }

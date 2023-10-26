@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faDollarSign, faCaretUp, faCaretDown, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 
 import { LatLng, Result } from '../util/types.ts';
-import { CurrencyContext } from './modal/Settings.tsx';
+import { CurrencyContext } from '../util/contexts.ts';
 import { fromUSD } from "@/app/util/utilities.ts";
 
 const hours_minutes = (d: Date) => `${d.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}:${d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}`
