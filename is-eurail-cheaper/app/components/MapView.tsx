@@ -101,7 +101,6 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
         <div>
             {[from, to].map((pos) => { return pos === undefined ? <></> :
                 <Marker map={map} position={pos} onClick={() => console.log("clicked")}>
-                    {/*<FontAwesomeIcon icon={faMapPin} />*/}
                     <div id="circle-container">
                         <div className="item" style={{backgroundColor: colors[1]}}></div>
                         {/* add circles on last element*/}
@@ -130,7 +129,6 @@ export default function MapView({ latitude, longitude, coords, meaningless, stop
                                   setZoomTo: (n: number) => void, setMap: Dispatch<any> }) {
     const mapRef = useRef(null);
     const map = useContext(MapContext);
-    // const [map, setMap] = React.useState<google.maps.Map>();
 
     useEffect(() => {
         if (mapRef.current === null) {

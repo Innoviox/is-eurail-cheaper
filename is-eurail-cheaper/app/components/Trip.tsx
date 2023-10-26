@@ -4,13 +4,10 @@ import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
 import React, {
     Dispatch,
-    MutableRefObject,
-    RefObject,
     useContext,
     useEffect,
     useState,
     forwardRef,
-    useImperativeHandle
 } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute} from "@fortawesome/free-solid-svg-icons";
@@ -215,12 +212,6 @@ const Trip = forwardRef(function Trip({ fromCity, toCity, weeks, setSearchEnable
             addData(fromCity.name + toCity!.name, [db[0].price, eurail[0].price])
         }
     }, [db, eurail])
-
-    // useImperativeHandle(ref, () => ({
-    //     getPrices() {
-    //         return [db[0].price, eurail[0].price];
-    //     }
-    // }));
 
     return (
         <div>
