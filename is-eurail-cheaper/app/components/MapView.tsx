@@ -125,7 +125,7 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
 }
 
 export function Zoomer({ map, stops }: {map: google.maps.Map | null, stops: LatLng[][] }) {
-    if (map !== null) {
+    if (map !== null && stops.length === 0) {
         map.fitBounds(pathToBounds(stops.flat()), 10);
     }
 

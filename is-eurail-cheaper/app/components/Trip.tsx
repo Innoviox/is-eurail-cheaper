@@ -66,7 +66,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
         let addedStops = false;
         let d = increaseDate(new Date(), weeks, 8);
         let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-            await fetch(PRICE_API(key, fromCity, toCity, d), {
+            await fetch(PRICE_API(key, fromCity.name, toCity.name, d), {
                 method: 'GET'
             }).then(async response => {
                 if (response.ok) {
@@ -199,7 +199,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
     useEffect(() => {
         const calc = async () => calculate();
         calc().then(() => console.log("calculated!"));
-    }, [calculate, fromCity, toCity]);
+    }, [fromCity, toCity]);
 
     return (
         <div>
