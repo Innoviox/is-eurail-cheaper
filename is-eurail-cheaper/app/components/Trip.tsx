@@ -13,8 +13,7 @@ import colors from "@/app/util/colors.ts";
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity }: { fromCity: string, toCity: string | undefined, weeks: number, setSearchEnabled: Dispatch<any>, setImposedCity: Dispatch<any>, onSearchSubmit: (f: FormData, l: Location, i: number) => void, idx: number, deleteCity: (n: number) => void }) {
-
+export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, setZoomTo }: { fromCity: string, toCity: string | undefined, weeks: number, setSearchEnabled: Dispatch<any>, setImposedCity: Dispatch<any>, onSearchSubmit: (f: FormData, l: Location, i: number) => void, idx: number, deleteCity: (n: number) => void, setZoomTo: (n: number) => void }) {
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
     let [eurail, setEurail]: [Result[], Dispatch<any>] = useState([]);
 
@@ -108,7 +107,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                     </div>
                     <div className="level-item">
                         <div>
-                            {makeCity(fromCity)}
+                            {makeCity(fromCity, 0)}
                         </div>
                     </div>
                     <div className="level-item">
@@ -118,7 +117,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                     </div>
                     <div className="level-item">
                         <div>
-                            {makeCity(toCity!)}
+                            {makeCity(toCity!, 1)}
                         </div>
                     </div>
                 </div>
@@ -180,7 +179,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                         </div>
                         <div className="level-item">
                             <div>
-                                {makeCity(fromCity)}
+                                {makeCity(fromCity, 0)}
                             </div>
                         </div>
                     </div>
