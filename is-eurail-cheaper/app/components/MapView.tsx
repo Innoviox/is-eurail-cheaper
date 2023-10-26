@@ -90,7 +90,7 @@ function Route({ map, path, color }: {map: google.maps.Map | null, path: LatLng[
     return <></>;
 }
 
-export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.maps.Map | null, from: LatLng, to: LatLng, stops: LatLng[][], colors: string[]}) {
+export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.maps.Map | null, from: LatLng, to: LatLng | undefined, stops: LatLng[][], colors: string[]}) {
     let circles = [0]; //, 1, 2, 3];
     let previousPosition: LatLng;
     let path: LatLng[];
@@ -99,22 +99,25 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
 
     return (
         <div>
-            {[from, to].map((pos) =>
+            {[from, to].map((pos) => { return pos === undefined ? <></> :
                 <Marker map={map} position={pos} onClick={() => console.log("clicked")}>
                     {/*<FontAwesomeIcon icon={faMapPin} />*/}
                     <div id="circle-container">
                         <div className="item" style={{backgroundColor: colors[1]}}></div>
                         {/* add circles on last element*/}
-                        { circles.map(i => {
+                        {circles.map(i => {
                             return (
-                                <div key={i} className="circle" style={{"animationDelay": `${i}s`,
-                                    "border": `1px solid ${colors[1]}`}} />
-                            )}) }
+                                <div key={i} className="circle" style={{
+                                    "animationDelay": `${i}s`,
+                                    "border": `1px solid ${colors[1]}`
+                                }}/>
+                            )
+                        })}
                     </div>
                 </Marker>
-            )}
+            })}
 
-            { stops.length > 0 ?
+            { (to !== undefined && stops.length > 0) ?
                 stops.map((leg, i) => <Route key={`stopovers-${i}`} map={map} path={leg} color={"#AE359A"} />)
             : <Route map={map} path={[from, to]} color={"#879799"} />}
         </div>

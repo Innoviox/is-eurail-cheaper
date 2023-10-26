@@ -29,7 +29,7 @@ import bus from "../img/bus.png";
 import boat from "../img/boat.png";
 import tram from "../img/tram.png";
 import colors from "../util/colors.ts";
-import { LatLng, Location, Result, Endpoint, EndpointResult } from '../util/types.ts';
+import { LatLng, Location, Result, Endpoint, EndpointResult, ICity } from '../util/types.ts';
 import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
 import { CurrencyContext, ImposedCityContext, StopsContext, CoordsContext } from '../util/contexts.ts';
 
@@ -60,24 +60,17 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
                                    setCoords: Dispatch<any> }
                                  ) {
     const currency = useContext(CurrencyContext);
-    const stops = useContext(StopsContext);
-    const coords = useContext(CoordsContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
-    const city = (idx: number) => idx >= cities.length ? undefined : cities[idx][0];
+    const city = (idx: number) => idx >= cities.length ? undefined : cities[idx];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
-    let [cities, setCities]: [[string, string][], Dispatch<any>] = useState([]);
-    let [db, setDb] : [Result[][], Dispatch<any>] = useState([]);
-    let [eurail, setEurail] : [Result[][], Dispatch<any>] = useState([]);
-    let [open, setOpen]: [boolean[], Dispatch<any>] = useState([]);
-    let [choices, setChoices]: [string[], Dispatch<any>] = useState([]);
+    let [cities, setCities]: [ICity[], Dispatch<any>] = useState([]);
 
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
     let [showFullEuro, setShowFullEuro] = useState(true);
     let [ending, setEnding] = useState(false);
-
 
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
@@ -119,33 +112,12 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
 
     function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
-        let fromCity, fromCityId, toCity, toCityId;
+        let toCity, toCityId;
         toCity = formData.get("toCity") as string;
         toCityId = formData.get("toCityId") as string;
-        let calc1 = false;
-        if (idx === undefined) {
-            fromCity = cities.length === 0 ? undefined : cities[cities.length - 1][0];
-            fromCityId = cities.length === 0 ? undefined : cities[cities.length - 1][1];
-        } else if (idx === 0) {
-            fromCity = formData.get("toCity") as string;
-            fromCityId = formData.get("toCityId") as string;
-            toCity = cities.length === 1 ? undefined : cities[1][0];
-            toCityId = cities.length === 1 ? undefined : cities[1][1];
-            calc1 = true;
-        } else {
-            if (idx === cities.length - 1) {
-                calc1 = true;
-            }
-            fromCity = cities[idx - 1][0];
-            fromCityId =  cities[idx - 1][1];
-        }
+        let city: ICity = { name: toCity, id: toCityId, location: { lat: location.latitude, lng: location.longitude } };
 
-        console.log(idx, fromCity, toCity, calc1);
-
-        if (toCityId === fromCityId) { // todo give message
-            console.log("returning at check");
-            return;
-        }
+        // todo check if same as previous/next
 
         if (!everAnimated) {
             setAnimatingSearch(true);
@@ -154,12 +126,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
             everAnimated = true;
         }
 
-        addCoords(location.latitude, location.longitude, idx);
-        if (idx === 0) {
-            add(cities, setCities, [fromCity, fromCityId], idx);
-        } else {
-            add(cities, setCities, [toCity, toCityId], idx);
-        }
+        add(cities, setCities, city, idx);
     }
 
     function sumArr(arr: Result[][]) {
@@ -173,8 +140,8 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
     function renderTrip(): React.JSX.Element {
         return (
             <div>
-                {cities.map((fromCity: [string, string], idx: number) => (
-                    <Trip key={idx} fromCity={fromCity[0]} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity}/>
+                {cities.map((fromCity: ICity, idx: number) => (
+                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity}/>
                 ))}
             </div>
         )
@@ -286,7 +253,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
                             </div>
                             <div className="divider"></div>
                             <div id="price-totals">
-                                {renderTotals()}
+                                {/*{renderTotals()}*/}
                             </div>
                         </div>
                     </div>

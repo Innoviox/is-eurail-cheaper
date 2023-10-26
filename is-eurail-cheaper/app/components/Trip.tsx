@@ -11,20 +11,20 @@ import City from "@/app/components/City.tsx";
 import colors from "@/app/util/colors.ts";
 import { MapContext } from "../util/contexts.ts";
 import { MarkerWrapper, Zoomer } from "./MapView.tsx";
+import { ICity } from "../util/types.ts";
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, coords }: {
-    fromCity: string,
-    toCity: string | undefined,
+export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity }: {
+    fromCity: ICity,
+    toCity: ICity | undefined,
     weeks: number,
     setSearchEnabled: Dispatch<any>,
     setImposedCity: Dispatch<any>,
     onSearchSubmit: (f: FormData, l: Location, i: number) => void,
     idx: number,
-    deleteCity: (n: number) => void,
-    coords: LatLng[] }) {
+    deleteCity: (n: number) => void }) {
     let map = useContext(MapContext);
 
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
@@ -115,7 +115,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                     </div>
                     <div className="level-item">
                         <div>
-                            {makeCity(fromCity, 0)}
+                            {makeCity(fromCity.name, 0)}
                         </div>
                     </div>
                     <div className="level-item">
@@ -125,7 +125,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                     </div>
                     <div className="level-item">
                         <div>
-                            {makeCity(toCity!, 1)}
+                            {makeCity(toCity!.name, 1)}
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
                         </div>
                         <div className="level-item">
                             <div>
-                                {makeCity(fromCity, 0)}
+                                {makeCity(fromCity.name, 0)}
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImp
     return (
         <div>
             {renderPrices()}
-            <MarkerWrapper map={map ?? null} from={coords[0]} to={coords[1]} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
+            <MarkerWrapper map={map ?? null} from={fromCity.location} to={toCity === undefined ? undefined : toCity!.location} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
             { zoom ? <Zoomer map={map ?? null} stops={stops}  /> : <></> }
         </div>
     )
