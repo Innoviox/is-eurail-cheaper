@@ -22,6 +22,7 @@ import City from './City.tsx';
 import Picker from './Picker.tsx';
 import PriceDisplay from "./PriceDisplay.tsx";
 import Background from './Background.tsx';
+import Trip from './Trip.tsx';
 import airplane from "../img/airplane.png";
 import train from "../img/train.png";
 import bus from "../img/bus.png";
@@ -32,7 +33,6 @@ import { LatLng, Location, Result, Endpoint, EndpointResult } from '../util/type
 import { increaseDate, toUSD, fromUSD } from '../util/utilities.ts';
 import { CurrencyContext, ImposedCityContext, StopsContext, CoordsContext } from '../util/contexts.ts';
 
-const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -46,8 +46,6 @@ const eurailprices = new Map<number, number>([
     [22, 445],
     [31, 576]
 ]);
-
-const sentinel = -100;
 
 let everAnimated = false;
 
@@ -65,7 +63,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
     const coords = useContext(CoordsContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
-    const city = (idx: number) => cities[idx][0];
+    const city = (idx: number) => idx >= cities.length ? undefined : cities[idx][0];
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
     let [cities, setCities]: [[string, string][], Dispatch<any>] = useState([]);
@@ -79,24 +77,6 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
     let [showFullEuro, setShowFullEuro] = useState(true);
     let [ending, setEnding] = useState(false);
 
-    const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
-
-    function sortPrices(n: Result[]) {
-        return n.sort((a, b) => a.price === b.price ? a.length - b.length : a.price - b.price);
-    }
-
-    // todo Stop type
-    function extractPrice(trips: EndpointResult[]) {
-        return sortPrices(trips.map(i => {
-            return {
-                price: toUSD(parseInt(i.price), i.currency),
-                length: parseInt(i.length),
-                legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
-                                                                    { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
-                departure: new Date(i.departure)
-            };
-        }).slice(0, 5));
-    }
 
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
@@ -136,7 +116,7 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         return newlst;
     }
 
-    async function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
+    function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
         /// i guess we can't have nice things
         let fromCity, fromCityId, toCity, toCityId;
         toCity = formData.get("toCity") as string;
@@ -179,68 +159,16 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
         } else {
             add(cities, setCities, [toCity, toCityId], idx);
         }
-
-        if (fromCity !== undefined && toCity !== undefined) {
-            if (idx === undefined) {
-                await calculate([idx], [fromCity], [toCity]);
-            } else if (calc1) {
-                await calculate([idx === 0 ? 1 : idx], [fromCity], [toCity]);
-            } else {
-                await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
-            }
-        }
-    }
-
-    // todo this is a mess
-    async function calculate(idxs: number[] | undefined[], fromCity: string[], toCity: string[]) {
-        console.log("CALCULATING", idxs, fromCity, toCity);
-
-        let sub1 = idxs[0] === undefined ? undefined : idxs.map(i => i! - 1);
-        let startLength = idxs[0] === undefined ? [db.length] : idxs.map(i => i! - 1);
-        let m = (a: any) => idxs[0] === undefined ? a : idxs.map(_ => a); // todo rename
-        add(db, setDb, m([{ price: sentinel, length: sentinel }]), sub1); // start loading wheels
-        add(eurail, setEurail, m([{ price: sentinel, length: sentinel }]), sub1);
-        add(open, setOpen, m(true), sub1);
-        add(choices, setChoices, m(""), sub1);
-        if (sub1 !== undefined) {
-            addStops(m([]), sub1);
-        }
-
-        let endpoint_adds: Map<string, Result[][]> = new Map();
-        let stop_adds: LatLng[][][] = [];
-
-        setSearchEnabled(false);
-        for (let i = 0; i < idxs.length; i++) {
-            let addedStops = false;
-            let d = increaseDate(new Date(), weeks, 8);
-            let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-                await fetch(PRICE_API(key, fromCity[i], toCity[i], d), {
-                    method: 'GET'
-                }).then(async response => {
-                    if (response.ok) {
-                        let data = await response.json();
-                        let price = extractPrice(data.journeys);
-
-                        let n = endpoint_adds.get(key) ?? [];
-                        n.push(price);
-                        endpoint_adds.set(key, n);
-
-                        if (!addedStops && price[0].legs !== undefined) {
-                            stop_adds[i] = price[0].legs;
-                            addedStops = true;
-                        }
-                    } else {
-                        console.log(`response not ok - price ${key}`);
-                    }
-                });
-            }));
-        }
-        setSearchEnabled(true);
-
-        Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-            add(lst, setlst, endpoint_adds.get(key), startLength);
-        });
-        addStops(stop_adds, startLength);
+        //
+        // if (fromCity !== undefined && toCity !== undefined) {
+        //     if (idx === undefined) {
+        //         await calculate([idx], [fromCity], [toCity]);
+        //     } else if (calc1) {
+        //         await calculate([idx === 0 ? 1 : idx], [fromCity], [toCity]);
+        //     } else {
+        //         await calculate([idx, idx + 1], [fromCity, toCity], [toCity, cities[idx + 1][0]]);
+        //     }
+        // }
     }
 
     function sumArr(arr: Result[][]) {
@@ -254,78 +182,15 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
     function renderTrip(): React.JSX.Element {
         return (
             <div>
-                {cities.map((city: [string, string], idx: number) => (
-                    <div key={city[0]}>
-                        {renderPrices(idx)}
-                    </div>
+                {cities.map((fromCity: [string, string], idx: number) => (
+                    <Trip key={idx} fromCity={fromCity[0]} toCity={city(idx + 1)} />
                 ))}
             </div>
         )
     }
 
-    function renderPrices(idx: number) {
-        if (idx < cities.length - 1) {
-            return (
-                <div>
-                    <div className="prices-container">
-                        {renderUpper(idx)}
-                        <div className={"lower " + (open[idx] ? "lower-open" : "lower-closed")}>
-                            <div className="lower-inner">
-                                {Object.entries(endpoints).map(([key, [lst, setlst, img]]) => (
-                                    <div key={key} className="level">
-                                        <div className="level-left">
-                                            <div className="level-item">
-                                                <div>
-                                                    {/*// todo do i need choices? onClick={() => setChoice(idx, key)}*/}
-                                                    <PriceDisplay img={img}>
-                                                        {lst[idx].length === 0 || lst[idx][0].price === sentinel ?
-                                                            <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={lst[idx]} parentOpen={open[idx]}
-                                                                    setFirst={(n) => setFirst(lst, setlst, idx, n)}
-                                                                    setStops={(n) => {
-                                                                        let l = lst[idx][n].legs;
-                                                                        if (l !== undefined) {
-                                                                            addStops([l], idx);
-                                                                        }
-                                                                    }}/>
-                                                        }
-                                                    </PriceDisplay>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        } else if (idx === cities.length - 1) {
-            return (
-                <div className="level prices-container">
-                    <div className="level-left">
-                        <div className="level-item">
-                            <div>
-                                <FontAwesomeIcon icon={faCity} />
-                            </div>
-                        </div>
-                        <div className="level-item">
-                            <div>
-                                {makeCity(idx)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-    }
 
-    function makeCity(idx: number) {
-        return <City name={city(idx)} color={colors[idx]}
-                     onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx)}
-                     setImposedCity={setImposedCity}
-                     deleteCity={() => deleteRow(idx)} />
-    }
+
 
     async function deleteRow(idx: number) {
         console.log("DELETING", idx);
@@ -354,54 +219,6 @@ export default function TripView({ addCoords, weeks, addStops, setZoomTo, setSto
             doRemove(idx, idx - 1);
             await calculate(...calc);
         }
-    }
-
-    function setFirst(data: any[], setlst: Dispatch<any>, idx: number, n: number) {
-        let lst = [...data[idx]];
-        let temp = lst[n]; // store target
-        lst.splice(n, 1); // remove target number
-        lst = sortPrices(lst); // sort
-        lst.unshift(temp); // put target at front
-        add(data, setlst, lst, idx);
-    }
-
-    function renderUpper(idx: number) {
-        return  (
-            <div className="upper level"> {/* onClick={() => toggleOpen(idx)}> */}
-                <div className="level-left">
-                    <div className="level-item">
-                        <div>
-                            <FontAwesomeIcon icon={faRoute} />
-                        </div>
-                    </div>
-                    <div className="level-item">
-                        <div>
-                            {makeCity(idx)}
-                        </div>
-                    </div>
-                    <div className="level-item">
-                        <div>
-                            <FontAwesomeIcon icon={faArrowRightLong}/>
-                        </div>
-                    </div>
-                    <div className="level-item">
-                        <div>
-                            {makeCity(idx + 1)}
-                        </div>
-                    </div>
-                </div>
-                <div className="level-right">
-                    <div className="tags">
-                        {/*<div className="tag action-tag is-danger" onClick={() => deleteRow(idx)}>*/}
-                        {/*    <FontAwesomeIcon icon={faTrashCan} />*/}
-                        {/*</div>*/}
-                        <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
-                            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
     }
 
     function renderTotals() {

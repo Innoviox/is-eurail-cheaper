@@ -1,0 +1,193 @@
+import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/types.ts";
+import {increaseDate, toUSD} from "@/app/util/utilities.ts";
+import db_image from "@/app/img/db.png";
+import eurail_image from "@/app/img/eurail.png";
+import React, {Dispatch, useState} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute} from "@fortawesome/free-solid-svg-icons";
+import PriceDisplay from "@/app/components/PriceDisplay.tsx";
+import Picker from "@/app/components/Picker.tsx";
+import City from "@/app/components/City.tsx";
+import colors from "@/app/util/colors.ts";
+
+const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
+
+const sentinel = -100;
+export default function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity }: { fromCity: string, toCity: string | undefined, weeks: number, setSearchEnabled: Dispatch<any>, setImposedCity: Dispatch<any>, onSearchSubmit: (f: FormData, l: Location, i: number) => void, idx: number, deleteCity: (n: number) => void }) {
+
+    let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
+    let [eurail, setEurail]: [Result[], Dispatch<any>] = useState([]);
+
+    const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
+
+    function sortPrices(n: Result[]) {
+        return n.sort((a, b) => a.price === b.price ? a.length - b.length : a.price - b.price);
+    }
+
+    // todo Stop type
+    function extractPrice(trips: EndpointResult[]) {
+        return sortPrices(trips.map(i => {
+            return {
+                price: toUSD(parseInt(i.price), i.currency),
+                length: parseInt(i.length),
+                legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
+                { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
+                departure: new Date(i.departure)
+            };
+        }).slice(0, 5));
+    }
+
+    async function calculate() {
+        if (toCity === undefined) {
+            return;
+        }
+
+        console.log("CALCULATING", fromCity, toCity);
+
+        setDb([{ price: sentinel, length: sentinel }]);
+        setEurail([{ price: sentinel, length: sentinel }]);
+
+        if (sub1 !== undefined) {
+            addStops(m([]), sub1);
+        }
+
+        let stop_adds: LatLng[][][] = [];
+
+        setSearchEnabled(false);
+        let addedStops = false;
+        let d = increaseDate(new Date(), weeks, 8);
+        let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
+            await fetch(PRICE_API(key, fromCity, toCity, d), {
+                method: 'GET'
+            }).then(async response => {
+                if (response.ok) {
+                    let data = await response.json();
+                    let price = extractPrice(data.journeys);
+
+                    setlst(price);
+
+                    if (!addedStops && price[0].legs !== undefined) {
+                        stop_adds[i] = price[0].legs;
+                        addedStops = true;
+                    }
+                } else {
+                    console.log(`response not ok - price ${key}`);
+                }
+            });
+        }));
+        setSearchEnabled(true);
+
+        addStops(stop_adds, startLength);
+    }
+
+    function setFirst(data: any[], setlst: Dispatch<any>, n: number) {
+        let lst = [...data];
+        let temp = lst[n]; // store target
+        lst.splice(n, 1); // remove target number
+        lst = sortPrices(lst); // sort
+        lst.unshift(temp); // put target at front
+        // add(data, setlst, lst, idx);
+        setlst(lst);
+    }
+
+    function makeCity(name: string, n: number) {
+        return <City name={name} color={colors[idx + n]}
+                     onSearchSubmit={(f, l) => onSearchSubmit(f, l, idx + n)}
+                     setImposedCity={setImposedCity}
+                     deleteCity={() => deleteCity(idx + n)} />
+    }
+
+    function renderUpper() {
+        return  (
+            <div className="upper level"> {/* onClick={() => toggleOpen(idx)}> */}
+                <div className="level-left">
+                    <div className="level-item">
+                        <div>
+                            <FontAwesomeIcon icon={faRoute} />
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            {makeCity(fromCity)}
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            <FontAwesomeIcon icon={faArrowRightLong}/>
+                        </div>
+                    </div>
+                    <div className="level-item">
+                        <div>
+                            {makeCity(toCity!)}
+                        </div>
+                    </div>
+                </div>
+                <div className="level-right">
+                    <div className="tags">
+                        <div className="tag action-tag is-link" onClick={() => setZoomTo(idx)}>
+                            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function renderPrices() {
+        if (toCity !== undefined) {
+            return (
+                <div>
+                    <div className="prices-container">
+                        {renderUpper()}
+                        <div className={"lower " }> {/* + (open[idx] ? "lower-open" : "lower-closed")}>*/}
+                            <div className="lower-inner">
+                                {Object.entries(endpoints).map(([key, [lst, setlst, img]]) => (
+                                    <div key={key} className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div>
+                                                    <PriceDisplay img={img}>
+                                                        {lst.length === 0 || lst[0].price === -100 ?
+                                                            <button className="button is-loading is-ghost">Loading</button> :
+                                                            <Picker data={lst} parentOpen={true}
+                                                                    setFirst={(n) => setFirst(lst, setlst, n)}
+                                                                    setStops={(n) => {
+                                                                        let l = lst[n].legs;
+                                                                        if (l !== undefined) {
+                                                                            addStops([l], idx);
+                                                                        }
+                                                                    }}/>
+                                                        }
+                                                    </PriceDisplay>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        } else  {
+            return (
+                <div className="level prices-container">
+                    <div className="level-left">
+                        <div className="level-item">
+                            <div>
+                                <FontAwesomeIcon icon={faCity} />
+                            </div>
+                        </div>
+                        <div className="level-item">
+                            <div>
+                                {makeCity(fromCity)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    return renderPrices();
+}

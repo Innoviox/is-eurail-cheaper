@@ -20,7 +20,7 @@ import { ImposedCityContext } from "../util/contexts.ts";
 
 export default function City({ name, color, onSearchSubmit, setImposedCity, deleteCity }:
                              { name: string, color: string,
-                               onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>,
+                               onSearchSubmit: (formData: FormData, loc: Location) => void,
                                setImposedCity: Dispatch<SetStateAction<string[]>>, deleteCity: () => void }) {
     const imposedCity = useContext(ImposedCityContext);
 
@@ -38,7 +38,7 @@ export default function City({ name, color, onSearchSubmit, setImposedCity, dele
 
     async function onSearchSubmitWrapper(formData: FormData, loc: Location) {
         setEditing(false);
-        await onSearchSubmit(formData, loc);
+        onSearchSubmit(formData, loc);
     }
 
     async function handleChange(e: ChangeEvent<HTMLInputElement>) {
