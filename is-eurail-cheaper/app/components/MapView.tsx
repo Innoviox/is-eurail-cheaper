@@ -123,10 +123,8 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
     );
 }
 
-export default function MapView({ latitude, longitude, coords, meaningless, stops, meaningless2, zoomTo, setZoomTo, setMap }:
-                                { latitude: number; longitude: number,
-                                  coords: any, meaningless: number, stops: LatLng[][][], meaningless2: number, zoomTo: number,
-                                  setZoomTo: (n: number) => void, setMap: Dispatch<any> }) {
+export default function MapView({ latitude, longitude, setMap }:
+                                { latitude: number; longitude: number, setMap: Dispatch<any> }) {
     const mapRef = useRef(null);
     const map = useContext(MapContext);
 

@@ -25,21 +25,14 @@ initialize();
 
 
 export default function Home() {
-    let [coords, setCoords] : [LatLng[], Dispatch<any>] = useState([]);
     let lat = 50, lng = 10;
 
-    let [meaningless, setMeaningless] = useState(143);
     let [visible, setVisible] = useState(false);
     let [visible2, setVisible2] = useState(false);
     let [visible3, setVisible3] = useState(false);
 
     let [weeks, setWeeks] = useState(2);
     let [currency, setCurrency] = useState("$ (USD)");
-
-    let [stops, setStops]: [LatLng[][][], Dispatch<any>] = useState([]);
-    let [meaningless2, setMeaningless2] = useState(0);
-
-    let [zoomTo, setZoomTo] = useState(-1);
 
     let [map, setMap] = useState<google.maps.Map | null>(null);
 
@@ -78,9 +71,7 @@ export default function Home() {
                 <div id="map">
                     <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
                         {/*<Wrapper apiKey="dead">*/}
-                        <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
-                                 stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo}
-                                 setMap={setMap} />
+                        <MapView latitude={lat} longitude={lng} setMap={setMap} />
                     </Wrapper>
                 </div>
                 <div id="trip">
