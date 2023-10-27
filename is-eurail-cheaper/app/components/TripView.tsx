@@ -70,33 +70,52 @@ export default function TripView() {
         return 0; // todo ??
     }
 
-    // todo do this better
-    // set = -1 => set list to price
-    // set is list => set each index in set to its corresponding index in price
-    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined | number[] = undefined) {
-        let n = [...lst];
+    function updateCities(newCities: ICity[]) {
+        setCities(newCities);
+        setCitiesHistory(citiesHistory.slice(0, citiesHistoryIdx + 1).concat([newCities]));
+        setCitiesHistoryIdx(citiesHistoryIdx + 1);
+    }
 
-        console.log("ADDING", set, price);
+    function setHistory(idx: number) {
+        setCities(citiesHistory[idx]);
+        setCitiesHistoryIdx(idx);
+    }
 
-        if (set === -1) {
-            n = price;
-        } else if (set === undefined) {
+    function undo() {
+        if (citiesHistoryIdx > 0) {
+            setHistory(citiesHistoryIdx - 1);
+        }
+    }
+
+    function redo() {
+        if (citiesHistoryIdx < citiesHistory.length - 1) {
+            setHistory(citiesHistoryIdx + 1);
+        }
+    }
+
+    function canUndo() {
+        return searchEnabled && citiesHistoryIdx > 0;
+    }
+
+    function canRedo() {
+        return searchEnabled && citiesHistoryIdx < citiesHistory.length - 1;
+    }
+
+    function addCity(price: any, set: number | undefined = undefined) {
+        let n = [...cities];
+
+        if (set === undefined) {
             n.push(price);
-        } else if (Array.isArray(set)) { // https://stackoverflow.com/questions/23130292/test-for-array-of-string-type-in-typescript
-            set.forEach((i, idx) => n[i] = price[idx]);
         } else {
             n[set] = price;
         }
 
-        setlst(n);
-        return n;
+        updateCities(n);
     }
 
-    function remove(lst: any[], setlst: Dispatch<any>, remove: number) {
-        let newlst = lst.filter((_: any, i: number) => i !== remove);
-        console.log(lst, newlst, remove);
-        setlst(newlst);
-        return newlst;
+    function deleteCity(remove: number) {
+        let n = cities.filter((_: any, i: number) => i !== remove);
+        updateCities(n);
     }
 
     function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
@@ -115,7 +134,7 @@ export default function TripView() {
             everAnimated = true;
         }
 
-        add(cities, setCities, city, idx);
+        addCity(city, idx);
     }
 
     function renderTrip(): React.JSX.Element {
@@ -127,11 +146,6 @@ export default function TripView() {
                 ))}
             </div>
         )
-    }
-
-    async function deleteCity(idx: number) {
-        console.log("DELETING", idx);
-        remove(cities, setCities, idx);
     }
 
     function renderTotals() {
@@ -241,10 +255,10 @@ export default function TripView() {
                         <div className="fade-in">
                             <div className="global-actions">
                                 <div className="buttons has-addons">
-                                    <button className="button action-button">
+                                    <button className="button action-button" onClick={undo} disabled={!canUndo()}>
                                         <FontAwesomeIcon icon={faRotateLeft} className="filter-undo" />
                                     </button>
-                                    <button className="button action-button">
+                                    <button className="button action-button" onClick={redo} disabled={!canRedo()}>
                                         <FontAwesomeIcon icon={faRotateRight} className="filter-undo" />
                                     </button>
                                 </div>
