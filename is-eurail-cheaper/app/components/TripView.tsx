@@ -239,22 +239,17 @@ export default function TripView({ weeks }:
                         <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                         <div className="divider"></div>
                         <div className="fade-in">
-                            {/*<div className="level">*/}
-                            {/*    <div className="level-right">*/}
-                            {/*        <div className="level-item">*/}
-                            {/*            <div>*/}
-                            {/*                <div className="tags has-addons price-picker-tags">*/}
-                            {/*                    <div className="tag is-success">*/}
-                            {/*                        <FontAwesomeIcon icon={faRotateLeft} />*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="tag is-warning">*/}
-                            {/*                        <FontAwesomeIcon icon={faRotateRight} />*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
+                            <div className="global-actions">
+                                <div className="tags has-addons">
+                                    <div className="tag is-success">
+                                        <FontAwesomeIcon icon={faRotateLeft} />
+                                    </div>
+                                    <div className="tag is-warning">
+                                        <FontAwesomeIcon icon={faRotateRight} />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
                             <div id="trips-box">
                                 {renderTrip()}
                             </div>
