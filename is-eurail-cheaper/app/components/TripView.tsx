@@ -53,8 +53,8 @@ export default function TripView() {
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
     let [cities, setCities]: [ICity[], Dispatch<any>] = useState([]);
-    let [citiesHistory, setCitiesHistory]: [ICity[][], Dispatch<any>] = useState([]);
-    let [citiesHistoryIdx, setCitiesHistoryIdx]: [number, Dispatch<any>] = useState(-1);
+    let [citiesHistory, setCitiesHistory]: [ICity[][], Dispatch<any>] = useState([[]]);
+    let [citiesHistoryIdx, setCitiesHistoryIdx]: [number, Dispatch<any>] = useState(0);
 
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
