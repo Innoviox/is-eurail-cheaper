@@ -82,13 +82,13 @@ export default function TripView() {
     }
 
     function undo() {
-        if (citiesHistoryIdx > 0) {
+        if (canUndo()) {
             setHistory(citiesHistoryIdx - 1);
         }
     }
 
     function redo() {
-        if (citiesHistoryIdx < citiesHistory.length - 1) {
+        if (canRedo()) {
             setHistory(citiesHistoryIdx + 1);
         }
     }
@@ -138,7 +138,6 @@ export default function TripView() {
     }
 
     function renderTrip(): React.JSX.Element {
-        // data = Array(1000).map(_ => [0, 0]);
         return (
             <div>
                 {cities.map((fromCity: ICity, idx: number) => (
