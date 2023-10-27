@@ -23,7 +23,7 @@ import boat from "../img/boat.png";
 import tram from "../img/tram.png";
 import { Location, Result, ICity } from '../util/types.ts';
 import { fromUSD } from '../util/utilities.ts';
-import { CurrencyContext, ImposedCityContext } from '../util/contexts.ts';
+import { SettingsContext, ImposedCityContext } from '../util/contexts.ts';
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -42,10 +42,8 @@ const sentinel = -100; // todo do this differently (classic)
 let everAnimated = false;
 
 
-export default function TripView({ weeks }:
-                                 { weeks: number }
-                                 ) {
-    const currency = useContext(CurrencyContext);
+export default function TripView() {
+    const settings = useContext(SettingsContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
     let [data, setData] = useState(new Map<string, number[]>);
@@ -55,6 +53,8 @@ export default function TripView({ weeks }:
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
     let [cities, setCities]: [ICity[], Dispatch<any>] = useState([]);
+    let [citiesHistory, setCitiesHistory]: [ICity[][], Dispatch<any>] = useState([]);
+    let [citiesHistoryIdx, setCitiesHistoryIdx]: [number, Dispatch<any>] = useState(-1);
 
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
@@ -64,39 +64,58 @@ export default function TripView({ weeks }:
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
             if (days >= cities.length) {
-                return fromUSD(price, currency);
+                return fromUSD(price, settings.currency);
             }
         }
         return 0; // todo ??
     }
 
-    // todo do this better
-    // set = -1 => set list to price
-    // set is list => set each index in set to its corresponding index in price
-    function add(lst: any[], setlst: Dispatch<any>, price: any, set: number | undefined | number[] = undefined) {
-        let n = [...lst];
+    function updateCities(newCities: ICity[]) {
+        setCities(newCities);
+        setCitiesHistory(citiesHistory.slice(0, citiesHistoryIdx + 1).concat([newCities]));
+        setCitiesHistoryIdx(citiesHistoryIdx + 1);
+    }
 
-        console.log("ADDING", set, price);
+    function setHistory(idx: number) {
+        setCities(citiesHistory[idx]);
+        setCitiesHistoryIdx(idx);
+    }
 
-        if (set === -1) {
-            n = price;
-        } else if (set === undefined) {
+    function undo() {
+        if (canUndo()) {
+            setHistory(citiesHistoryIdx - 1);
+        }
+    }
+
+    function redo() {
+        if (canRedo()) {
+            setHistory(citiesHistoryIdx + 1);
+        }
+    }
+
+    function canUndo() {
+        return searchEnabled && citiesHistoryIdx > 0;
+    }
+
+    function canRedo() {
+        return searchEnabled && citiesHistoryIdx < citiesHistory.length - 1;
+    }
+
+    function addCity(price: any, set: number | undefined = undefined) {
+        let n = [...cities];
+
+        if (set === undefined) {
             n.push(price);
-        } else if (Array.isArray(set)) { // https://stackoverflow.com/questions/23130292/test-for-array-of-string-type-in-typescript
-            set.forEach((i, idx) => n[i] = price[idx]);
         } else {
             n[set] = price;
         }
 
-        setlst(n);
-        return n;
+        updateCities(n);
     }
 
-    function remove(lst: any[], setlst: Dispatch<any>, remove: number) {
-        let newlst = lst.filter((_: any, i: number) => i !== remove);
-        console.log(lst, newlst, remove);
-        setlst(newlst);
-        return newlst;
+    function deleteCity(remove: number) {
+        let n = cities.filter((_: any, i: number) => i !== remove);
+        updateCities(n);
     }
 
     function onSearchSubmit(formData: FormData, location: Location, idx: number | undefined = undefined) {
@@ -115,23 +134,17 @@ export default function TripView({ weeks }:
             everAnimated = true;
         }
 
-        add(cities, setCities, city, idx);
+        addCity(city, idx);
     }
 
     function renderTrip(): React.JSX.Element {
-        // data = Array(1000).map(_ => [0, 0]);
         return (
             <div>
                 {cities.map((fromCity: ICity, idx: number) => (
-                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity} addData={addData}  />
+                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity} addData={addData}  />
                 ))}
             </div>
         )
-    }
-
-    async function deleteCity(idx: number) {
-        console.log("DELETING", idx);
-        remove(cities, setCities, idx);
     }
 
     function renderTotals() {
@@ -170,7 +183,7 @@ export default function TripView({ weeks }:
                                     <div className="flip-parent" key="db">
                                         <div className="tags has-addons">
                                             <div className="tag is-info price-picker-tag">
-                                                { currency.split(" ")[0] }
+                                                { settings.currency.split(" ")[0] }
                                             </div>
                                             <div className={"tag price-picker-tag price "}>
                                                 {sumdb}
@@ -190,7 +203,7 @@ export default function TripView({ weeks }:
                                     <div className="flip-parent" key="eu">
                                         <div className="tags has-addons price-picker" onClick={() => setShowFullEuro(!showFullEuro)}>
                                             <div className="tag is-info price-picker-tag">
-                                                { currency.split(" ")[0] }
+                                                { settings.currency.split(" ")[0] }
                                             </div>
                                             {showFullEuro ? <>
                                                 <div className={"tag price-picker-tag price "}>
@@ -239,22 +252,17 @@ export default function TripView({ weeks }:
                         <SearchBar onSearchSubmit={onSearchSubmit} enabled={searchEnabled} />
                         <div className="divider"></div>
                         <div className="fade-in">
-                            {/*<div className="level">*/}
-                            {/*    <div className="level-right">*/}
-                            {/*        <div className="level-item">*/}
-                            {/*            <div>*/}
-                            {/*                <div className="tags has-addons price-picker-tags">*/}
-                            {/*                    <div className="tag is-success">*/}
-                            {/*                        <FontAwesomeIcon icon={faRotateLeft} />*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="tag is-warning">*/}
-                            {/*                        <FontAwesomeIcon icon={faRotateRight} />*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
+                            <div className="global-actions">
+                                <div className="buttons has-addons">
+                                    <button className="button action-button" onClick={undo} disabled={!canUndo()}>
+                                        <FontAwesomeIcon icon={faRotateLeft} className="filter-undo" />
+                                    </button>
+                                    <button className="button action-button" onClick={redo} disabled={!canRedo()}>
+                                        <FontAwesomeIcon icon={faRotateRight} className="filter-undo" />
+                                    </button>
+                                </div>
+                            </div>
+                            <br />
                             <div id="trips-box">
                                 {renderTrip()}
                             </div>
