@@ -15,17 +15,16 @@ import PriceDisplay from "@/app/components/PriceDisplay.tsx";
 import Picker from "@/app/components/Picker.tsx";
 import City from "@/app/components/City.tsx";
 import colors from "@/app/util/colors.ts";
-import { MapContext } from "../util/contexts.ts";
+import {MapContext, SettingsContext} from "../util/contexts.ts";
 import { MarkerWrapper, pathToBounds } from "./MapView.tsx";
 import { ICity } from "../util/types.ts";
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-const Trip = forwardRef(function Trip({ fromCity, toCity, weeks, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, addData }: {
+const Trip = forwardRef(function Trip({ fromCity, toCity, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, addData }: {
     fromCity: ICity,
     toCity: ICity | undefined,
-    weeks: number,
     setSearchEnabled: Dispatch<any>,
     setImposedCity: Dispatch<any>,
     onSearchSubmit: (f: FormData, l: Location, i: number) => void,
@@ -33,6 +32,8 @@ const Trip = forwardRef(function Trip({ fromCity, toCity, weeks, setSearchEnable
     deleteCity: (n: number) => void,
     addData: (key: string, value: number[]) => void
 }, ref) {
+    const settings = useContext(SettingsContext);
+
     let map = useContext(MapContext);
 
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
@@ -71,7 +72,7 @@ const Trip = forwardRef(function Trip({ fromCity, toCity, weeks, setSearchEnable
 
         setSearchEnabled(false);
         let addedStops = false;
-        let d = increaseDate(new Date(), weeks, 8);
+        let d = increaseDate(new Date(), settings.weeks, 8);
         let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
             await fetch(PRICE_API(key, fromCity.name, toCity.name, d), {
                 method: 'GET'

@@ -23,7 +23,7 @@ import boat from "../img/boat.png";
 import tram from "../img/tram.png";
 import { Location, Result, ICity } from '../util/types.ts';
 import { fromUSD } from '../util/utilities.ts';
-import { CurrencyContext, ImposedCityContext } from '../util/contexts.ts';
+import { SettingsContext, ImposedCityContext } from '../util/contexts.ts';
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -42,10 +42,8 @@ const sentinel = -100; // todo do this differently (classic)
 let everAnimated = false;
 
 
-export default function TripView({ weeks }:
-                                 { weeks: number }
-                                 ) {
-    const currency = useContext(CurrencyContext);
+export default function TripView() {
+    const settings = useContext(SettingsContext);
     const [imposedCity, setImposedCity]: [string[], Dispatch<any>] = useState([]);
 
     let [data, setData] = useState(new Map<string, number[]>);
@@ -66,7 +64,7 @@ export default function TripView({ weeks }:
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
             if (days >= cities.length) {
-                return fromUSD(price, currency);
+                return fromUSD(price, settings.currency);
             }
         }
         return 0; // todo ??
@@ -125,7 +123,7 @@ export default function TripView({ weeks }:
         return (
             <div>
                 {cities.map((fromCity: ICity, idx: number) => (
-                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} weeks={weeks} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity} addData={addData}  />
+                    <Trip key={idx} fromCity={fromCity} toCity={city(idx + 1)} setSearchEnabled={setSearchEnabled} setImposedCity={setImposedCity} onSearchSubmit={onSearchSubmit} idx={idx} deleteCity={deleteCity} addData={addData}  />
                 ))}
             </div>
         )
@@ -172,7 +170,7 @@ export default function TripView({ weeks }:
                                     <div className="flip-parent" key="db">
                                         <div className="tags has-addons">
                                             <div className="tag is-info price-picker-tag">
-                                                { currency.split(" ")[0] }
+                                                { settings.currency.split(" ")[0] }
                                             </div>
                                             <div className={"tag price-picker-tag price "}>
                                                 {sumdb}
@@ -192,7 +190,7 @@ export default function TripView({ weeks }:
                                     <div className="flip-parent" key="eu">
                                         <div className="tags has-addons price-picker" onClick={() => setShowFullEuro(!showFullEuro)}>
                                             <div className="tag is-info price-picker-tag">
-                                                { currency.split(" ")[0] }
+                                                { settings.currency.split(" ")[0] }
                                             </div>
                                             {showFullEuro ? <>
                                                 <div className={"tag price-picker-tag price "}>

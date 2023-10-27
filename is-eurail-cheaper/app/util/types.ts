@@ -8,3 +8,4 @@ export type Result = { price: number, length: number, legs: LatLng[][] | undefin
 export type Endpoint = [Result[], Dispatch<any>, StaticImageData]
 export type EndpointResult = { price: string, currency: string, length: string, legs: { location: Location }[][], departure: Date }
 export type ICity = { name: string, id: string, location: LatLng }
+export type Settings = { weeks: number, currency: string }

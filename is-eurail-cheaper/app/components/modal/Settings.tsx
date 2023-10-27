@@ -1,18 +1,17 @@
 import { ChangeEvent, useState, createContext } from "react";
 import { currencies } from '../../util/utilities.ts';
+import { Settings } from '../../util/types.ts';
 
-export default function Settings({ visible, setVisible, setWeeksGlobal, setCurrencyGlobal }:
+export default function Settings({ visible, setVisible, setSettings }:
                                  { visible: boolean,
                                    setVisible: (visible: boolean) => void
-                                   setWeeksGlobal: (weeks: number) => void,
-                                   setCurrencyGlobal: (currency: string) => void }) {
+                                   setSettings: (s: Settings) => void }) {
     let [weeks, setWeeksInternal] = useState(2);
     let [currency, setCurrencyInternal] = useState("$ (USD)");
 
     function close() { // update global settings & make modal disappear
         setVisible(false);
-        setWeeksGlobal(weeks);
-        setCurrencyGlobal(currency);
+        setSettings({weeks: weeks, currency: currency});
     }
 
     return (

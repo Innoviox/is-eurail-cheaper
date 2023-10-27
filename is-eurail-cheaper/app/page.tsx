@@ -15,7 +15,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./util/colors.ts";
-import { CurrencyContext, MapContext } from "./util/contexts.ts";
+import { SettingsContext, MapContext } from "./util/contexts.ts";
 
 import Image from 'next/image';
 import scale from "./img/scale.png";
@@ -31,13 +31,13 @@ export default function Home() {
     let [visible2, setVisible2] = useState(false);
     let [visible3, setVisible3] = useState(false);
 
-    let [weeks, setWeeks] = useState(2);
-    let [currency, setCurrency] = useState("$ (USD)");
+    let [settings, setSettings] = useState({weeks: 2, currency: "$ (USD)"});
 
     let [map, setMap] = useState<google.maps.Map | null>(null);
 
     return (
         <MapContext.Provider value={map}>
+        <SettingsContext.Provider value={settings}>
             <main id="main">
             <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
@@ -70,20 +70,18 @@ export default function Home() {
             <div id="container">
                 <div id="map">
                     <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
-                        {/*<Wrapper apiKey="dead">*/}
                         <MapView latitude={lat} longitude={lng} setMap={setMap} />
                     </Wrapper>
                 </div>
                 <div id="trip">
-                    <CurrencyContext.Provider value={currency}>
-                        <TripView weeks={weeks} />
-                    </CurrencyContext.Provider>
+                    <TripView />
                 </div>
             </div>
-            <Settings visible={visible} setVisible={setVisible} setWeeksGlobal={setWeeks} setCurrencyGlobal={setCurrency} />
+            <Settings visible={visible} setVisible={setVisible} setSettings={setSettings} />
             <About visible={visible2} setVisible={setVisible2} />
             <Guide visible={visible3} setVisible={setVisible3} />
         </main>
+        </SettingsContext.Provider>
         </MapContext.Provider>
     )
 }

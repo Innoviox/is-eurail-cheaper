@@ -18,6 +18,5 @@ export const exchangeRates = new Map(Object.entries({ // from USD
     // "(THB)": 36.46
 }));
 
-// https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
-export const toUSD = (price: number, currency: string) => Math.round(price / (exchangeRates.get(currency.split(" ")[1]) ?? 1) * 100) / 100;
-export const fromUSD = (price: number, currency: string) => Math.round(price * (exchangeRates.get(currency.split(" ")[1]) ?? 1) * 100) / 100;
+export const toUSD = (price: number, currency: string) => Math.trunc(price / (exchangeRates.get(currency.split(" ")[1]) ?? 1));
+export const fromUSD = (price: number, currency: string) => Math.trunc(price * (exchangeRates.get(currency.split(" ")[1]) ?? 1));
