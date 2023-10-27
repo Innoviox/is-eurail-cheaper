@@ -9,7 +9,7 @@ export type DropdownHandle = {
 
 const SearchBarDropDown = forwardRef(function SearchBarDropDown({ showDropdown, setShowDropdown, onSearchSubmit, setInputVal } :
                                                   { showDropdown: boolean, setShowDropdown:  Dispatch<SetStateAction<boolean>>,
-                                                      onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>,
+                                                      onSearchSubmit: (formData: FormData, loc: Location) => void,
                                                       setInputVal:  Dispatch<SetStateAction<string>> }, ref) {
     let [stations, setStations]: [string[], Dispatch<any>] = useState([]);
     let [stationIds, setStationIds] = useState(new Map<string, [string, Location]>());
@@ -30,7 +30,7 @@ const SearchBarDropDown = forwardRef(function SearchBarDropDown({ showDropdown, 
         let [id, loc] = stationIds.get(toCity as string) ?? ["", {longitude: 0, latitude: 0}];
         formData.append("toCityId", id);
         setShowDropdown(false);
-        await onSearchSubmit(formData, loc);
+        onSearchSubmit(formData, loc);
     }
 
     // https://stackoverflow.com/questions/37949981/call-child-method-from-parent

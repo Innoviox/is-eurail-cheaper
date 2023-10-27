@@ -1,11 +1,11 @@
 'use client'
-import {Dispatch, useState} from "react";
+import React, {Dispatch, useState} from "react";
 
 import {Wrapper} from '@googlemaps/react-wrapper';
 
 import MapView from './components/MapView.tsx';
 import TripView from './components/TripView.tsx';
-import Settings, { CurrencyContext } from './components/modal/Settings.tsx';
+import Settings from './components/modal/Settings.tsx';
 import About from '@/app/components/modal/About.tsx';
 import Guide from './components/modal/Guide.tsx';
 
@@ -15,6 +15,7 @@ import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faGear, faQuestion, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { initialize } from "./util/colors.ts";
+import { CurrencyContext, MapContext } from "./util/contexts.ts";
 
 import Image from 'next/image';
 import scale from "./img/scale.png";
@@ -22,8 +23,9 @@ import scale from "./img/scale.png";
 initialize();
 
 
+
 export default function Home() {
-    let [coords, setCoords] : [{lat: number, lng: number}[], Dispatch<any>] = useState([]);
+    let [coords, setCoords] : [LatLng[], Dispatch<any>] = useState([]);
     let lat = 50, lng = 10;
 
     let [meaningless, setMeaningless] = useState(143);
@@ -39,48 +41,11 @@ export default function Home() {
 
     let [zoomTo, setZoomTo] = useState(-1);
 
-    function addCoords(lat: number, lng: number, idx: number | undefined = undefined) {
-        let newCoords = coords;
-        if (idx === undefined) {
-            newCoords.push({'lat': lat, 'lng': lng});
-        } else {
-            newCoords[idx] = {'lat': lat, 'lng': lng};
-        }
-        setCoords(newCoords);
-        setMeaningless(meaningless + 1);
-    }
-
-    function addStops(newStops: LatLng[][][], set: number | number[] | undefined = undefined) {
-        let newS = stops;
-
-        if (set === undefined) {
-            newS.push(newStops[0]);
-        } else if (Array.isArray(set)) {
-            set.forEach((s, idx) => {
-                newS[s] = newStops[idx];
-            });
-        } else {
-            newS[set] = newStops[0];
-        }
-
-        setStops(newS);
-        setMeaningless2(meaningless2 + 1);
-    }
-
-    function removeStops(idx: number) {
-        let newS = stops;
-        newS.splice(idx, 1);
-        setStops(newS);
-        setMeaningless2(meaningless2 + 1);
-
-        let newC = coords;
-        newC.splice(idx, 1);
-        setCoords(newC);
-        setMeaningless(meaningless + 1);
-    }
+    let [map, setMap] = useState<google.maps.Map | null>(null);
 
     return (
-        <main id="main">
+        <MapContext.Provider value={map}>
+            <main id="main">
             <nav id="navbar" className="navbar is-light" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
                     <div className="navbar-item">
@@ -89,9 +54,9 @@ export default function Home() {
                 </div>
                 <div className="navbar-menu">
                     <div className="navbar-start">
-                        <span className="navbar-item">
-                          Is Eurail Cheaper?
-                        </span>
+                <span className="navbar-item">
+                  Is Eurail Cheaper?
+                </span>
                     </div>
                     <div className="navbar-end">
                         <a className="navbar-item" onClick={() => setVisible3(true)}>
@@ -107,19 +72,20 @@ export default function Home() {
                             <FontAwesomeIcon icon={faGithub} />
                         </a>
                     </div>
-              </div>
+                </div>
             </nav>
             <div id="container">
                 <div id="map">
-                  <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
-                  {/*<Wrapper apiKey="dead">*/}
-                    <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
-                             stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo} />
-                  </Wrapper>
+                    <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "dead"} version="beta" libraries={["marker"]}>
+                        {/*<Wrapper apiKey="dead">*/}
+                        <MapView latitude={lat} longitude={lng} coords={coords} meaningless={meaningless}
+                                 stops={stops} meaningless2={meaningless2} zoomTo={zoomTo} setZoomTo={setZoomTo}
+                                 setMap={setMap} />
+                    </Wrapper>
                 </div>
                 <div id="trip">
                     <CurrencyContext.Provider value={currency}>
-                        <TripView addCoords={addCoords} weeks={weeks} addStops={addStops} setZoomTo={setZoomTo} removeStops={removeStops} />
+                        <TripView weeks={weeks} />
                     </CurrencyContext.Provider>
                 </div>
             </div>
@@ -127,5 +93,6 @@ export default function Home() {
             <About visible={visible2} setVisible={setVisible2} />
             <Guide visible={visible3} setVisible={setVisible3} />
         </main>
+        </MapContext.Provider>
     )
 }

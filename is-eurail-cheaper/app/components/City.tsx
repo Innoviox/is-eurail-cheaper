@@ -1,11 +1,29 @@
-import React, {useState, useRef, RefObject} from "react";
+import React, {
+    useState,
+    useRef,
+    RefObject,
+    createContext,
+    useContext,
+    SetStateAction,
+    Dispatch,
+    ChangeEvent,
+    Context
+} from "react";
 import Image from "next/image";
 import edit from "../img/edit.png";
 import {useOuterClick} from "@/app/util/outerclick.ts";
-import SearchBarDropDown, {DropdownHandle} from "@/app/components/SearchBarDropDown.tsx";
+import SearchBarDropDown, {DropdownHandle} from "./SearchBarDropDown.tsx";
 import {Location} from "@/app/util/types.ts";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import { ImposedCityContext } from "../util/contexts.ts";
 
-export default function City({name, color, onSearchSubmit}: {name: string, color: string, onSearchSubmit: (formData: FormData, loc: Location) => Promise<void>}) {
+export default function City({ name, color, onSearchSubmit, setImposedCity, deleteCity }:
+                             { name: string, color: string,
+                               onSearchSubmit: (formData: FormData, loc: Location) => void,
+                               setImposedCity: Dispatch<SetStateAction<string[]>>, deleteCity: () => void }) {
+    const imposedCity = useContext(ImposedCityContext);
+
     // search bar drop down boilerplate
     const innerRef: RefObject<HTMLDivElement> = useOuterClick(closeDropdown);
     const dropdownRef = useRef<DropdownHandle>();
@@ -15,11 +33,46 @@ export default function City({name, color, onSearchSubmit}: {name: string, color
         setShowDropdown(false);
         setEditing(false);
         setInputVal("");
+        setImposedCity(["", ""]);
     }
 
     async function onSearchSubmitWrapper(formData: FormData, loc: Location) {
         setEditing(false);
-        await onSearchSubmit(formData, loc);
+        onSearchSubmit(formData, loc);
+    }
+
+    async function handleChange(e: ChangeEvent<HTMLInputElement>) {
+        setImposedCity([name, e.target.value]);
+        if (dropdownRef.current !== undefined) {
+            dropdownRef.current.handleChange(e);
+        }
+    }
+
+    function renderName() {
+        if (editing) {
+            return (
+                <input type="text" className="input city-name-input is-static" placeholder="New city..."
+                       autoFocus={true} style={{width: nameRef.current ? nameRef.current.clientWidth : 100,
+                    height: nameRef.current ? nameRef.current.clientHeight : 24}}
+                       onChange={handleChange}
+                       value={inputVal} />
+            )
+        } else if (imposedCity[0] === name) {
+            return (
+                <input type="text" className="input city-name-input is-static" placeholder="New city..."
+                   style={{width: nameRef.current ? nameRef.current.clientWidth : 100,
+                           height: nameRef.current ? nameRef.current.clientHeight : 24}}
+                   readOnly={true}
+                   value={imposedCity[1]} />
+            )
+        } else {
+            return <span className="city-name">{name}</span>;
+        }
+    }
+
+    function startEditing() {
+        setImposedCity([name, ""]);
+        setEditing(true);
     }
 
     let [hovering, setHovering] = useState(false);
@@ -33,19 +86,14 @@ export default function City({name, color, onSearchSubmit}: {name: string, color
                 <span className="dot inline-block" style={{"backgroundColor": color}} />
 
                 <div ref={nameRef} className="inline-block">
-                    {editing ?
-                        <input type="text" className="input city-name-input is-static" placeholder="New city..."
-                           autoFocus={true} style={{width: nameRef.current ? nameRef.current.clientWidth : 100,
-                                                    height: nameRef.current ? nameRef.current.clientHeight : 24}}
-                           onChange={(e) => dropdownRef.current && dropdownRef.current.handleChange(e)}
-                           value={inputVal} />
-                        : <span className="city-name">{name}</span>
-                    }
+                    {renderName()}
                 </div>
-                {/* onBlur={() => setEditing(false)} /> */}
 
-                <div className="edit-container" onClick={() => setEditing(true)}>
-                    <Image src={edit} alt="edit" className={"edit " + (hovering ? "bright": "")} />
+                <div className="action-container edit-container" onClick={startEditing}>
+                    <Image src={edit} alt="edit" className={"action-icon edit " + (hovering ? "bright": "")} />
+                </div>
+                <div className="action-container trash-container" onClick={deleteCity}>
+                    <FontAwesomeIcon className={"action-icon trash " + (hovering ? "bright": "")} icon={faTrashCan} />
                 </div>
             </div>
             {editing ? <SearchBarDropDown ref={dropdownRef} showDropdown={showDropdown} setShowDropdown={setShowDropdown} onSearchSubmit={onSearchSubmitWrapper} setInputVal={setInputVal} />

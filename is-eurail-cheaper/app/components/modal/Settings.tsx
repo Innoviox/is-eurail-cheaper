@@ -1,6 +1,5 @@
 import { ChangeEvent, useState, createContext } from "react";
 import { currencies } from '../../util/utilities.ts';
-export const CurrencyContext = createContext("$ (USD)");
 
 export default function Settings({ visible, setVisible, setWeeksGlobal, setCurrencyGlobal }:
                                  { visible: boolean,

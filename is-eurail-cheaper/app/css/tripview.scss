@@ -1,5 +1,5 @@
 #trips-box {
-  padding: 10px;
+  padding: 10px 10px 10px 0;
   border-radius: 25px;
 }
 
@@ -17,82 +17,6 @@
 
 .floating {
   padding: 10px;
-}
-
-.upper {
-  padding: 1px;
-}
-
-.lower .level, .upper.level, #total .level, #total .content {
-  margin-bottom: 0 !important;
-}
-
-.lower-inner {
-  border-left: 2px solid gray;
-  margin-left: 10px;
-  padding-left: 10px;
-}
-
-.lower-closed {
-  max-height: 0;
-}
-
-.lower {
-  overflow: hidden;
-  height: auto;
-}
-
-.divider {
-  border-bottom: 1px solid #bbb;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-// https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
-#alone-text {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 1;
-  width: 295px;
-}
-
-#alone-searchbar {
-  position: absolute;
-  top: 30%;
-  //left: 23%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 1;
-  width: 295px;
-}
-
-.action-tag:hover {
-  filter: brightness(85%);
-}
-
-.is-loading {
-  z-index: 0;
-}
-
-@keyframes lower-open {
-  from {
-    max-height: 0;
-  }
-
-  to {
-    max-height: 100px !important;
-  }
-}
-
-.lower {
-  transition: max-height 0.3s;
-}
-
-.lower-open {
-  animation: lower-open 0.3s;
-  max-height: 100px;
 }
 
 .animating-search-bar {
@@ -120,4 +44,34 @@
 .fade-out {
   opacity: 0;
   animation: fade-in reverse 0.2s;
+}
+
+// https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
+#alone-text {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+  width: 295px;
+}
+
+#alone-searchbar {
+  position: absolute;
+  top: 30%;
+  //left: 23%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+  width: 295px;
+}
+
+.divider {
+  border-bottom: 1px solid #bbb;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.reset-button {
+
 }
