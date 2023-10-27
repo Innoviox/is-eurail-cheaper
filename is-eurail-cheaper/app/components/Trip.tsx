@@ -22,7 +22,7 @@ import { ICity } from "../util/types.ts";
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
 const sentinel = -100;
-const Trip = forwardRef(function Trip({ fromCity, toCity, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, addData }: {
+export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCity, onSearchSubmit, idx, deleteCity, addData }: {
     fromCity: ICity,
     toCity: ICity | undefined,
     setSearchEnabled: Dispatch<any>,
@@ -31,7 +31,7 @@ const Trip = forwardRef(function Trip({ fromCity, toCity, setSearchEnabled, setI
     idx: number,
     deleteCity: (n: number) => void,
     addData: (key: string, value: number[]) => void
-}, ref) {
+}) {
     const settings = useContext(SettingsContext);
 
     let map = useContext(MapContext);
@@ -220,6 +220,4 @@ const Trip = forwardRef(function Trip({ fromCity, toCity, setSearchEnabled, setI
             <MarkerWrapper map={map ?? null} from={fromCity.location} to={toCity === undefined ? undefined : toCity!.location} stops={stops} colors={[colors[idx], colors[idx + 1]]}/>
         </div>
     )
-});
-
-export default Trip;
+}
