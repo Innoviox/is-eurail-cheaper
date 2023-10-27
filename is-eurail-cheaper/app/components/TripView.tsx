@@ -55,6 +55,8 @@ export default function TripView({ weeks }:
 
     // cities is a list of [string, id]; can't be a map cause we can have multiple instances of same city
     let [cities, setCities]: [ICity[], Dispatch<any>] = useState([]);
+    let [citiesHistory, setCitiesHistory]: [ICity[][], Dispatch<any>] = useState([]);
+    let [citiesHistoryIdx, setCitiesHistoryIdx]: [number, Dispatch<any>] = useState(-1);
 
     let [searchEnabled, setSearchEnabled] = useState(true);
     let [animatingSearch, setAnimatingSearch] = useState(false);
@@ -240,13 +242,13 @@ export default function TripView({ weeks }:
                         <div className="divider"></div>
                         <div className="fade-in">
                             <div className="global-actions">
-                                <div className="tags has-addons">
-                                    <div className="tag is-success">
-                                        <FontAwesomeIcon icon={faRotateLeft} />
-                                    </div>
-                                    <div className="tag is-warning">
-                                        <FontAwesomeIcon icon={faRotateRight} />
-                                    </div>
+                                <div className="buttons has-addons">
+                                    <button className="button action-button">
+                                        <FontAwesomeIcon icon={faRotateLeft} className="filter-undo" />
+                                    </button>
+                                    <button className="button action-button">
+                                        <FontAwesomeIcon icon={faRotateRight} className="filter-undo" />
+                                    </button>
                                 </div>
                             </div>
                             <br />

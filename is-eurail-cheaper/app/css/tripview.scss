@@ -79,3 +79,13 @@
 .global-actions {
   float: right;
 }
+
+.action-button {
+  width: 25px;
+  height: 25px;
+}
+
+// https://stackoverflow.com/questions/22252472/how-can-i-change-the-color-of-an-svg-element
+.filter-undo {
+  filter: invert(18%) sepia(77%) saturate(3035%) hue-rotate(225deg) brightness(95%) contrast(106%);
+}
