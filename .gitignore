@@ -5,3 +5,4 @@ __pycache__
 .idea
 api-key.txt
 is-eurail-cheaper/.env
+dbapikey
