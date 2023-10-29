@@ -2,6 +2,7 @@
 
 - frontend: `npm run dev`
 - https://github.com/trainline-eu/stations
+- https://www.kaggle.com/datasets/headsortails/train-stations-in-europe
 
 # Todos
 
