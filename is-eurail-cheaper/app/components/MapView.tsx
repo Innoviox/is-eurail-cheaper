@@ -99,16 +99,16 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
 
     return (
         <div>
-            {[from, to].map((pos) => { return pos === undefined ? <></> :
+            {[from, to].map((pos, idx: number) => { return pos === undefined ? <></> :
                 <Marker map={map} position={pos} onClick={() => console.log("clicked")}>
                     <div id="circle-container">
-                        <div className="item" style={{backgroundColor: colors[1]}}></div>
+                        <div className="item" style={{backgroundColor: colors[idx]}}></div>
                         {/* add circles on last element*/}
                         {circles.map(i => {
                             return (
                                 <div key={i} className="circle" style={{
                                     "animationDelay": `${i}s`,
-                                    "border": `1px solid ${colors[1]}`
+                                    "border": `1px solid ${colors[idx]}`
                                 }}/>
                             )
                         })}
