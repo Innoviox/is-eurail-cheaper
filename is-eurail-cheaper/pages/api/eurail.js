@@ -3,6 +3,7 @@ import strftime from 'strftime';
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 let url = (fromCityId, toCityId, timestamp) => `https://api.timetable.eurail.com/v2/timetable?origin=${fromCityId}&destination=${toCityId}&timestamp=${timestamp}&tripsNumber=5&currency=USD`
 let stationUrl = (query) => `https://api.timetable.eurail.com/v2/locations?input=${query}&results=1`
+let resultUrl = (from_city, from_id, to_city, to_id, dateInMS) => `https://www.eurail.com/en/book-reservations?ol=${from_city}&ov=${from_id}&dl=${to_city}&dv=${to_id}&t=${dateInMS}`
 
 async function stationToId(station) {
     return fetch(stationUrl(station))
@@ -28,7 +29,8 @@ async function get_journeys(from_city, to_city, date) {
                 price: trip.price ?? 0,
                 currency: "USD",
                 length: length,
-                departure: start
+                departure: start,
+                link: resultUrl(from_city, from_id, to_city, to_id, date.getTime())
                 // legs: legs
             }
         }));
