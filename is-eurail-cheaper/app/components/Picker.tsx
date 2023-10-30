@@ -1,6 +1,6 @@
 import React, { useState, useRef, Dispatch, LegacyRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faDollarSign, faCaretUp, faCaretDown, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faDollarSign, faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 import { LatLng, Result } from '../util/types.ts';
 import { SettingsContext } from '../util/contexts.ts';
@@ -63,6 +63,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
         }
 
         return (
+            <>
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
                  key={tripN} ref={tripN === 0 ? topRef as LegacyRef<HTMLDivElement> : undefined} style={style}
                  onClick={() => {
@@ -86,13 +87,6 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     { formatTime(data[tripN].length) }
                 </div>
 
-                {/*<div className="tag is-info price-picker-tag">*/}
-                {/*    <FontAwesomeIcon icon={faClock} />*/}
-                {/*</div>*/}
-                {/*<div className="tag price-picker-tag is-primary">*/}
-                {/*    { hours_minutes(data[tripN].departure) }*/}
-                {/*</div>*/}
-
                 {
                     tripN === 0 ?
                         <div className="tag price-picker-tag">
@@ -101,6 +95,16 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                         : <></>
                 }
             </div>
+            {
+                tripN === 0 ?
+                    <div className="tag price-picker-tag link-tag is-link">
+                        <a href={data[tripN].link} target="_blank" rel="noreferrer">
+                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                        </a>
+                    </div>
+                    : <></>
+            }
+            </>
         )
     }
 
@@ -159,7 +163,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
     if (parentOpen || open === 0) {
         return (
             <div className={"flip-parent "}>
-                <div onClick={() => startAnimation()}>
+                <div onClick={() => startAnimation()} className="price-container">
                     {renderPricePickerElement(0)}
                 </div>
 
