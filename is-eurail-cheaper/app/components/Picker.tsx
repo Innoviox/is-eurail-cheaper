@@ -67,7 +67,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
             <div className={"tags has-addons price-picker " + classes[tripN].join(" ") + (tripN === 0 ? " first" : "")}
                  key={tripN} ref={tripN === 0 ? topRef as LegacyRef<HTMLDivElement> : undefined} style={style}
                  onClick={() => {
-                     if (tripN !== 0 && startAnimation()) {
+                     if (startAnimation() && tripN !== 0) {
                          setFirst(tripN);
                          setStops(tripN);
                      }
@@ -163,7 +163,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
     if (parentOpen || open === 0) {
         return (
             <div className={"flip-parent "}>
-                <div onClick={() => startAnimation()} className="price-container">
+                <div className="price-container">
                     {renderPricePickerElement(0)}
                 </div>
 
