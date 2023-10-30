@@ -10,7 +10,7 @@ import React, {
     forwardRef,
 } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute} from "@fortawesome/free-solid-svg-icons";
+import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute, faArrowsToCircle} from "@fortawesome/free-solid-svg-icons";
 import PriceDisplay from "@/app/components/PriceDisplay.tsx";
 import Picker from "@/app/components/Picker.tsx";
 import City from "@/app/components/City.tsx";
@@ -39,6 +39,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
     let [db, setDb]: [Result[], Dispatch<any>] = useState([]);
     let [eurail, setEurail]: [Result[], Dispatch<any>] = useState([]);
     let [stops, setStops]: [LatLng[][], Dispatch<any>] = useState([]);
+    let [open, setOpen] = useState(true);
 
     const endpoints: {db: Endpoint, eurail: Endpoint} = {"db": [db, setDb, db_image], "eurail": [eurail, setEurail, eurail_image]};
 
@@ -137,7 +138,10 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                     </div>
                 </div>
                 <div className="level-right">
-                    <div className="tags">
+                    <div className="tags has-addons">
+                        <div className={"tag action-tag is-info " + (open ? "is-light" : "")} onClick={() => setOpen(!open)}>
+                            <FontAwesomeIcon icon={faArrowsToCircle} />
+                        </div>
                         <div className="tag action-tag is-link" onClick={() => map && map.fitBounds(pathToBounds(stops.flat()), 10)}>
                             <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         </div>
@@ -153,7 +157,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                 <div>
                     <div className="prices-container">
                         {renderUpper()}
-                        <div className={"lower " }> {/* + (open[idx] ? "lower-open" : "lower-closed")}>*/}
+                        <div className={"lower " + (open ? "lower-open" : "lower-closed")}>
                             <div className="lower-inner">
                                 {Object.entries(endpoints).map(([key, [lst, setlst, img]]) => (
                                     <div key={key} className="level">
