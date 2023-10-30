@@ -61,6 +61,13 @@ export default function TripView() {
     let [showFullEuro, setShowFullEuro] = useState(true);
     let [ending, setEnding] = useState(false);
 
+    function reset() {
+        setCities([]);
+        setCitiesHistory([[]]);
+        setCitiesHistoryIdx(0);
+        setData(new Map<string, number[]>);
+    }
+
     function calculateEurailPrice() {
         for (const [days, price] of eurailprices.entries()) {
             if (days >= cities.length) {
@@ -259,6 +266,9 @@ export default function TripView() {
                                     </button>
                                     <button className="button action-button" onClick={redo} disabled={!canRedo()}>
                                         <FontAwesomeIcon icon={faRotateRight} className="filter-undo" />
+                                    </button>
+                                    <button className="button action-button is-danger" onClick={reset}>
+                                        <FontAwesomeIcon icon={faPowerOff} />
                                     </button>
                                 </div>
                             </div>
