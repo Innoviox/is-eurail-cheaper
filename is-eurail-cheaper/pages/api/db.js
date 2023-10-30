@@ -15,7 +15,6 @@ function parseJourney(journey) {
 
     let legs = journey.legs.map(leg => leg.stopovers === undefined ? [] : leg.stopovers.map(stopover => stopover.stop));
 
-    console.log(journey.legs[0].origin, journey.legs[journey.legs.length - 1].destination);
     let origin = journey.legs[0].origin;
     let destination = journey.legs[journey.legs.length - 1].destination;
 

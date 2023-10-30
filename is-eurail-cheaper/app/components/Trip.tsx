@@ -50,6 +50,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
     // todo Stop type
     function extractPrice(trips: EndpointResult[]) {
         return sortPrices(trips.map(i => {
+            console.log(i);
             return {
                 price: toUSD(parseInt(i.price), i.currency),
                 length: parseInt(i.length),
