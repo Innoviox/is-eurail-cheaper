@@ -167,7 +167,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                                                     <PriceDisplay img={img}>
                                                         {lst.length === 0 || lst[0].price === -100 ?
                                                             <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={lst} parentOpen={true}
+                                                            <Picker data={lst} parentOpen={open}
                                                                     setFirst={(n) => setFirst(lst, setlst, n)}
                                                                     setStops={(n) => {
                                                                         let l = lst[n].legs;
