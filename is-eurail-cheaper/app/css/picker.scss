@@ -1,5 +1,9 @@
-.price-picker:hover {
+.price-picker:hover, .link-tag:hover {
   filter: brightness(85%);
+}
+
+.price-container {
+  display: flex;
 }
 
 .on-top {
