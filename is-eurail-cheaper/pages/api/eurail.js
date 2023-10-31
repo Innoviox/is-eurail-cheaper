@@ -13,7 +13,7 @@ async function stationToId(station) {
         .then(result => result[0].id);
 }
 
-async function getStops(leg) {
+async function getStops(leg, from_station) {
     return fetch(stopsUrl(leg.id, leg.start.id, leg.end.id))
         .then(response => response.json())
         .then(result => {
@@ -22,7 +22,7 @@ async function getStops(leg) {
             }
 
             return Promise.all(result.stops.map(stop => _station(stop.station)))
-                .then(response => response);
+                .then(stations => [from_station, ...stations]);
         });
 }
 
@@ -33,13 +33,16 @@ async function get_journeys(from_city, to_city, date) {
     let from_id = await stationToId(from_city);
     let to_id = await stationToId(to_city);
 
+    let from_station = await _station(from_city);
+
     return fetch(url(from_id, to_id, timestamp))
         .then(response => response.json())
-        .then(result => result.map(trip => {
+        .then(result => Promise.all(result.map(trip => {
             let start = new Date(trip.departure);
             let end = new Date(trip.arrival);
             let length = (end - start) / 1000;
-            return Promise.all(trip.legs.map(leg => getStops(leg)))
+
+            return Promise.all(trip.legs.map(leg => getStops(leg, from_station)))
                 .then(legs => { return {
                     price: trip.price ?? 0,
                     currency: "USD",
@@ -48,9 +51,10 @@ async function get_journeys(from_city, to_city, date) {
                     link: resultUrl(from_city, from_id, to_city, to_id, date.getTime()),
                     legs: legs
                 }});
-        }));
+        })));
 }
 
 export default async function handler (req, res) {
-    res.status(200).json({ "journeys": await get_journeys(req.query.origin, req.query.destination, new Date(parseInt(req.query.date))) });
+    await get_journeys(req.query.origin, req.query.destination, new Date(parseInt(req.query.date)))
+            .then(journeys => res.status(200).json({ "journeys": journeys }));
 }
