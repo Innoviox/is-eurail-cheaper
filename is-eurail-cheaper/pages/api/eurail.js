@@ -13,16 +13,20 @@ async function stationToId(station) {
         .then(result => result[0].id);
 }
 
-async function getStops(leg, from_station) {
+async function getStops(leg) {
     return fetch(stopsUrl(leg.id, leg.start.id, leg.end.id))
         .then(response => response.json())
         .then(result => {
-            if (result.stops === undefined) {
+            if (result.stops === undefined) { // some legs have no stops (eurail counts platform changes as "legs")
                 return [];
             }
 
-            return Promise.all(result.stops.map(stop => _station(stop.station)))
-                .then(stations => [from_station, ...stations]);
+            // sometimes the start and end aren't in there for some reason so add them in
+            return Promise.all([
+                _station(leg.start.station),
+                ...result.stops.map(stop => _station(stop.station)),
+                _station(leg.end.station)
+            ]);
         });
 }
 
@@ -33,8 +37,6 @@ async function get_journeys(from_city, to_city, date) {
     let from_id = await stationToId(from_city);
     let to_id = await stationToId(to_city);
 
-    let from_station = await _station(from_city);
-
     return fetch(url(from_id, to_id, timestamp))
         .then(response => response.json())
         .then(result => Promise.all(result.map(trip => {
@@ -42,7 +44,7 @@ async function get_journeys(from_city, to_city, date) {
             let end = new Date(trip.arrival);
             let length = (end - start) / 1000;
 
-            return Promise.all(trip.legs.map(leg => getStops(leg, from_station)))
+            return Promise.all(trip.legs.map(leg => getStops(leg)))
                 .then(legs => { return {
                     price: trip.price ?? 0,
                     currency: "USD",
