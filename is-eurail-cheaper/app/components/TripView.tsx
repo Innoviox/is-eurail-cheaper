@@ -24,6 +24,7 @@ import tram from "../img/tram.png";
 import { Location, Result, ICity } from '../util/types.ts';
 import { fromUSD } from '../util/utilities.ts';
 import { SettingsContext, ImposedCityContext } from '../util/contexts.ts';
+import Reset from "./modal/Reset.tsx";
 
 // todo currency, class
 // https://www.eurail.com/en/eurail-passes/global-pass
@@ -60,6 +61,8 @@ export default function TripView() {
     let [animatingSearch, setAnimatingSearch] = useState(false);
     let [showFullEuro, setShowFullEuro] = useState(true);
     let [ending, setEnding] = useState(false);
+
+    let [resetVisible, setResetVisible] = useState(false);
 
     function reset() {
         setCities([]);
@@ -267,7 +270,7 @@ export default function TripView() {
                                     <button className="button action-button" onClick={redo} disabled={!canRedo()}>
                                         <FontAwesomeIcon icon={faRotateRight} className="filter-undo" />
                                     </button>
-                                    <button className="button action-button is-danger" onClick={reset}>
+                                    <button className="button action-button is-danger" onClick={() => setResetVisible(true)}>
                                         <FontAwesomeIcon icon={faPowerOff} />
                                     </button>
                                 </div>
@@ -281,6 +284,7 @@ export default function TripView() {
                                 {renderTotals()}
                             </div>
                         </div>
+                        <Reset visible={resetVisible} setVisible={setResetVisible} reset={reset} />
                     </div>
                     :
                     <div className="floating">
