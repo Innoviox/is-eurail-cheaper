@@ -2,7 +2,6 @@
 import React, {Dispatch, MutableRefObject, ReactElement, useContext} from "react";
 import { useEffect, useRef } from "react";
 import {createRoot, Root} from "react-dom/client";
-import colors from "../util/colors.ts";
 import { LatLng } from "../util/types.ts";
 import {MapContext} from "@/app/util/contexts.ts";
 
@@ -92,10 +91,6 @@ function Route({ map, path, color }: {map: google.maps.Map | null, path: LatLng[
 
 export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.maps.Map | null, from: LatLng, to: LatLng | undefined, stops: LatLng[][], colors: string[]}) {
     let circles = [0]; //, 1, 2, 3];
-    let previousPosition: LatLng;
-    let path: LatLng[];
-
-    // console.log("GOT STOPS", stops);
 
     return (
         <div>
@@ -126,7 +121,6 @@ export function MarkerWrapper({ map, from, to, stops, colors }: {map: google.map
 export default function MapView({ latitude, longitude, setMap }:
                                 { latitude: number; longitude: number, setMap: Dispatch<any> }) {
     const mapRef = useRef(null);
-    const map = useContext(MapContext);
 
     useEffect(() => {
         if (mapRef.current === null) {

@@ -76,7 +76,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
         setSearchEnabled(false);
         let addedStops = false;
         let d = increaseDate(new Date(), settings.weeks, 8);
-        let values = await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
+        await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
             await fetch(PRICE_API(key, fromCity.name, toCity.name, d), {
                 method: 'GET'
             }).then(async response => {

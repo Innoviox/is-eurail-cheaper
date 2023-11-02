@@ -2,12 +2,10 @@ import React, {
     useState,
     useRef,
     RefObject,
-    createContext,
     useContext,
     SetStateAction,
     Dispatch,
-    ChangeEvent,
-    Context
+    ChangeEvent
 } from "react";
 import Image from "next/image";
 import edit from "../img/edit.png";

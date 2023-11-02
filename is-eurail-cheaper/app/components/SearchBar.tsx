@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent, FormEvent, MouseEvent, Dispatch, RefObject, useRef} from "react";
+import React, {useState, FormEvent, RefObject, useRef} from "react";
 import { useOuterClick } from "../util/outerclick.ts";
 import { FontAwesomeIcon }  from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";

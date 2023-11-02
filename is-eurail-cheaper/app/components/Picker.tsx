@@ -1,8 +1,8 @@
 import React, { useState, useRef, Dispatch, LegacyRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faDollarSign, faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
-import { LatLng, Result } from '../util/types.ts';
+import { Result } from '../util/types.ts';
 import { SettingsContext } from '../util/contexts.ts';
 import { fromUSD } from "@/app/util/utilities.ts";
 
