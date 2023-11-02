@@ -19,6 +19,11 @@ export const trip = async (id) => {
 	return await fetch(`https://v6.db.transport.rest/trips/${encodeURIComponent(id)}`)
 		.then(response => response.json())
 		.then(result => {
+			if (result.trip === null || result.trip === undefined) {
+				console.log("couldn't find trip", id);
+				return null;
+			}
+			console.log("found trip", id);
 			return {
 				"origin": result.trip.origin,
 				"destination": result.trip.destination

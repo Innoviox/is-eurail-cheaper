@@ -21,20 +21,30 @@ function multiApi(journey) {
             console.log("couldn't find", leg.line.operator.id);
             return null;
         } else {
-            return await pricer(leg.tripId, leg.line.productName);
+            return await pricer(leg.tripId, leg.line.productName)
+                .then(result => {
+                    if (result === null) {
+                        result = {};
+                    }
+                    result.image = leg.line.operator.id;
+                    return result;
+                });
         }
     }));
 }
 
 async function parseJourney(journey) {
     let price = 0, incomplete = false;
+    let image = "db"; // todo multi-image
     if (journey.price === null) {
         let multiPrices = await multiApi(journey);
-        multiPrices.forEach(p => {
-            if (p === null) {
+        multiPrices.forEach(data => {
+            console.log("got mp", data);
+            image = data.image;
+            if (data.price === undefined) {
                 incomplete = true; // todo tell which is incomplete (provide more info)
             } else {
-                price += p;
+                price += data.price;
             }
         });
     } else {
@@ -56,7 +66,8 @@ async function parseJourney(journey) {
         "legs": legs,
         "departure": start,
         "link": resultsUrl(origin.name, origin.id, destination.name, destination.id, new Date(start)),
-        "incomplete": incomplete
+        "incomplete": incomplete,
+        "image": image
     };
 }
 

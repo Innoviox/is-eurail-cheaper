@@ -2,6 +2,7 @@ import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/typ
 import {increaseDate, toUSD} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
+import sncf_image from "@/app/img/sncf.png";
 import React, {
     Dispatch,
     useContext,
@@ -11,13 +12,18 @@ import React, {
 } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRightLong, faCity, faMagnifyingGlassPlus, faRoute, faArrowsToCircle} from "@fortawesome/free-solid-svg-icons";
-import PriceDisplay from "@/app/components/PriceDisplay.tsx";
 import Picker from "@/app/components/Picker.tsx";
 import City from "@/app/components/City.tsx";
 import colors from "@/app/util/colors.ts";
 import {MapContext, SettingsContext} from "../util/contexts.ts";
 import { MarkerWrapper, pathToBounds } from "./MapView.tsx";
 import { ICity } from "../util/types.ts";
+
+const images = new Map(Object.entries({
+    "db": db_image,
+    "eurail": eurail_image,
+    "sncf": sncf_image
+}));
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
@@ -58,7 +64,8 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                 { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
                 departure: new Date(i.departure),
                 link: i.link,
-                incomplete: i.incomplete
+                incomplete: i.incomplete,
+                image: images.get(i.image)!
             };
         }).slice(0, 5));
     }
@@ -167,19 +174,17 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                                         <div className="level-left">
                                             <div className="level-item">
                                                 <div>
-                                                    <PriceDisplay img={img}>
-                                                        {lst.length === 0 || lst[0].price === -100 ?
-                                                            <button className="button is-loading is-ghost">Loading</button> :
-                                                            <Picker data={lst} parentOpen={open}
-                                                                    setFirst={(n) => setFirst(lst, setlst, n)}
-                                                                    setStops={(n) => {
-                                                                        let l = lst[n].legs;
-                                                                        if (l !== undefined) {
-                                                                            setStops(l);
-                                                                        }
-                                                                    }}/>
-                                                        }
-                                                    </PriceDisplay>
+                                                    {lst.length === 0 || lst[0].price === -100 ?
+                                                        <button className="button is-loading is-ghost">Loading</button> :
+                                                        <Picker data={lst} parentOpen={open}
+                                                                setFirst={(n) => setFirst(lst, setlst, n)}
+                                                                setStops={(n) => {
+                                                                    let l = lst[n].legs;
+                                                                    if (l !== undefined) {
+                                                                        setStops(l);
+                                                                    }
+                                                                }}/>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

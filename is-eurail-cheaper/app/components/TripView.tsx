@@ -13,7 +13,6 @@ import Image from 'next/image';
 import eurail_image from "../img/eurail.png";
 import db_image from "../img/db.png";
 import SearchBar from './SearchBar.tsx';
-import PriceDisplay from "./PriceDisplay.tsx";
 import Background from './Background.tsx';
 import Trip from './Trip.tsx';
 import airplane from "../img/airplane.png";
@@ -188,19 +187,18 @@ export default function TripView() {
                 <div className="level">
                     <div className="level-left">
                         <div className="level-item">
-                            <div>
-                                <PriceDisplay img={db_image}>
-                                    <div className="flip-parent" key="db">
-                                        <div className="tags has-addons">
-                                            <div className="tag is-info price-picker-tag">
-                                                { settings.currency.split(" ")[0] }
-                                            </div>
-                                            <div className={"tag price-picker-tag price "}>
-                                                {sumdb}
-                                            </div>
-                                        </div>
+                            <Image src={db_image} className="logo" alt="DB" />
+                        </div>
+                        <div className="level-item">
+                            <div className="flip-parent" key="db">
+                                <div className="tags has-addons">
+                                    <div className="tag is-info price-picker-tag">
+                                        { settings.currency.split(" ")[0] }
                                     </div>
-                                </PriceDisplay>
+                                    <div className={"tag price-picker-tag price "}>
+                                        {sumdb}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -208,38 +206,37 @@ export default function TripView() {
                 <div className="level">
                     <div className="level-left">
                         <div className="level-item">
-                            <div>
-                                <PriceDisplay img={eurail_image}>
-                                    <div className="flip-parent" key="eu">
-                                        <div className="tags has-addons price-picker" onClick={() => setShowFullEuro(!showFullEuro)}>
-                                            <div className="tag is-info price-picker-tag">
-                                                { settings.currency.split(" ")[0] }
-                                            </div>
-                                            {showFullEuro ? <>
-                                                <div className={"tag price-picker-tag price "}>
-                                                    {sumeu}
-                                                </div>
-                                                <div className="tag is-info price-picker-tag">
-                                                    <FontAwesomeIcon icon={faTicket} />
-                                                </div>
-                                                <div className={"tag price-picker-tag price"}>
-                                                    {euprice}
-                                                </div>
-                                                <div className={"tag price-picker-tag is-link"}>
-                                                    <FontAwesomeIcon icon={faCaretLeft} />
-                                                </div>
-                                            </> : <>
-                                                <div className={"tag price-picker-tag price "}>
-                                                    {sumeu + euprice}
-                                                </div>
-                                                <div className={"tag price-picker-tag is-link "}>
-                                                    <FontAwesomeIcon icon={faCaretRight} />
-                                                </div>
-                                            </>}
-                                        </div>
+                            <Image src={eurail_image} className="logo" alt="DB" />
+                        </div>
+                        <div className="level-item">
+                            <div className="flip-parent" key="eu">
+                            <div className="tags has-addons price-picker" onClick={() => setShowFullEuro(!showFullEuro)}>
+                                <div className="tag is-info price-picker-tag">
+                                    { settings.currency.split(" ")[0] }
+                                </div>
+                                {showFullEuro ? <>
+                                    <div className={"tag price-picker-tag price "}>
+                                        {sumeu}
                                     </div>
-                                </PriceDisplay>
+                                    <div className="tag is-info price-picker-tag">
+                                        <FontAwesomeIcon icon={faTicket} />
+                                    </div>
+                                    <div className={"tag price-picker-tag price"}>
+                                        {euprice}
+                                    </div>
+                                    <div className={"tag price-picker-tag is-link"}>
+                                        <FontAwesomeIcon icon={faCaretLeft} />
+                                    </div>
+                                </> : <>
+                                    <div className={"tag price-picker-tag price "}>
+                                        {sumeu + euprice}
+                                    </div>
+                                    <div className={"tag price-picker-tag is-link "}>
+                                        <FontAwesomeIcon icon={faCaretRight} />
+                                    </div>
+                                </>}
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>

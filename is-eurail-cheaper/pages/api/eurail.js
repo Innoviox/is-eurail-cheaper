@@ -52,7 +52,8 @@ async function get_journeys(from_city, to_city, date) {
                     departure: start,
                     link: resultUrl(from_city, from_id, to_city, to_id, date.getTime()),
                     legs: legs,
-                    incomplete: trip.price === null
+                    incomplete: trip.price === null,
+                    image: "eurail"
                 }});
         })));
 }

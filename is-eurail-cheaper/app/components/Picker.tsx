@@ -5,6 +5,7 @@ import { faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare, faT
 import { Result } from '../util/types.ts';
 import { SettingsContext } from '../util/contexts.ts';
 import { fromUSD } from "@/app/util/utilities.ts";
+import Image from "next/image";
 
 const hours_minutes = (d: Date) => `${d.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}:${d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}`
 
@@ -19,6 +20,8 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
     let [open, setOpen] = useState(0); // 0 => closed, 1 => opening, 2 => open
 
     let tagClasses = calculateTagClasses();
+
+    let [img, setImg] = useState(data[0].image);
 
     function calculateTagClasses() {
         let minprice = Math.min(...data.map(i => i.price));
@@ -70,9 +73,15 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                      if (startAnimation() && tripN !== 0) {
                          setFirst(tripN);
                          setStops(tripN);
+                         setImg(data[tripN].image);
                      }
                  }}
-                 onMouseEnter={() => open !== 1 && setStops(tripN)}>
+                 onMouseEnter={() => {
+                     if (open !== 1) {
+                         setStops(tripN);
+                         setImg(data[tripN].image);
+                     }
+                 }}>
                 <div className="tag is-info price-picker-tag">
                     { settings.currency.split(" ")[0] }
                 </div>
@@ -170,33 +179,48 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
         return true;
     }
 
-    if (parentOpen || open === 0) {
-        return (
-            <div className={"flip-parent "}>
-                <div className="price-container">
-                    {renderPricePickerElement(0)}
-                </div>
+    function priceElements() {
+        if (parentOpen || open === 0) {
+            return (
+                <div className={"flip-parent "}>
+                    <div className="price-container">
+                        {renderPricePickerElement(0)}
+                    </div>
 
-                {
-                    data.map((_, i) => {
-                        if (i > 0 && i <= minShow) {
-                            return renderPricePickerElement(i);
-                        }
-                    })
-                }
-            </div>
-        )
-    } else if (open === 1) {
-
-    } else if (open === 2) {
-        setOpen(0);
-        animate(0, 0);
-        return (
-            <div className={"flip-parent "}>
-                <div>
-                    {renderPricePickerElement(0)}
+                    {
+                        data.map((_, i) => {
+                            if (i > 0 && i <= minShow) {
+                                return renderPricePickerElement(i);
+                            }
+                        })
+                    }
                 </div>
-            </div>
-        );
+            )
+        } else if (open === 1) {
+
+        } else if (open === 2) {
+            setOpen(0);
+            animate(0, 0);
+            return (
+                <div className={"flip-parent "}>
+                    <div>
+                        {renderPricePickerElement(0)}
+                    </div>
+                </div>
+            );
+        }
     }
+
+    return (
+        <div className="level">
+            <div className="level-left">
+                <div className="level-item">
+                    <Image src={img} className="logo" alt="" />
+                </div>
+                <div className="level-item">
+                    {priceElements()}
+                </div>
+            </div>
+        </div>
+    )
 }

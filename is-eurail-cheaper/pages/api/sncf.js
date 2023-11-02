@@ -22,11 +22,15 @@ async function station(name) {
 export default async function SNCFprice(tripID, trainType) {
     return await trip(tripID)
         .then(trip => {
+            if (trip === null) {
+                return null;
+            }
             let dataset = datasets[trainType];
             if (dataset === undefined ) {
                 console.log("couldn't find dataset", dataset);
                 return null;
             } else {
+                // console.log("got url", tripID, trainType, journey_search_url(datasets[trainType], trip.origin.name, trip.destination.name));
                 return fetch(journey_search_url(datasets[trainType], trip.origin.name, trip.destination.name))
                     .then(response => response.json())
                     .then(result => {
@@ -41,7 +45,7 @@ export default async function SNCFprice(tripID, trainType) {
                        if (result === null) {
                            return null;
                        } else {
-                           return result.prix_eur ?? (result.prix_min + result.prix_max) / 2;
+                           return { 'price': result.prix_eur ?? result.prix_min } // todo add a warning for using minimum price
                        }
                     });
             }
