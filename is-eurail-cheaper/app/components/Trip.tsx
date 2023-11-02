@@ -18,6 +18,7 @@ import colors from "@/app/util/colors.ts";
 import {MapContext, SettingsContext} from "../util/contexts.ts";
 import { MarkerWrapper, pathToBounds } from "./MapView.tsx";
 import { ICity } from "../util/types.ts";
+import Image from "next/image";
 
 const images = new Map(Object.entries({
     "db": db_image,
@@ -175,7 +176,16 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                                             <div className="level-item">
                                                 <div>
                                                     {lst.length === 0 || lst[0].price === -100 ?
-                                                        <button className="button is-loading is-ghost">Loading</button> :
+                                                        <div className="level">
+                                                            <div className="level-left">
+                                                                <div className="level-item">
+                                                                    <Image src={img} className="logo" alt="" />
+                                                                </div>
+                                                                <div className="level-item">
+                                                                    <button className="button is-loading is-ghost">Loading</button>
+                                                                </div>
+                                                            </div>
+                                                        </div> :
                                                         <Picker data={lst} parentOpen={open}
                                                                 setFirst={(n) => setFirst(lst, setlst, n)}
                                                                 setStops={(n) => {
