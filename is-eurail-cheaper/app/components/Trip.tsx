@@ -57,7 +57,8 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                 legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
                 { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
                 departure: new Date(i.departure),
-                link: i.link
+                link: i.link,
+                incomplete: i.incomplete
             };
         }).slice(0, 5));
     }

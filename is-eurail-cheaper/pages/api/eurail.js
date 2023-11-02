@@ -51,7 +51,8 @@ async function get_journeys(from_city, to_city, date) {
                     length: length,
                     departure: start,
                     link: resultUrl(from_city, from_id, to_city, to_id, date.getTime()),
-                    legs: legs
+                    legs: legs,
+                    incomplete: trip.price === null
                 }});
         })));
 }

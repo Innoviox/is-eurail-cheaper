@@ -105,7 +105,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     : <></>
             }
             {
-                Number.isNaN(data[tripN].price) ?
+                data[tripN].incomplete ?
                     <div className="has-tooltip-bottom">
                         <FontAwesomeIcon icon={faTriangleExclamation} className="warning"/>
                         <div className="tooltip warning-tooltip">

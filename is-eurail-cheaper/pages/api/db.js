@@ -9,7 +9,13 @@ const s = (name, id) => encodeURIComponent(`A=1@O=${name}@U=80@L=${id}@B=1@p=169
 const resultsUrl = (name1, id1, name2, id2, date) => `https://www.bahn.de/buchung/fahrplan/suche#so=${name1}&zo=${name2}&soid=${s(name1, id1)}&zoid=${s(name2, id2)}&hd=${strftime(DT_FORMAT, date)}`;
 
 function parseJourney(journey) {
-    let price = journey.price === null ? NaN : journey.price.amount;
+    let price = 0, incomplete = false;
+    if (journey.price === null) {
+        incomplete = true;
+    } else {
+        price = journey.price.amount;
+    }
+
     let start = Date.parse(journey.legs[0].plannedDeparture);
     let end = Date.parse(journey.legs[journey.legs.length - 1].plannedArrival);
 
@@ -24,7 +30,8 @@ function parseJourney(journey) {
         "length": (end - start) / 1000,
         "legs": legs,
         "departure": start,
-        "link": resultsUrl(origin.name, origin.id, destination.name, destination.id, new Date(start))
+        "link": resultsUrl(origin.name, origin.id, destination.name, destination.id, new Date(start)),
+        "incomplete": incomplete
     };
 }
 
