@@ -1,3 +1,7 @@
+.action-tag:hover {
+  filter: brightness(85%);
+}
+
 .upper {
   padding: 1px;
 }
@@ -13,16 +17,12 @@
 }
 
 .lower-closed {
+  overflow: hidden;
   max-height: 0;
 }
 
 .lower {
-  overflow: hidden;
   height: auto;
-}
-
-.action-tag:hover {
-  filter: brightness(85%);
 }
 
 .is-loading {

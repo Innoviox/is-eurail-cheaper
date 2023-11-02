@@ -42,16 +42,6 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-
-.first {
-  position: relative;
-}
-
-
-.length {
-  width: 51px;
-}
-
 // based on https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_bottom
 .tooltip {
   visibility: hidden;
@@ -65,10 +55,12 @@ body {
   left: 50%;
   margin-left: -100%;
 
-  padding: 0 5px;
+  padding: 5px;
   border-radius: 5px;
   width: 200%;
-  text-align: center
+  text-align: center;
+  line-height: 15px;
+  font-size: 15px;
 }
 
 .has-tooltip-bottom .tooltip::after {
@@ -84,7 +76,7 @@ body {
 
 .has-tooltip-bottom {
   position: relative;
-  display: inline-block;
+  overflow: visible;
 }
 
 .has-tooltip-bottom:hover .tooltip {

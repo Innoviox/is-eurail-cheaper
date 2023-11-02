@@ -4,6 +4,18 @@
 - https://github.com/trainline-eu/stations
 - https://www.kaggle.com/datasets/headsortails/train-stations-in-europe
 
+# Extending Data Sources
+
+- Multi api idea
+  - get the journey from db
+  - if it NaNs:
+    - for each train in the journey: get it somehow
+    - needed APIs:
+      - trenitalia
+      - SNCF
+      - IC, EC, EST
+      - 
+
 # Todos
 
 - [ ] backend

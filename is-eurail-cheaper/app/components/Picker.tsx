@@ -1,6 +1,6 @@
 import React, { useState, useRef, Dispatch, LegacyRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 import { Result } from '../util/types.ts';
 import { SettingsContext } from '../util/contexts.ts';
@@ -101,6 +101,16 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                         <a href={data[tripN].link} target="_blank" rel="noreferrer">
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                         </a>
+                    </div>
+                    : <></>
+            }
+            {
+                data[tripN].incomplete ?
+                    <div className="has-tooltip-bottom">
+                        <FontAwesomeIcon icon={faTriangleExclamation} className="warning"/>
+                        <div className="tooltip warning-tooltip">
+                            <span>One or more of the segments of this trip has missing price information.</span>
+                        </div>
                     </div>
                     : <></>
             }
