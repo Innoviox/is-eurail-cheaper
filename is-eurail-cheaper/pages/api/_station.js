@@ -15,4 +15,15 @@ const _station = (s) => {
 		)
 }
 
-export default _station
+export const trip = async (id) => {
+	return await fetch(`https://v6.db.transport.rest/trips/${encodeURIComponent(id)}`)
+		.then(response => response.json())
+		.then(result => {
+			return {
+				"origin": result.trip.origin,
+				"destination": result.trip.destination
+			}
+		});
+}
+
+export default _station;
