@@ -42,16 +42,6 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-
-.first {
-  position: relative;
-}
-
-
-.length {
-  width: 51px;
-}
-
 // based on https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_bottom
 .tooltip {
   visibility: hidden;
