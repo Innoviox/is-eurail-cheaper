@@ -32,10 +32,12 @@
 @keyframes lower-open {
   from {
     max-height: 0;
+    overflow: hidden;
   }
 
   to {
     max-height: 100px !important;
+    overflow: visible;
   }
 }
 
