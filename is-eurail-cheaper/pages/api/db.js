@@ -2,7 +2,7 @@ import _station from './_station.js';
 import strftime from 'strftime';
 
 import SNCF_price from './sncf.js';
-import Trenitalia_price from './trenitalia.js;'
+import Trenitalia_price from './trenitalia.js'
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
 const URL = (from, to, date) => `https://v6.db.transport.rest/journeys?from=${from}&to=${to}&departure=${date}&results=5&stopovers=true`;
@@ -18,12 +18,16 @@ const providers = {
 
 function multiApi(journey) {
     return Promise.all(journey.legs.map(async leg => {
+        if (leg.line === undefined) {
+            return {}; // todo ??
+        }
         let pricer = providers[leg.line.operator.id];
         if (providers[leg.line.operator.id] === undefined) {
             console.log("couldn't find", leg.line.operator.id);
-            return null;
+            return {};
         } else {
-            return await pricer({
+            console.log("LINE#3", leg.line);
+            return await pricer({ // todo pass date
                 tripId: leg.tripId,
                 trainType: leg.line.productName,
                 fromCity: leg.origin.name,
@@ -47,7 +51,9 @@ async function parseJourney(journey) {
         let multiPrices = await multiApi(journey);
         multiPrices.forEach(data => {
             console.log("got mp", data);
-            image = data.image;
+            if (data.image !== undefined) {
+                image = data.image;
+            }
             if (data.price === undefined) {
                 incomplete = true; // todo tell which is incomplete (provide more info)
             } else {
