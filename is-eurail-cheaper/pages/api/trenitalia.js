@@ -45,9 +45,10 @@ export default async function Trenitalia_price(legInfo) {
                     let price = null;
                     result.solutions.forEach(solution => {
                         let s = solution.solution;
-                        console.log("TI SOL", s.price.amount, s.trains.map(i => [i.description, i.acronym]));
-                        if (s.trains.length === 0 && s.trains[0].description === legInfo.line.fahrtNr) {
-                            console.log("taking price");
+                        // console.log("TI SOL", s.price, s.trains.map(i => [i.description, i.acronym]));
+                        // console.log("FOR", legInfo.line.fahrtNr);
+                        if (s.price !== null && s.trains.length === 1 && s.trains[0].description === legInfo.line.fahrtNr) {
+                            // console.log("taking price");
                             price = { 'price': s.price.amount };
                         }
                     });
