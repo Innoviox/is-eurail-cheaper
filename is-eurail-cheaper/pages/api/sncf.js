@@ -19,19 +19,19 @@ async function station(name) {
         .then(response => response.json());
 }
 
-export default async function SNCFprice(tripID, trainType) {
-    return await trip(tripID)
+export default async function SNCF_price(legInfo) {
+    return await trip(legInfo.tripID)
         .then(trip => {
             if (trip === null) {
                 return null;
             }
-            let dataset = datasets[trainType];
+            let dataset = datasets[legInfo.trainType];
             if (dataset === undefined ) {
                 console.log("couldn't find dataset", dataset);
                 return null;
             } else {
                 // console.log("got url", tripID, trainType, journey_search_url(datasets[trainType], trip.origin.name, trip.destination.name));
-                return fetch(journey_search_url(datasets[trainType], trip.origin.name, trip.destination.name))
+                return fetch(journey_search_url(dataset, trip.origin.name, trip.destination.name))
                     .then(response => response.json())
                     .then(result => {
                         if (result.results.length === 0) {
@@ -42,6 +42,7 @@ export default async function SNCFprice(tripID, trainType) {
                         }
                     })
                     .then(result => {
+                        // console.log("found", result);
                        if (result === null) {
                            return null;
                        } else {

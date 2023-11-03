@@ -1,7 +1,8 @@
 import _station from './_station.js';
 import strftime from 'strftime';
 
-import SNCFprice from './sncf.js';
+import SNCF_price from './sncf.js';
+import Trenitalia_price from './trenitalia.js;'
 
 let DT_FORMAT = "%Y-%m-%dT%H:%M:%S"
 const URL = (from, to, date) => `https://v6.db.transport.rest/journeys?from=${from}&to=${to}&departure=${date}&results=5&stopovers=true`;
@@ -11,7 +12,8 @@ const s = (name, id) => encodeURIComponent(`A=1@O=${name}@U=80@L=${id}@B=1@p=169
 const resultsUrl = (name1, id1, name2, id2, date) => `https://www.bahn.de/buchung/fahrplan/suche#so=${name1}&zo=${name2}&soid=${s(name1, id1)}&zoid=${s(name2, id2)}&hd=${strftime(DT_FORMAT, date)}`;
 
 const providers = {
-    'sncf': SNCFprice
+    'sncf': SNCF_price,
+    'trenitalia': Trenitalia_price
 }
 
 function multiApi(journey) {
@@ -21,7 +23,12 @@ function multiApi(journey) {
             console.log("couldn't find", leg.line.operator.id);
             return null;
         } else {
-            return await pricer(leg.tripId, leg.line.productName)
+            return await pricer({
+                tripId: leg.tripId,
+                trainType: leg.line.productName,
+                fromCity: leg.origin.name,
+                toCity: leg.destination.name
+            })
                 .then(result => {
                     if (result === null) {
                         result = {};
