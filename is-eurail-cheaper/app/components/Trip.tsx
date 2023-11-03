@@ -3,6 +3,7 @@ import {increaseDate, toUSD} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
 import sncf_image from "@/app/img/sncf.png";
+import trenitalia_image from "@/app/img/trenitalia.png";
 import React, {
     Dispatch,
     useContext,
@@ -23,7 +24,8 @@ import Image from "next/image";
 const images = new Map(Object.entries({
     "db": db_image,
     "eurail": eurail_image,
-    "sncf": sncf_image
+    "sncf": sncf_image,
+    "trenitalia": trenitalia_image
 }));
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
