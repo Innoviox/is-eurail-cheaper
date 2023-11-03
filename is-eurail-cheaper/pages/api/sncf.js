@@ -25,7 +25,7 @@ export default async function SNCF_price(legInfo) {
             if (trip === null) {
                 return null;
             }
-            let dataset = datasets[legInfo.trainType];
+            let dataset = datasets[legInfo.line.productName];
             if (dataset === undefined ) {
                 console.log("couldn't find dataset", dataset);
                 return null;

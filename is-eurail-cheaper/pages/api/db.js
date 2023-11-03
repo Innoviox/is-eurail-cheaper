@@ -29,7 +29,7 @@ function multiApi(journey) {
             console.log("LINE#3", leg.line);
             return await pricer({ // todo pass date
                 tripId: leg.tripId,
-                trainType: leg.line.productName,
+                line: leg.line,
                 fromCity: leg.origin.name,
                 toCity: leg.destination.name
             })
