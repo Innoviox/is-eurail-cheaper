@@ -1,0 +1,48 @@
+<html>
+<head>
+    <style>
+    img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .image-holder {
+        position: relative
+    }
+
+    .image {
+        position: absolute;
+    }
+
+    .image-top {
+        /*transform: rotate3d(1, 0, 0, 45deg);*/
+        /*z-index:-1*/
+        clip-path: polygon(0% 0%, 97% 0%, 0% 97%);
+    }
+
+    .image-bottom {
+        clip-path: polygon(100% 3%, 100% 100%, 3% 100%);
+    }
+
+    /*.arrow-bottom {*/
+    /*    width: 0;*/
+    /*    height: 0;*/
+    /*    border-top: 100px solid transparent;*/
+    /*    border-bottom: 100px solid white;*/
+    /*    border-left:100px solid white;*/
+    /*    border-right:100px solid transparent;*/
+    /*    position:absolute;*/
+    /*}*/
+    </style>
+<!--    /// https://www.coding-dude.com/wp/css/create-a-triangle/-->
+</head>
+<body>
+<!--<div class="arrow-bottom"></div>-->
+<br><br><br>
+<div class="image-holder">
+<!--    <div class="arrow-bottom"></div>-->
+    <img src="sncf.png" alt="sncf" class="image image-top"></img>
+    <img src="trenitalia.png" alt="sncf" class="image image-bottom"></img>
+</div>
+</body>
+</html>
