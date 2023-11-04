@@ -17,11 +17,23 @@
     .image-top {
         /*transform: rotate3d(1, 0, 0, 45deg);*/
         /*z-index:-1*/
-        clip-path: polygon(0% 0%, 97% 0%, 0% 97%);
+        clip-path: polygon(0% 0%, 98% 0%, 0% 98%);
     }
 
     .image-bottom {
-        clip-path: polygon(100% 3%, 100% 100%, 3% 100%);
+        clip-path: polygon(100% 2%, 100% 100%, 2% 100%);
+    }
+
+    .image-1 {
+        clip-path: polygon(0% 0%, 50% 0%, 0% 100%);
+    }
+
+    .image-2 {
+        clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    }
+
+    .image-3 {
+        clip-path: polygon(50% 0%, 100% 0%, 100% 100%);
     }
 
     /*.arrow-bottom {*/
@@ -41,8 +53,9 @@
 <br><br><br>
 <div class="image-holder">
 <!--    <div class="arrow-bottom"></div>-->
-    <img src="sncf.png" alt="sncf" class="image image-top"></img>
-    <img src="trenitalia.png" alt="sncf" class="image image-bottom"></img>
+    <img src="sncf.png" alt="sncf" class="image image-1"></img>
+    <img src="trenitalia.png" alt="sncf" class="image image-2"></img>
+    <img src="db.png" alt="db" class="image image-3"></img>
 </div>
 </body>
 </html>
