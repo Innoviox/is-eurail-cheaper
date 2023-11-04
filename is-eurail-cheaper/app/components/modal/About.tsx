@@ -17,6 +17,7 @@ export default function About({ visible, setVisible }:
                         <p>Also made with <a href="https://bulma.io/documentation/overview/start/">Bulma</a>.</p>
                         <p>Thanks to <a href="https://fontawesome.com/">Fontawesome</a>, <a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Darius Dan</a>, Freepik (<a href="https://www.flaticon.com/free-icons/train" title="train icons">1</a>, <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">2</a>, <a href="https://www.flaticon.com/free-icons/tram" title="tram icons">3</a>, <a href="https://www.flaticon.com/free-icons/scale" title="scale icons">4</a>), <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">smalllikeart</a>, and <a href="https://www.flaticon.com/free-icons/price-comparison" title="price comparison icons">amonrat rungreangfangsai</a> for the icons.</p>
                         <p>Thanks to <a href="https://github.com/juliuste">Julius Tens</a> for the inspiration and the stations search code.</p>
+                        <p>Thanks to <a href="https://en.m.wikipedia.org/">Wikipedia</a> for the logo image files.</p>
                         <p>Mapping data is from the <a href="https://developers.google.com/maps">Google Maps API</a>, integrated into React with help from <a href="https://github.com/leighhalliday/google-maps-threejs">Leigh Halliday</a>.</p>
                         <p>Pricing data is from the <a href="https://transport.rest/">transport.rest</a> and <a href="https://www.eurail.com/en">eurail</a> APIs.</p>
                         <p>Thanks to these posts (
@@ -32,7 +33,9 @@ export default function About({ visible, setVisible }:
                             <a href="https://stackoverflow.com/questions/22252472/how-can-i-change-the-color-of-an-svg-element">10</a>,&nbsp;
                             <a href="https://stackoverflow.com/questions/37949981/call-child-method-from-parent">11</a>,&nbsp;
                             <a href="https://www.reddit.com/r/nextjs/comments/qxyf2u/nextjs_fouc/">12</a>,&nbsp;
-                            <a href="https://stackoverflow.com/questions/57609931/next-js-with-fortawesome-and-ssr">13</a>
+                            <a href="https://stackoverflow.com/questions/57609931/next-js-with-fortawesome-and-ssr">13</a>,&nbsp;
+                            <a href="https://medium.com/@albigiu/trenitalia-shock-non-crederete-mai-a-queste-api-painful-14433096502c">14</a>,&nbsp;
+                            <a href="https://stackoverflow.com/questions/56306243/how-to-prevent-panning-outside-world-edges-on-google-maps">15</a>
                             ) for helping me during the development process, as well as probably others that I forgot to save.</p>
                         <p>Please let me know at sarras305-at-gmail or at the <a href="https://github.com/Innoviox/is-eurail-cheaper/issues">issues board</a> of any bugs or feature recommendations.</p>
                     </div>
