@@ -136,7 +136,17 @@ export default function MapView({ latitude, longitude, setMap }:
                 lng: longitude ?? 0,
             },
             zoom: 5,
-            mapId: 'DEMO_MAP_ID'
+            mapId: 'DEMO_MAP_ID',
+            minZoom: 2,
+            restriction: { // https://stackoverflow.com/questions/56306243/how-to-prevent-panning-outside-world-edges-on-google-maps
+                latLngBounds: {
+                    east: 179.9999,
+                    north: 85,
+                    south: -85,
+                    west: -179.9999
+                },
+                strictBounds: true
+            }
         }));
     }, [latitude, longitude]);
 
