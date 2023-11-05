@@ -68,7 +68,7 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
                 departure: new Date(i.departure),
                 link: i.link,
                 incomplete: i.incomplete,
-                image: images.get(i.image)!
+                image: i.image.map(img => images.get(img)!)
             };
         }).slice(0, 5));
     }

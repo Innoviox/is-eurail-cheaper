@@ -21,7 +21,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
 
     let tagClasses = calculateTagClasses();
 
-    let [img, setImg] = useState(data[0].image);
+    let [imgs, setImgs] = useState(data[0].image);
 
     function calculateTagClasses() {
         let minprice = Math.min(...data.map(i => i.price));
@@ -73,13 +73,13 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                      if (startAnimation() && tripN !== 0) {
                          setFirst(tripN);
                          setStops(tripN);
-                         setImg(data[tripN].image);
+                         setImgs(data[tripN].image);
                      }
                  }}
                  onMouseEnter={() => {
                      if (open !== 1) {
                          setStops(tripN);
-                         setImg(data[tripN].image);
+                         setImgs(data[tripN].image);
                      }
                  }}>
                 <div className="tag is-info price-picker-tag">
@@ -215,7 +215,13 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
         <div className="level">
             <div className="level-left">
                 <div className="level-item">
-                    <Image src={img} className="logo" alt="" />
+                    <div className="images">
+                        { imgs.map((img, i) => {
+                            return (
+                                <Image src={img} className={"logo image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
+                            )
+                        })}
+                    </div>
                 </div>
                 <div className="level-item">
                     {priceElements()}
