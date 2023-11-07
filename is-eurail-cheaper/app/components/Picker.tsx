@@ -218,7 +218,7 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     <div className="images">
                         { imgs.map((img, i) => {
                             return (
-                                <Image src={img} className={"logo image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
+                                <Image src={img} className={"logo i-image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
                             )
                         })}
                     </div>

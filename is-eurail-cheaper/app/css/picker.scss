@@ -143,10 +143,12 @@
 }
 
 .images {
-  position: relative;
+  position: static;
+  width: 30px; // todo variable
+  height: 30px;
 }
 
-.image {
+.i-image {
   position: absolute;
 }
 

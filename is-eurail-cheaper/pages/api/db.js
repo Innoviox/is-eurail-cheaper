@@ -26,7 +26,7 @@ function multiApi(journey) {
             console.log("couldn't find", leg.line.operator.id);
             return {};
         } else {
-            console.log("LINE#3", leg.line);
+            // console.log("LINE#3", leg.line);
             return await pricer({ // todo pass date
                 tripId: leg.tripId,
                 line: leg.line,
@@ -51,7 +51,7 @@ async function parseJourney(journey) {
         let multiPrices = await multiApi(journey);
         multiPrices.forEach(data => {
             console.log("got mp", data);
-            if (data.image !== undefined) {
+            if (data.image !== undefined && !image.includes(data.image)) {
                 // image = data.image;
                 image.push(data.image);
             }
