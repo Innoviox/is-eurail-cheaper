@@ -218,8 +218,8 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     <div className="images">
                         { imgs.map((img, i) => {
                             return (
-                                <div className="has-tooltip-bottom">
-                                    <Image src={img} className={"logo i-image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
+                                <div key={`image-${i}`} className="has-tooltip-bottom">
+                                    <Image src={img} className={"logo i-image " + `image-${i + 1}-of-${imgs.length}`} alt=""/>
                                     <div className="tooltip image-tooltip">
                                         <span>{imageToName(img)}</span>
                                     </div>
