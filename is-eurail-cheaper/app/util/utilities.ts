@@ -20,3 +20,17 @@ export const exchangeRates = new Map(Object.entries({ // from USD
 
 export const toUSD = (price: number, currency: string) => Math.trunc(price / (exchangeRates.get(currency.split(" ")[1]) ?? 1));
 export const fromUSD = (price: number, currency: string) => Math.trunc(price * (exchangeRates.get(currency.split(" ")[1]) ?? 1));
+
+// https://dmitripavlutin.com/timeout-fetch-request/
+export async function fetchWithTimeout(resource: string, options: {}, timeout = 8000) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+    });
+    clearTimeout(id);
+
+    return response;
+}

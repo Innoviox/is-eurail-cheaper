@@ -35,7 +35,8 @@ export default function About({ visible, setVisible }:
                             <a href="https://www.reddit.com/r/nextjs/comments/qxyf2u/nextjs_fouc/">12</a>,&nbsp;
                             <a href="https://stackoverflow.com/questions/57609931/next-js-with-fortawesome-and-ssr">13</a>,&nbsp;
                             <a href="https://medium.com/@albigiu/trenitalia-shock-non-crederete-mai-a-queste-api-painful-14433096502c">14</a>,&nbsp;
-                            <a href="https://stackoverflow.com/questions/56306243/how-to-prevent-panning-outside-world-edges-on-google-maps">15</a>
+                            <a href="https://stackoverflow.com/questions/56306243/how-to-prevent-panning-outside-world-edges-on-google-maps">15</a>,&nbsp;
+                            <a href="https://dmitripavlutin.com/timeout-fetch-request/">16</a>
                             ) for helping me during the development process, as well as probably others that I forgot to save.</p>
                         <p>Please let me know at sarras305-at-gmail or at the <a href="https://github.com/Innoviox/is-eurail-cheaper/issues">issues board</a> of any bugs or feature recommendations.</p>
                     </div>

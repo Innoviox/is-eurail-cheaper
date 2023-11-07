@@ -1,5 +1,5 @@
 import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/types.ts";
-import {increaseDate, toUSD} from "@/app/util/utilities.ts";
+import {increaseDate, toUSD, fetchWithTimeout} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
 import sncf_image from "@/app/img/sncf.png";
@@ -63,8 +63,9 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
             return {
                 price: toUSD(parseInt(i.price), i.currency),
                 length: parseInt(i.length),
-                legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) => leg.map(stop =>
-                { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
+                legs: i.legs === undefined ? undefined : i.legs.map((leg: {location: Location}[]) =>
+                    leg.filter(stop => stop.location !== undefined)
+                        .map(stop => { return { lat: stop.location.latitude, lng: stop.location.longitude }; })),
                 departure: new Date(i.departure),
                 link: i.link,
                 incomplete: i.incomplete,
@@ -88,11 +89,12 @@ export default function Trip({ fromCity, toCity, setSearchEnabled, setImposedCit
         let addedStops = false;
         let d = increaseDate(new Date(), settings.weeks, 8);
         await Promise.all(Object.entries(endpoints).map(async ([key, [lst, setlst, _img]], endpoint_num) => {
-            await fetch(PRICE_API(key, fromCity.name, toCity.name, d), {
+            await fetchWithTimeout(PRICE_API(key, fromCity.name, toCity.name, d), {
                 method: 'GET'
-            }).then(async response => {
+            }, 8000).then(async response => {
                 if (response.ok) {
                     let data = await response.json();
+                    console.log(data);
                     let price = extractPrice(data.journeys);
 
                     setlst(price);
