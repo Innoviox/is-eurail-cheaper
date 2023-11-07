@@ -152,6 +152,13 @@
   position: absolute;
 }
 
+.i-image:hover {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  background-color: white;
+  z-index: 2;
+  //box-shadow: 0px 5px 27px 0px #8C8C8C;
+}
+
 .image-1-of-1 {
 
 }
