@@ -4,7 +4,7 @@ import { faCaretUp, faCaretDown, faHourglassStart, faArrowUpRightFromSquare, faT
 
 import { Result } from '../util/types.ts';
 import { SettingsContext } from '../util/contexts.ts';
-import { fromUSD } from "@/app/util/utilities.ts";
+import { fromUSD, imageToName } from "@/app/util/utilities.ts";
 import Image from "next/image";
 
 const hours_minutes = (d: Date) => `${d.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}:${d.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}`
@@ -218,7 +218,12 @@ export default function Picker({ data, parentOpen, setFirst, setStops } :
                     <div className="images">
                         { imgs.map((img, i) => {
                             return (
-                                <Image src={img} className={"logo i-image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
+                                <div className="has-tooltip-bottom">
+                                    <Image src={img} className={"logo i-image " + `image-${i + 1}-of-${imgs.length}`} alt="" key={`image-${i}`} />
+                                    <div className="tooltip image-tooltip">
+                                        <span>{imageToName(img)}</span>
+                                    </div>
+                                </div>
                             )
                         })}
                     </div>

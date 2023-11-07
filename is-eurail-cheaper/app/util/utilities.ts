@@ -1,3 +1,8 @@
+import db_image from "@/app/img/db.png";
+import eurail_image from "@/app/img/eurail.png";
+import sncf_image from "@/app/img/sncf.png";
+import trenitalia_image from "@/app/img/trenitalia.png";
+
 export function increaseDate(date: Date, weeks: number, hour: number) {
     let newDate = new Date(date);
     newDate.setDate(newDate.getDate() + weeks * 7);
@@ -33,4 +38,18 @@ export async function fetchWithTimeout(resource: string, options: {}, timeout = 
     clearTimeout(id);
 
     return response;
+}
+
+export const images = new Map(Object.entries({
+    "db": db_image,
+    "eurail": eurail_image,
+    "sncf": sncf_image,
+    "trenitalia": trenitalia_image
+}));
+
+export function imageToName(image: StaticImageData) {
+    for (const [key, value] of images.entries()) {
+        if (value === image) return key;
+    }
+    return "";
 }

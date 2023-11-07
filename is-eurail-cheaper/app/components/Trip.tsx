@@ -1,5 +1,5 @@
 import {Endpoint, EndpointResult, LatLng, Location, Result} from "@/app/util/types.ts";
-import {increaseDate, toUSD, fetchWithTimeout} from "@/app/util/utilities.ts";
+import {increaseDate, toUSD, fetchWithTimeout, images} from "@/app/util/utilities.ts";
 import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
 import sncf_image from "@/app/img/sncf.png";
@@ -20,13 +20,6 @@ import {MapContext, SettingsContext} from "../util/contexts.ts";
 import { MarkerWrapper, pathToBounds } from "./MapView.tsx";
 import { ICity } from "../util/types.ts";
 import Image from "next/image";
-
-const images = new Map(Object.entries({
-    "db": db_image,
-    "eurail": eurail_image,
-    "sncf": sncf_image,
-    "trenitalia": trenitalia_image
-}));
 
 const PRICE_API = (endpoint: string, origin: string, destination: string, date: number) => `${process.env.NEXT_PUBLIC_API_URL}/${endpoint}?origin=${origin}&destination=${destination}&date=${date}`;
 
