@@ -42,7 +42,7 @@ export default function City({ name, color, onSearchSubmit, setImposedCity, dele
     async function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setImposedCity([name, e.target.value]);
         if (dropdownRef.current !== undefined) {
-            dropdownRef.current.handleChange(e);
+            dropdownRef.current.handleChange(e, () => {});
         }
     }
 

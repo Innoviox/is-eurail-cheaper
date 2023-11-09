@@ -4,7 +4,7 @@ import {Location} from "@/app/util/types.ts";
 const STATIONS_API = `${process.env.NEXT_PUBLIC_API_URL}/stations?query=`;
 
 export type DropdownHandle = {
-    handleChange: (event: ChangeEvent<HTMLInputElement>) => Promise<void>
+    handleChange: (event: ChangeEvent<HTMLInputElement>, completion: () => void) => Promise<void>
 }
 
 const SearchBarDropDown = forwardRef(function SearchBarDropDown({ showDropdown, setShowDropdown, onSearchSubmit, setInputVal } :
@@ -35,7 +35,7 @@ const SearchBarDropDown = forwardRef(function SearchBarDropDown({ showDropdown, 
 
     // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
     useImperativeHandle(ref, () => ({
-        async handleChange(event: ChangeEvent<HTMLInputElement>) {
+        async handleChange(event: ChangeEvent<HTMLInputElement>, completion: () => void) {
             // console.log(event.target.value);
             let val = event.target.value;
             setInputVal(val);
@@ -63,6 +63,7 @@ const SearchBarDropDown = forwardRef(function SearchBarDropDown({ showDropdown, 
             } else {
                 console.log("response not ok - stations");
             }
+            completion();
         }
     }));
 

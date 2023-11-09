@@ -12,6 +12,7 @@ export default function SearchBar({onSearchSubmit, enabled}:
 
     let [showDropdown, setShowDropdown] = useState(false);
     let [inputVal, setInputVal] = useState("");
+    let [loading, setLoading] = useState(false);
 
     function closeDropdown() {
         setShowDropdown(false);
@@ -25,9 +26,15 @@ export default function SearchBar({onSearchSubmit, enabled}:
         <div ref={innerRef} id="searchbar">
             <form onSubmit={onSubmit} id="search-form">
                 <div id="search-container">
-                    <div className="control has-icons-left">
-                        <input className="input" type="text" name="toCity"
-                               placeholder="Next city..." onChange={(e) => dropdownRef.current && dropdownRef.current.handleChange(e)}
+                    <div className={"control has-icons-left " + (loading ? "is-loading" : "")}>
+                        <input className="input"  type="text" name="toCity"
+                               placeholder="Next city..." onChange={(e) => {
+                                   if (dropdownRef.current) {
+                                       console.log("set loading ot true");
+                                        setLoading(true);
+                                        dropdownRef.current.handleChange(e, () => setLoading(false));
+                                   }
+                               }}
                                autoComplete="off" disabled={!enabled}
                                value={inputVal} />
                         <span className="icon is-small is-left">
