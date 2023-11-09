@@ -2,6 +2,7 @@ import db_image from "@/app/img/db.png";
 import eurail_image from "@/app/img/eurail.png";
 import sncf_image from "@/app/img/sncf.png";
 import trenitalia_image from "@/app/img/trenitalia.png";
+import {StaticImageData} from "next/image";
 
 export function increaseDate(date: Date, weeks: number, hour: number) {
     let newDate = new Date(date);
