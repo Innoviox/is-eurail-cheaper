@@ -26,7 +26,7 @@ function multiApi(journey) {
             console.log("couldn't find", leg.line.operator.id);
             return {};
         } else {
-            console.log("LINE#3", leg.line);
+            // console.log("LINE#3", leg.line);
             return await pricer({ // todo pass date
                 tripId: leg.tripId,
                 line: leg.line,
@@ -46,13 +46,14 @@ function multiApi(journey) {
 
 async function parseJourney(journey) {
     let price = 0, incomplete = false;
-    let image = "db"; // todo multi-image
+    let image = []; // todo multi-image
     if (journey.price === null) {
         let multiPrices = await multiApi(journey);
         multiPrices.forEach(data => {
             console.log("got mp", data);
-            if (data.image !== undefined) {
-                image = data.image;
+            if (data.image !== undefined && !image.includes(data.image)) {
+                // image = data.image;
+                image.push(data.image);
             }
             if (data.price === undefined) {
                 incomplete = true; // todo tell which is incomplete (provide more info)
@@ -62,6 +63,7 @@ async function parseJourney(journey) {
         });
     } else {
         price = journey.price.amount;
+        image = ["db"];
     }
 
     let start = Date.parse(journey.legs[0].plannedDeparture);
